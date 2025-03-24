@@ -1,0 +1,12 @@
+@use '@angular/material' as mat;
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+:root {
+  @include mat.menu-overrides((
+    item-label-text-color: black,
+    item-icon-color: black,
+    container-color: white,
+    divider-color: black
+  ));
+}

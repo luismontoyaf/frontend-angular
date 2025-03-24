@@ -1,0 +1,17 @@
+<app-header></app-header>
+
+<div class="container">
+  <app-sidenav></app-sidenav>
+
+  <div class="main-content">
+    <!-- Spinner con clase overlay -->
+    <div *ngIf="loading" class="spinner-overlay">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <!-- Mostrar el contenido solo cuando el spinner no esté visible -->
+    <div *ngIf="!loading">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

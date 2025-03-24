@@ -1,0 +1,31 @@
+<div class="container">
+  
+  <div class="main-content" [class.menu-open]="isMenuOpen">
+    <div class="emptyContent" *ngIf="content == true">
+      <h1>Aún no tienes productos</h1>
+      <p>Agregar tus Productos</p>
+    </div>
+
+    <div class="products-container" *ngIf="content == false">
+      <input 
+        type="text" 
+        placeholder="Buscar productos..." 
+        [(ngModel)]="searchTerm"
+        (input)="filterProducts()"
+      />
+
+      <button mat-flat-button class="AgregarProd" (click)="openAddProductDialog()">Agregar Producto</button>
+      <mat-divider></mat-divider>
+    <div class="products-content" *ngIf="content == false">
+      <!-- Lista de productos -->
+      <div class="product-card" *ngFor="let product of filteredProducts">
+        <img [src]="product.image" alt="{{ product.name }}" />
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description }}</p>
+        <p class="price">$ {{ product.price | number: '1.2-2' }}</p>
+        <button (click)="buyProduct(product)">Comprar</button>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

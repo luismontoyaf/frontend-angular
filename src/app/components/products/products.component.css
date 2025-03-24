@@ -1,0 +1,163 @@
+/* HTML y Body para permitir que la página ocupe toda la pantalla */
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  .container {
+    display: flex;
+    height: 92.5vh;
+    transition: margin-left 0.3s;
+    overflow: hidden;
+  }
+    
+    /* Contenido principal */
+    .main-content {
+      flex: 1;
+    padding: 20px;
+    transition: margin-left 0.3s;
+    overflow: auto;
+    }
+  
+    .main-content.menu-open {
+      margin-left: 60px; /* Ancho del sidebar cuando está cerrado */
+    }
+    
+    .emptyContent {
+      position: absolute;
+      top: 50vh;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    
+    .AgregarProd {
+      background-color: #3f51b5;
+      color: white;
+      border: none;
+      margin-left: 20px;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Estilo del input de búsqueda */
+  .products-container input {
+    width: 50vh;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  /* Estilo para las tarjetas de producto */
+  .product-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    width: calc(33.333% - 20px);
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .product-card img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+  
+  .product-card h3 {
+    margin: 10px 0;
+    font-size: 18px;
+  }
+  
+  .product-card p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .product-card .price {
+    font-size: 20px;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .product-card button {
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .product-card button:hover {
+    background-color: #283593;
+  }
+  
+  /* Media Queries para Responsividad */
+  @media (max-width: 768px) {
+    .products-content {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+  
+    .products-container input {
+      width: 100%;
+    }
+  
+    .main-content {
+      padding: 10px;
+    }
+  
+    .emptyContent h1 {
+      font-size: 1.2rem;
+    }
+  
+    .emptyContent p {
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+  
+    .main-content.menu-open {
+        margin-left: 20px; /* Ancho del sidebar cuando está cerrado */
+    }
+    
+    .products-container input {
+      width: 30vh;
+    }
+  
+    .products-content {
+      grid-template-columns: 1fr;
+    }
+  
+    .product-card{
+      width: 90%;
+    }
+  
+    .product-card img {
+      width: 80px;
+      height: 80px;
+    }
+  
+    .product-card h3 {
+      font-size: 16px;
+    }
+  
+    .product-card p {
+      font-size: 14px;
+    }
+  
+    .product-card .price {
+      font-size: 18px;
+    }
+  
+    .product-card button {
+      padding: 8px 16px;
+    }
+  }

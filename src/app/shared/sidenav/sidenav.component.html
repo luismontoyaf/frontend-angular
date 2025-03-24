@@ -1,0 +1,22 @@
+<div class="sidebar" [class.open]="(sidebarService.isOpen$ | async)">
+    <button class="menu-toggle" (click)="toggleMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <ul>
+      <li>
+        <a routerLink="/home">
+          <mat-icon>dashboard</mat-icon> Inicio
+        </a>
+      </li>
+      <li>
+        <a routerLink="/products">
+          <mat-icon>inventory_2</mat-icon> Agregar Productos
+        </a>
+      </li>
+      <li>
+        <a routerLink="/register">
+          <mat-icon>person_add</mat-icon> Registrar Usuarios
+        </a>
+      </li>
+    </ul>
+  </div>

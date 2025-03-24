@@ -1,0 +1,32 @@
+mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+
+  .custom-file-upload {
+    margin-top: 16px;
+  }
+  
+  .custom-file-upload label {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  .custom-file-upload input[type="file"] {
+    display: block;
+  }
+
+  .image-preview {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    margin-top: 10px;
+  }
+  
