@@ -13,7 +13,7 @@ import { MaterialModule } from '../../../material.module';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css']
 })
-export class LayoutComponent {
+export default class LayoutComponent {
   loading = false;
 
   constructor(private router: Router, private loaderService: LoaderService) {

@@ -7,7 +7,7 @@
     flex: 1;
     position: relative;
     transition: margin-left 0.3s;
-    height: 92.5vh;
+    height: 100%;
   }
   
   .main-content.menu-open {

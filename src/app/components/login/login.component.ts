@@ -19,6 +19,8 @@ export class LoginComponent {
 
   username = '';
   password = '';
+  messageSuccess = '';
+  messageError = '';
   message = '';
 
   selectedForm: string = 'form1';
@@ -26,6 +28,8 @@ export class LoginComponent {
 
    // Opciones de la lista desplegable
    tiposDocumento: string[] = ['Cédula de Ciudadanía', 'Pasaporte', 'Tarjeta de Identidad', 'Cédula de Extranjería'];
+
+   tiposGenero: string[] = ['Masculino', 'Femenino', 'Otro'];
 
   constructor(private fb: FormBuilder, private authService: AuthService, private registerService: RegisterService, private router: Router) {
     this.loginForm = this.fb.group({
@@ -44,6 +48,7 @@ export class LoginComponent {
       confirmContrasena: ['', Validators.required],
       cell: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       direccion: ['', Validators.required],
+      genero: [''],
     }, {
       validators: this.passwordMatchValidator
     });
@@ -91,8 +96,13 @@ export class LoginComponent {
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+    console.log('formLoginData');
+    console.log(formLoginData);
+    console.log('formLoginData Json');
+    console.log(JSON.stringify(formLoginData));
+    
     // Validar formato de correo
-    if (!emailPattern.test(this.username)) {
+    if (!emailPattern.test(formLoginData.username)) {
       this.message = 'Por favor, ingresa un correo electrónico válido.';
       return;
     }
@@ -123,13 +133,13 @@ export class LoginComponent {
 
     const formData = this.registerForm.value;
 
-    this.registerService.register(formData.name, formData.lastname, formData.tipoDocumento, formData.numDocumento, formData.correo, formData.fechaNacimiento, formData.contrasena, formData.cell, formData.direccion).subscribe(
+    this.registerService.register(formData.name, formData.lastname, formData.tipoDocumento, formData.numDocumento, formData.correo, formData.fechaNacimiento, formData.contrasena, formData.cell, formData.direccion, formData.genero).subscribe(
       (response) => {
         console.log('Usuario Creado');
         this.message = 'Registro exitoso';
 
-        // Redirigir al componente Home
-        this.router.navigate(['/home']);
+        // Redirigir al componente login
+        this.router.navigate(['/login']);
       },
       (error) => {
         console.error('Error:', error);
@@ -138,7 +148,7 @@ export class LoginComponent {
     );
   }
   goToRegister(){
-    this.registerForm.reset();
+    this.loginForm.reset();
 
     this.selectedForm = 'form2';
   }

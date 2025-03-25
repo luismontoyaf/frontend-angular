@@ -121,4 +121,16 @@
     font-size: 15px;
     color: #d9534f;
   }
+
+  .messageSuccess {
+    margin-top: 15px;
+    font-size: 15px;
+    color: #038832;
+  }
+
+  .messageError {
+    margin-top: 15px;
+    font-size: 15px;
+    color: #d9534f;
+  }
   

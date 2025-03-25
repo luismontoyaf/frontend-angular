@@ -6,7 +6,7 @@ html, body {
 
 .container {
   display: flex;
-  height: 92.5vh;
+  height: 90vh;
   transition: margin-left 0.3s;
   overflow: hidden;
 }

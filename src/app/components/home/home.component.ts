@@ -20,7 +20,7 @@ interface Product {
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export default class HomeComponent {
   isMenuOpen = false;
   content: boolean = false;
   products: Product[] = [];

@@ -10,9 +10,9 @@ export class RegisterService {
   
     constructor(private http: HttpClient) {}
   
-    register(nombre: string, apellidos: string, tipoDocumento: string, numDocumento: string, correo: string, fechaNacimiento: Date, contrasena: string, celular: string, direccion: string): Observable<any> {
+    register(nombre: string, apellidos: string, tipoDocumento: string, numDocumento: string, correo: string, fechaNacimiento: Date, contrasena: string, celular: string, direccion: string, genero: string): Observable<any> {
       const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-      const body = { nombre, apellidos, tipoDocumento, numDocumento, correo, fechaNacimiento, contrasena, celular, direccion };
+      const body = { nombre, apellidos, tipoDocumento, numDocumento, correo, fechaNacimiento, contrasena, celular, direccion, genero };
       return this.http.post(this.apiUrl + "/register", body, { headers });
     }
 

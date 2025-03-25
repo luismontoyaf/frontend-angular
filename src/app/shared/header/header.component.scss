@@ -26,6 +26,7 @@
     margin: 0;
     display: flex;
     gap: 1rem;
+    align-items: center; 
   }
   
   nav li a {
@@ -52,7 +53,7 @@
   button:hover {
     cursor: pointer;
     border-radius: 3px;
-    background-color: gray;
+    background-color: rgba(14, 13, 13, 0.142);
   }
 
   p{
@@ -64,3 +65,5 @@
     align-items: center;
     color: white;
   }
+  
+  

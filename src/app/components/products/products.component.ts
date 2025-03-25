@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
-export class ProductsComponent {
+export default class ProductsComponent {
   isMenuOpen = false;
   content: boolean = false;
 

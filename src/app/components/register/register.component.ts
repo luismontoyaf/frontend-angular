@@ -11,7 +11,7 @@ import { MaterialModule } from '../../../material.module';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export default class RegisterComponent {
 registerForm: FormGroup;
 
   username = '';
