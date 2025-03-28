@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../material.module';
 import { SidebarService } from '../../services/Sidebar/sidebar.service';
 import { CommonModule } from '@angular/common'; 
 import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
+import { GetInfoService } from '../../services/GetInfo/get-info.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -10,12 +11,24 @@ import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.css'
 })
-export class SidenavComponent {
+export class SidenavComponent implements OnInit {
 
   isMenuOpen = false;
+  imageLogo: any;
+  opcionesMenu: any;
 
-  constructor(public sidebarService: SidebarService) {}
+  constructor(public sidebarService: SidebarService, private _getInfoService: GetInfoService) {}
 
+  ngOnInit() {
+    this._getInfoService.getParameter("LogoEmpresa").subscribe((data: string) => {
+      this.imageLogo = data; // Asignar directamente el string a la variable
+    });
+    this._getInfoService.getParameter("OPCIONES_MENU").subscribe((data: string) => {
+      this.opcionesMenu = JSON.parse(data).Opciones; // Asignar directamente el string a la variable
+      
+    });
+  }
+  
   toggleMenu() {
     this.sidebarService.toggleMenu();
   }
