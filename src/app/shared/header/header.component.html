@@ -1,13 +1,12 @@
-<header class="header-container">
+<header class="header-container bg-sky-950">
     <nav>
-      <h1>LikeCell</h1>
       <ul>
-        <li><a routerLink="/home"><mat-icon>dashboard</mat-icon> Inicio</a></li>
+        <a class="text-white text-base ml-5">Bienvenido</a>
         <!-- <li><a routerLink="/register"><mat-icon>account_circle</mat-icon> Registrarse</a></li> -->
         <button mat-icon-button [matMenuTriggerFor]="profileMenu" aria-label="Example icon-button with a menu" class="btnMenu">
           <mat-icon>account_circle</mat-icon>
         </button>
-        <p>Luis Montoya</p>
+        <p [matMenuTriggerFor]="profileMenu" class="cursor-pointer">Luis Montoya</p>
         <mat-menu #profileMenu="matMenu">
           <button mat-menu-item>
             <mat-icon>manage_accounts</mat-icon>

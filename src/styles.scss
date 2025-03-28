@@ -1,5 +1,9 @@
 @use '@angular/material' as mat;
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 // Customize the entire app. Change :root to your selector if you want to scope the styles.
 :root {

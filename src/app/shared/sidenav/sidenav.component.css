@@ -1,10 +1,11 @@
 .sidebar {
     position: sticky;
-    left: 0;
-    height: 100%;
-    width: 250px;
-    background-color: #3f51b5;
-    color: white;
+    left: 10px;
+    height: 95vh;
+    width: 230px;
+    border-radius: 20px;
+    /* background-color: #3f51b5; */
+    /* color: white; */
     overflow: hidden;
     transition: width 0.3s, padding 0.3s;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -16,15 +17,17 @@
 
   .sidebar ul {
     list-style: none;
-    padding: 1rem;
     margin-top: 50px;
+    width: 100%;
   }
   
   .sidebar ul li {
     display: block;
     align-items: center;
     justify-content: center;
-    margin: 15px 0;
+    width: 100%;
+    margin: 7px 0;
+    padding-left: 10px;
     left: 10px;
     transition: opacity 0.3s;
   }
@@ -32,22 +35,24 @@
   .sidebar ul li a {
     display: flex;
     align-items: center;
-    color: white;
+    color: white; /* Color predeterminado */
     text-decoration: none;
+    width: 100%;
     padding: 10px;
     white-space: nowrap;
-    border-radius: 10px;
     cursor: pointer;
-  }
-  
-  .sidebar ul li a mat-icon {
-    margin-right: 10px;
-    font-size: 24px;
-  }
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s; /* Transición suave */
+}
 
-  .sidebar ul li a:hover {
-    background-color: #283593;
-  }
+.sidebar ul li a span{
+  font-size: 15px;
+}
+
+.sidebar ul li a mat-icon {
+  margin-right: 10px;
+  font-size: 20px;
+  transition: color 0.3s; /* Transición suave para el color del ícono */
+}
 
   .sidebar.open ul li a  {
     display: none;
@@ -75,8 +80,25 @@
   }
   
   .menu-toggle:hover {
-    background-color: #283593;
+    background-color: #082F49;
     border-radius: 4px;
+  }
+
+  .sidebar ul li a.routerLinkActive {
+    color: #38bdf8; /* Color azul celeste de Tailwind */
+  }
+
+  .sidebar ul li a.routerLinkActive mat-icon {
+    color: #38bdf8; /* Color azul celeste para el icono cuando activo */
+  }
+  .sidebar ul li a:hover {
+    background-color: #082F49; /* Fondo oscuro para hover */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Sombra en hover */
+    color: #38bdf8; /* Cambiar color del texto */
+  }
+
+  .sidebar ul li a:hover mat-icon {
+      color: #38bdf8; /* Cambiar color del ícono al hacer hover */
   }
 
   @media (max-width: 480px) {

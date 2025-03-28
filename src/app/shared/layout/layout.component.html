@@ -1,17 +1,23 @@
-<app-header></app-header>
-
 <div class="container">
   <app-sidenav></app-sidenav>
 
-  <div class="main-content">
-    <!-- Spinner con clase overlay -->
-    <div *ngIf="loading" class="spinner-overlay">
-      <mat-spinner></mat-spinner>
+  <div class="content">
+    <!-- Header + Título (que se desplaza con el scroll) -->
+    <div class="header-container">
+      <h1 class="page-title">Registro de Usuarios</h1>
+      <app-header class="header"></app-header>
     </div>
+    
+    <div class="main-content">
+      <!-- Spinner con clase overlay -->
+      <div *ngIf="loading" class="spinner-overlay">
+        <mat-spinner></mat-spinner>
+      </div>
 
-    <!-- Mostrar el contenido solo cuando el spinner no esté visible -->
-    <div *ngIf="!loading">
-      <router-outlet></router-outlet>
+      <!-- Mostrar el contenido solo cuando el spinner no esté visible -->
+      <div *ngIf="!loading">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
 </div>

@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { MaterialModule } from '../../../material.module';
 import { SidebarService } from '../../services/Sidebar/sidebar.service';
 import { CommonModule } from '@angular/common'; 
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
-  imports: [MaterialModule, CommonModule, RouterModule],
+  imports: [MaterialModule, CommonModule, RouterModule, RouterLink, RouterLinkActive],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.css'
 })

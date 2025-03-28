@@ -1,21 +1,31 @@
-<div class="sidebar" [class.open]="(sidebarService.isOpen$ | async)">
+<div class="sidebar bg-sky-950 my-5" [class.open]="(sidebarService.isOpen$ | async)">
+    <div class="sidebar-header">
+      <img src="assets/images/likecell.png" class="w-28 mt-5 h-auto mx-auto" alt="Logo">
+      <br>
+      <hr> <!-- Línea divisoria -->
+      <!-- <button class="close" (click)="toggleMenu()">
+        <mat-icon>close</mat-icon>
+      </button>
     <button class="menu-toggle" (click)="toggleMenu()">
       <mat-icon>menu</mat-icon>
-    </button>
+    </button> -->
     <ul>
       <li>
-        <a routerLink="/dashboard/home">
-          <mat-icon>dashboard</mat-icon> Inicio
+        <a routerLink="/dashboard/home" routerLinkActive="text-sky-500" class="flex items-center">
+          <mat-icon class="icon" routerLinkActive="text-sky-500">dashboard</mat-icon>
+          <span class="ml-2" routerLinkActive="text-sky-500">Inicio</span>
         </a>
       </li>
       <li>
-        <a routerLink="/dashboard/products">
-          <mat-icon>inventory_2</mat-icon> Agregar Productos
+        <a routerLink="/dashboard/products" routerLinkActive="text-sky-500" class="flex items-center">
+          <mat-icon class="icon" routerLinkActive="text-sky-500">inventory_2</mat-icon>
+          <span class="ml-2" routerLinkActive="text-sky-500">Agregar Productos</span>
         </a>
       </li>
       <li>
-        <a routerLink="/dashboard/register">
-          <mat-icon>person_add</mat-icon> Registrar Usuarios
+        <a routerLink="/dashboard/register" routerLinkActive="text-sky-500" class="flex items-center">
+          <mat-icon class="icon" routerLinkActive="text-sky-500">person_add</mat-icon>
+          <span class="ml-2" routerLinkActive="text-sky-500">Registrar Usuarios</span>
         </a>
       </li>
     </ul>
