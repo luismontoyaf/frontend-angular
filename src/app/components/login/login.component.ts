@@ -115,7 +115,7 @@ export class LoginComponent {
         localStorage.setItem('token', response.token); // Almacenar el token
 
         // Redirigir al componente Home
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard/home']);
       },
       (error) => {
         console.error('Error:', error);

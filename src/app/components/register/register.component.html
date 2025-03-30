@@ -2,8 +2,8 @@
     <!-- <label for="return" class="regresar" (click)="backToLogin()">
       <mat-icon>arrow_back</mat-icon> Regresar
     </label> -->
-    <h2>Registrar Usuario</h2>
-    <form [formGroup]="registerForm" class="form-register" (ngSubmit)="register()">
+    <span class="font-bold mb-4">¡Todos los campos marcados con asteriscos deben ser diligenciados!</span>
+    <form [formGroup]="registerForm" class="form-register mt-5" (ngSubmit)="register()">
       <div class="form-group-reg">
         <label for="name">Nombres *</label>
         <input

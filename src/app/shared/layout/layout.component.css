@@ -1,8 +1,9 @@
-.container {
+/* .container {
   display: flex;
-  height: 100vh; /* Para que ocupe toda la pantalla */
-  overflow-y: hidden;
-}
+  width: 100vw;
+  overflow: hidden;
+  box-sizing: border-box;
+} */
 
 app-sidenav {
   position: fixed;
@@ -11,17 +12,25 @@ app-sidenav {
 
 .content {
   flex-grow: 1;
-  margin-left: 250px; /* Evita que el sidenav lo cubra */
+  margin-left: 250px; 
   margin-top: 20px;
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow-y: auto; /* Permite que todo haga scroll */
+  width: 100%;
+  min-width: 300px; 
+  overflow-y: auto; 
 }
 
 .header-container {
   display: flex;
-  margin-left: 20px;
+  margin-left: 20px; /* Asegura que el header abarque todo el ancho */
+  margin-right: 40px; /* Asegura que el header abarque todo el ancho */
+  width: 100%;
+}
+
+app-header {
+  margin-right: 3.5vw;
 }
 
 .page-title {
@@ -31,33 +40,37 @@ app-sidenav {
   margin-right: auto; /* Empuja el header a la derecha */
 }
 
-app-header {
+/* app-header {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   margin-right: 20px;
-  flex-grow: 1; /* Ocupa el espacio restante */
-}
+  flex-grow: 1; 
+  width: 100%;
+} */
 
-.main-content {
+/* .main-content {
   flex-grow: 1;
   padding: 20px;
-}
+  min-width: 300px; /* Ancho mínimo para evitar que se comprima demasiado 
+  width: 100%; /* Asegura que el contenido abarque todo el ancho disponible 
+} */
   
-  .main-content.menu-open {
-    margin-left: 60px;
-  }
+.main-content.menu-open {
+  margin-left: 60px;
+  width: calc(100vw - 60px); /* Ajusta el ancho cuando el menú está abierto */
+}
 
-  .spinner-overlay {
-    position: absolute;
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 1;
-    color: #082F49;
-  }
+.spinner-overlay {
+  position: absolute;
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+  color: #082F49;
+}

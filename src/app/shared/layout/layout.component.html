@@ -1,16 +1,16 @@
-<div class="container">
-  <app-sidenav></app-sidenav>
+<div class="flex h-screen w-screen overflow-hidden box-border">
+  <app-sidenav class="fixed ml-5"></app-sidenav>
 
-  <div class="content">
+  <div class="flex-grow ml-[250px] mt-5 flex flex-col h-screen min-w-[300px] overflow-y-auto">
     <!-- Header + Título (que se desplaza con el scroll) -->
-    <div class="header-container">
-      <h1 class="page-title">Registro de Usuarios</h1>
-      <app-header class="header"></app-header>
+    <div class="flex ml-5 w-full">
+      <h1 class="text-3xl font-bold text-gray-800 mr-auto">{{ pageTitle }}</h1>
+      <app-header class="flex items-center justify-end mr-5 flex-grow w-full"></app-header>
     </div>
     
-    <div class="main-content">
+    <div class="flex-grow p-5 min-w-[300px] w-full">
       <!-- Spinner con clase overlay -->
-      <div *ngIf="loading" class="spinner-overlay">
+      <div *ngIf="loading" class="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-white/80 z-10 text-[#082F49]">
         <mat-spinner></mat-spinner>
       </div>
 

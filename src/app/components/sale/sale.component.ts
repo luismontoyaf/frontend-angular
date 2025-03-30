@@ -3,9 +3,6 @@ import { MaterialModule } from '../../../material.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../services/Sidebar/sidebar.service';
-import { MatDialogModule } from '@angular/material/dialog';
-import { AddProductDialogComponent } from '../../dialogs/add-product-dialog/add-product-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { ProductsService } from '../../services/Products/products.service';
 
 interface Product {
@@ -19,21 +16,20 @@ interface Product {
 }
 
 @Component({
-  selector: 'app-products',
-  imports: [MaterialModule, CommonModule, FormsModule,MatDialogModule],
-  templateUrl: './products.component.html',
-  styleUrl: './products.component.css'
+  selector: 'app-sale',
+  imports: [MaterialModule, CommonModule, FormsModule],
+  templateUrl: './sale.component.html',
+  styleUrl: './sale.component.css'
 })
-export default class ProductsComponent {
-  isMenuOpen = false;
+export default class SaleComponent {
+ isMenuOpen = false;
   content: boolean = false;
-
-  products: Product[] = []; // Cambiado a any[] para evitar errores de tipo
-  filteredProducts: Product[] = []; // Cambiado a any[] para evitar errores de tipo
+  products: Product[] = [];
+  filteredProducts: Product[] = [];
 
   searchTerm: string = '';
 
-constructor(private sidebarService: SidebarService, private productsService: ProductsService,private dialog: MatDialog) {
+  constructor(private sidebarService: SidebarService, private productsService: ProductsService) {
     this.sidebarService.isOpen$.subscribe(open => {
       this.isMenuOpen = open;
     });
@@ -55,17 +51,7 @@ constructor(private sidebarService: SidebarService, private productsService: Pro
         this.content = true; // Mostrar mensaje de "No hay productos"
       }
     });
-}
-
-openAddProductDialog(): void {
-  this.dialog.open(AddProductDialogComponent, {
-    width: '400px'
-  });
-};
-
-  // toggleMenu() {
-  //   this.isMenuOpen = !this.isMenuOpen;
-  // }
+  }
 
   // Método para filtrar productos por nombre
   filterProducts() {
@@ -76,11 +62,7 @@ openAddProductDialog(): void {
   }
 
   // Simular la acción de comprar un producto
-  editProduct(product: any) {
-    alert(`Has comprado: ${product.name}`);
-  }
-
-  deleteProduct(product: any) {
-    alert(`Has comprado: ${product.name}`);
+  buyProduct(product: any) {
+    alert(`Has comprado: ${product.nombreProducto}`);
   }
 }

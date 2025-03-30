@@ -17,4 +17,10 @@ export class GetInfoService {
       { headers: { 'Content-Type': 'application/json' }, responseType: 'text' } // Importante: responseType: 'text'
     );
   }
+
+  getUserInfo(): Observable<any> {
+    return this.http.get("http://localhost:5000/api/info/getUserInfo", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    });
+  }
 }

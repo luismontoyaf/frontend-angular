@@ -12,7 +12,7 @@
     <ul>
       @for (item of opcionesMenu; track $index) {
         <li>
-          <a routerLink="/dashboard/home" routerLinkActive="text-sky-500" class="flex items-center">
+          <a routerLink={{item.Opcion.Ruta}} routerLinkActive="text-sky-500" class="flex items-center" (click)="setTitle(item.Opcion.TituloPrincipal)">
             <mat-icon class="icon" routerLinkActive="text-sky-500">{{item.Opcion.NombreIcono}}</mat-icon>
             <span class="ml-2" routerLinkActive="text-sky-500">{{item.Opcion.NombreEnMenu}}</span>
           </a>

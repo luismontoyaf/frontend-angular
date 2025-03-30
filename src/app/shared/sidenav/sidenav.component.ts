@@ -4,20 +4,21 @@ import { SidebarService } from '../../services/Sidebar/sidebar.service';
 import { CommonModule } from '@angular/common'; 
 import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
+import { TitleService } from '../services/title.service';
 
 @Component({
   selector: 'app-sidenav',
   imports: [MaterialModule, CommonModule, RouterModule, RouterLink, RouterLinkActive],
   templateUrl: './sidenav.component.html',
-  styleUrl: './sidenav.component.css'
+  styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit {
 
   isMenuOpen = false;
   imageLogo: any;
-  opcionesMenu: any;
+  opcionesMenu: any[] = [];
 
-  constructor(public sidebarService: SidebarService, private _getInfoService: GetInfoService) {}
+  constructor(public sidebarService: SidebarService, private _getInfoService: GetInfoService, private titleService: TitleService) {}
 
   ngOnInit() {
     this._getInfoService.getParameter("LogoEmpresa").subscribe((data: string) => {
@@ -31,5 +32,9 @@ export class SidenavComponent implements OnInit {
   
   toggleMenu() {
     this.sidebarService.toggleMenu();
+  }
+
+  setTitle(title: string): void {
+    this.titleService.setTitle(title);
   }
 }

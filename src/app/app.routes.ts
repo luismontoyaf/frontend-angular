@@ -16,6 +16,12 @@ export const routes: Routes = [
         { 
           path: 'products', loadComponent: () => import('./components/products/products.component'),
         },
+        { 
+          path: 'sale', loadComponent: () => import('./components/sale/sale.component'),
+        },
+        { 
+          path: '**', loadComponent: () => import('./components/home/home.component'),
+        },
         ]
       },
       { path: 'login', component: LoginComponent },
