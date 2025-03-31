@@ -7,6 +7,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AddProductDialogComponent } from '../../dialogs/add-product-dialog/add-product-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductsService } from '../../services/Products/products.service';
+import { EditProductDialogComponent } from '../../dialogs/edit-product-dialog/edit-product-dialog.component';
+import { MessageServiceService } from '../../dialogs/services/message-service.service';
+import { DeleteModalComponent } from '../../dialogs/shared/delete-modal/delete-modal.component';
 
 interface Product {
   id: number;
@@ -33,7 +36,10 @@ export default class ProductsComponent {
 
   searchTerm: string = '';
 
-constructor(private sidebarService: SidebarService, private productsService: ProductsService,private dialog: MatDialog) {
+constructor(private sidebarService: SidebarService, 
+  private productsService: ProductsService,
+  private messageService: MessageServiceService,
+  private dialog: MatDialog) {
     this.sidebarService.isOpen$.subscribe(open => {
       this.isMenuOpen = open;
     });
@@ -63,6 +69,13 @@ openAddProductDialog(): void {
   });
 };
 
+openEditProductDialog(product: Product): void {
+  this.dialog.open(EditProductDialogComponent, {
+    width: '400px',
+    data: { product }
+  });
+};
+
   // toggleMenu() {
   //   this.isMenuOpen = !this.isMenuOpen;
   // }
@@ -75,12 +88,10 @@ openAddProductDialog(): void {
     );
   }
 
-  // Simular la acción de comprar un producto
-  editProduct(product: any) {
-    alert(`Has comprado: ${product.name}`);
-  }
-
-  deleteProduct(product: any) {
-    alert(`Has comprado: ${product.name}`);
+  openDeleteProductDialog(product: any) {
+    this.messageService.setDeleteMessage('¿Está seguro de que desea eliminar el producto?');
+    this.dialog.open(DeleteModalComponent, {
+      data: { product },
+    });
   }
 }

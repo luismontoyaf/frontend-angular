@@ -27,6 +27,6 @@ export class HeaderComponent {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userInfo');
-    window.location.reload();
+    window.location.href = '/login';
   }
 }

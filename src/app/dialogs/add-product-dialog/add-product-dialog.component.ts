@@ -1,16 +1,21 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule  } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../material.module';
 import { ProductsService } from '../../services/Products/products.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MessageServiceService } from '../services/message-service.service';
+import { SuccessEditModalComponent } from '../shared/success-edit-modal/success-edit-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-product-dialog',
   standalone: true,
   templateUrl: './add-product-dialog.component.html',
   styleUrls: ['./add-product-dialog.component.css'],
-  imports: [CommonModule, FormsModule, MaterialModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, MaterialModule, ReactiveFormsModule, MatDialogModule,
+    MatFormFieldModule,],
 })
 export class AddProductDialogComponent {
   productForm: FormGroup;
@@ -20,7 +25,12 @@ export class AddProductDialogComponent {
 
   imagePreview: string | ArrayBuffer | null = null; 
 
-  constructor(private dialogRef: MatDialogRef<AddProductDialogComponent>, private fb: FormBuilder, private productsService: ProductsService ) {
+  constructor(private dialogRef: MatDialogRef<AddProductDialogComponent>, 
+    private fb: FormBuilder, 
+    private productsService: ProductsService,
+  private messageService: MessageServiceService,
+  private router: Router,
+    private dialog: MatDialog) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', Validators.required],
@@ -70,7 +80,10 @@ export class AddProductDialogComponent {
     this.productsService.addProduct(name, description, price, quantity, this.selectedFile).subscribe(
       (response) => {
         console.log('Producto Registrado');
-        this.message = 'Producto agregado exitosamente';
+        this.message = 'El producto ha sido agregado exitosamente ¿Desea agregar otro producto?';
+        this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
+        this.dialogRef.close(true); // Cerrar diálogo y recargar datos en la vista principal
+        this.openSuccessEditDialog(); // Abrir el diálogo de éxito
       },
       (error) => {
         console.error('Error:', error);
@@ -79,8 +92,20 @@ export class AddProductDialogComponent {
     );
   }
 
+  setMessage(message: string): void {
+    this.messageService.setMessageSuccess(message);
+  }
+
+  openSuccessEditDialog(): void {
+      this.dialog.open(SuccessEditModalComponent, {
+      });
+    };
+
   // Método para cerrar el popup
   closeDialog(): void {
     this.dialogRef.close();
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/dashboard/products']); // Recarga la vista actual
+    });
   }
 }

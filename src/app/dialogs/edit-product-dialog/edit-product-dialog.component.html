@@ -1,0 +1,53 @@
+<div class="add-product-dialog-container">
+    <h2 mat-dialog-title>Agrega Tus Productos</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="productForm" (ngSubmit)="editProducts()">
+    <mat-form-field>
+      <mat-label>Nombre del Producto</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+        El nombre es obligatorio y debe tener al menos 3 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+      <mat-error *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+        La descripción es obligatoria
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Precio</mat-label>
+      <input matInput type="text" formControlName="price" (input)="formatPrice($event)"/>
+      <mat-error *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+        El precio es obligatorio y debe ser mayor que 0
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Cantidad Disponible</mat-label>
+      <input matInput type="number" formControlName="quantity" />
+      <mat-error *ngIf="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched">
+        La cantidad debe ser al menos 1
+      </mat-error>
+    </mat-form-field>
+
+    <div class="custom-file-upload">
+      <label for="file">Imagen</label>
+      <input type="file" id="file" (change)="onFileSelected($event)" />
+    </div>
+
+    <div *ngIf="imagePreview">
+      <img [src]="imagePreview" alt="Imagen Previa" class="image-preview" />
+    </div>
+
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="closeDialog()">Cancelar</button>
+      <button mat-button color="primary" [disabled]="productForm.invalid" type="submit">Editar</button>
+    </mat-dialog-actions>
+  </form>
+</mat-dialog-content>
+</div>
