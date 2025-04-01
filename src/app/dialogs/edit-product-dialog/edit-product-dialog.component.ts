@@ -7,16 +7,7 @@ import { ProductsService } from '../../services/Products/products.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MessageServiceService } from '../services/message-service.service';
 import { SuccessModalComponent } from '../shared/success-modal/success-modal.component';
-
-interface Product {
-  id: number;
-  nombreProducto: string;
-  descripcion: string;
-  stock: number;
-  precio: number;
-  imagenBase64?: string; // Imagen como Base64 (cuando se obtiene)
-  imagenFile?: File;     // Imagen como File (cuando se envía)
-}
+import { Product } from '../../interfaces/product';
 
 @Component({
   selector: 'app-edit-product-dialog',

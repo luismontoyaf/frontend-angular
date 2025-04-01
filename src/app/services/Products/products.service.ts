@@ -1,22 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-interface Product {
-  id: number;
-  nombreProducto: string;
-  descripcion: string;
-  stock: number;
-  precio: number;
-  imagenBase64?: string; // Imagen como Base64 (cuando se obtiene)
-  imagenFile?: File;     // Imagen como File (cuando se envía)
-}
+import { environment } from '../../../environments/environment.development';
+import { Product } from '../../interfaces/product';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
-  private apiUrl = 'http://localhost:5000/api/products';
+  private apiUrl = environment.apiUrl; // URL de la API
   
     constructor(private http: HttpClient) {}
   
@@ -28,11 +20,11 @@ export class ProductsService {
       formData.append('stock', stock.toString());
       formData.append('ImagenFile', imagen);
     
-      return this.http.post(this.apiUrl + "/addProduct", formData);
+      return this.http.post(this.apiUrl + "/products/addProduct", formData);
     }
 
     getProducts() : Observable<any> {
-      return this.http.get(this.apiUrl + "/getProducts");
+      return this.http.get(`${this.apiUrl}/products/getProducts`);
     }
 
     editProduct(id: number, cambios: Partial<Product>) {
@@ -46,7 +38,7 @@ export class ProductsService {
       console.log('patchData', JSON.stringify(patchData));
       
     
-      return this.http.patch<Product>(`${this.apiUrl}/${id}`, patchData, {
+      return this.http.patch<Product>(`${this.apiUrl}/products/${id}`, patchData, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json-patch+json' })
       });
     }
@@ -62,7 +54,7 @@ export class ProductsService {
       console.log('patchData', JSON.stringify(patchData));
       
     
-      return this.http.patch<Product>(`${this.apiUrl}/delete/${id}`, patchData, {
+      return this.http.patch<Product>(`${this.apiUrl}/products/delete/${id}`, patchData, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json-patch+json' })
       });
     }

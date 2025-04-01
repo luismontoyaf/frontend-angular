@@ -4,18 +4,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { Router } from '@angular/router';
 import { ProductsService } from '../../../services/Products/products.service';
 import { SuccessModalComponent } from '../success-modal/success-modal.component';
-
-
-interface Product {
-  id: number;
-  nombreProducto: string;
-  descripcion: string;
-  stock: number;
-  precio: number;
-  imagenBase64?: string; // Imagen como Base64 (cuando se obtiene)
-  imagenFile?: File; 
-  activo: number;
-}
+import { Product } from '../../../interfaces/product';
 
 @Component({
   selector: 'app-delete-modal',

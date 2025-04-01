@@ -10,16 +10,7 @@ import { ProductsService } from '../../services/Products/products.service';
 import { EditProductDialogComponent } from '../../dialogs/edit-product-dialog/edit-product-dialog.component';
 import { MessageServiceService } from '../../dialogs/services/message-service.service';
 import { DeleteModalComponent } from '../../dialogs/shared/delete-modal/delete-modal.component';
-
-interface Product {
-  id: number;
-  nombreProducto: string;
-  descripcion: string;
-  stock: number;
-  precio: number;
-  imagenBase64?: string; // Imagen como Base64 (cuando se obtiene)
-  imagenFile?: File;     // Imagen como File (cuando se envía)
-}
+import { Product } from '../../interfaces/product';
 
 @Component({
   selector: 'app-products',

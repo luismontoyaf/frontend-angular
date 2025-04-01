@@ -4,16 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../services/Sidebar/sidebar.service';
 import { ProductsService } from '../../services/Products/products.service';
-
-interface Product {
-  id: number;
-  nombreProducto: string;
-  descripcion: string;
-  stock: number;
-  precio: number;
-  imagenBase64?: string; // Imagen como Base64 (cuando se obtiene)
-  imagenFile?: File;     // Imagen como File (cuando se envía)
-}
+import { Product } from '../../interfaces/product';
 
 @Component({
   selector: 'app-sale',

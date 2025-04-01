@@ -5,16 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../services/Sidebar/sidebar.service';
 import { ProductsService } from '../../services/Products/products.service';
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
-
-interface Product {
-  id: number;
-  nombreProducto: string;
-  descripcion: string;
-  stock: number;
-  precio: number;
-  imagenBase64?: string; // Imagen como Base64 (cuando se obtiene)
-  imagenFile?: File;     // Imagen como File (cuando se envía)
-}
+import { Product } from '../../interfaces/product'; // Asegúrate de que la ruta sea correcta
 
 @Component({
   selector: 'app-home',
@@ -55,52 +46,7 @@ export default class HomeComponent {
       }
     });
   }
-  // Lista de productos simulada
-  // products = [
-  //   {
-  //     name: 'Producto 1',
-  //     description: 'Descripción corta del producto 1',
-  //     price: 100,
-  //     image: 'https://via.placeholder.com/150'
-  //   },
-  //   {
-  //     name: 'Producto 2',
-  //     description: 'Descripción corta del producto 2',
-  //     price: 200,
-  //     image: 'https://via.placeholder.com/150'
-  //   },
-  //   {
-  //     name: 'Producto 3',
-  //     description: 'Descripción corta del producto 3',
-  //     price: 300,
-  //     image: 'https://via.placeholder.com/150'
-  //   },
-  //   {
-  //     name: 'Producto 4',
-  //     description: 'Descripción corta del producto 3',
-  //     price: 300,
-  //     image: 'https://via.placeholder.com/150'
-  //   },
-  //   {
-  //     name: 'Producto 2',
-  //     description: 'Descripción corta del producto 2',
-  //     price: 200,
-  //     image: 'https://via.placeholder.com/150'
-  //   },
-  //   {
-  //     name: 'Producto 3',
-  //     description: 'Descripción corta del producto 3',
-  //     price: 300,
-  //     image: 'https://via.placeholder.com/150'
-  //   },
-  //   {
-  //     name: 'Producto 4',
-  //     description: 'Descripción corta del producto 3',
-  //     price: 300,
-  //     image: 'https://via.placeholder.com/150'
-  //   }
-  // ];
-
+  
   // Método para filtrar productos por nombre
   filterProducts() {
     const term = this.searchTerm.toLowerCase();
