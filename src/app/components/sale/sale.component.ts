@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { MaterialModule } from '../../../material.module'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,10 +13,18 @@ import { Product } from '../../interfaces/product';
   styleUrl: './sale.component.css'
 })
 export default class SaleComponent {
- isMenuOpen = false;
+
+  quantity: number = 1; // Cantidad inicial de productos a comprar
+  
+  isMenuOpen = false;
   content: boolean = false;
+  showOptions: boolean = false;
+
   products: Product[] = [];
+
+  addedProducts = signal<Product[]>([]);
   filteredProducts: Product[] = [];
+  quantities: { [productId: string]: number } = {};
 
   searchTerm: string = '';
 
@@ -44,6 +52,16 @@ export default class SaleComponent {
     });
   }
 
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    const targetElement = event.target as HTMLElement;
+
+    // Si el clic ocurre fuera del input o la lista de opciones, oculta las opciones
+    if (!targetElement.closest('.search-container')) {
+      this.showOptions = false;
+    }
+  }
+
   // Método para filtrar productos por nombre
   filterProducts() {
     const term = this.searchTerm.toLowerCase();
@@ -52,6 +70,28 @@ export default class SaleComponent {
     );
   }
 
+  addToCart(product: Product) { // Mostrar las opciones de compra
+    this.addedProducts.set([...this.addedProducts(), { ...product }]) // Agregar el producto al carrito 
+  }
+
+  removeFromCart(productId: number) { // Eliminar el producto del carrito
+    this.addedProducts.set(this.addedProducts().filter(p => p.id !== productId)); // Eliminar el producto del carrito
+  }
+
+
+  trackByProduct(index: number, product: Product): string {
+    return product.id.toString(); // Asegúrate de que cada producto tenga un `id` único
+  }
+
+  increaseQuantity(product: Product) {
+    this.quantities[product.id] = (this.quantities[product.id] || 1) + 1;
+  }
+  
+
+  decrementQuantity(product: Product) {
+    this.quantities[product.id] = (this.quantities[product.id]) - 1;
+  }
+  
   // Simular la acción de comprar un producto
   buyProduct(product: any) {
     alert(`Has comprado: ${product.nombreProducto}`);

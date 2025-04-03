@@ -1,17 +1,22 @@
 .container{
-  height: 97vh;
   align-content: center;
   justify-content: center;
+  /* background-image: url('/assets/images/background-login.png'); */
+  /* background-image: url('/assets/images/fondo-login-degradado.png');  */
+  /* background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat;  */
 }
 
 .login-container {
-    max-width: 400px;
+    /* max-width: 400px;
+    width: 350px; */
     margin: 50px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
+    /* padding: 20px; */
+    /* border: 1px solid #ddd; */
     border-radius: 8px;
     background-color: #f9f9f9;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
   }
 
   .register-container {
@@ -92,7 +97,7 @@
     margin-top: 15px;
     grid-column: span 2;
     justify-self: center; 
-    background-color: #007bff;
+    /* background-color: #007bff; */
     border: none;
     color: #fff;
     border-radius: 4px;
@@ -100,9 +105,9 @@
     cursor: pointer;
   }
   
-  .btn:hover {
+  /* .btn:hover {
     background-color: #0056b3;
-  }
+  } */
 
   .regresar {
     color: #007bff; /* Color de enlace típico */

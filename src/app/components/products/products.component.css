@@ -50,6 +50,14 @@ html, body {
     border-radius: 4px;
     font-size: 16px;
   }
+
+  .scroll-hidden::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scroll-hidden {
+    scrollbar-width: none;
+  }
   
   /* Estilo para las tarjetas de producto */
   /* .product-card {
