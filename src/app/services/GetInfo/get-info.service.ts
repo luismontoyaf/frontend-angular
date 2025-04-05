@@ -24,4 +24,11 @@ export class GetInfoService {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     });
   }
+
+  getUserInfoByDocument(cedula: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/info/getUserInfoByDocument`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      params: { document: cedula }
+    });
+  }
 }

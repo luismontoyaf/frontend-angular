@@ -5,6 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../services/Sidebar/sidebar.service';
 import { ProductsService } from '../../services/Products/products.service';
 import { Product } from '../../interfaces/product';
+import { GetInfoService } from '../../services/GetInfo/get-info.service';
+import { SuccessEditModalComponent } from '../../dialogs/shared/success-edit-modal/success-edit-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageServiceService } from '../../dialogs/services/message-service.service';
 
 @Component({
   selector: 'app-sale',
@@ -13,6 +17,8 @@ import { Product } from '../../interfaces/product';
   styleUrl: './sale.component.css'
 })
 export default class SaleComponent{
+
+  user: any; // Property to store user information
 
   quantity: number = 1; // Cantidad inicial de productos a comprar
   totalValue: number = 0; // Valor total de la compra
@@ -30,8 +36,15 @@ export default class SaleComponent{
   quantities: { [productId: string]: number } = {};
 
   searchTerm: string = '';
+  message: string = '';
+  proccess: string = '';
 
-  constructor(private sidebarService: SidebarService, private productsService: ProductsService) {
+  constructor(private sidebarService: SidebarService, 
+    private productsService: ProductsService,
+    private getInfoService: GetInfoService,
+    private messageService: MessageServiceService,
+    private dialog: MatDialog,
+  ) {
     this.sidebarService.isOpen$.subscribe(open => {
       this.isMenuOpen = open;
     });
@@ -123,13 +136,30 @@ export default class SaleComponent{
     this.recalculateCartTotals();
   }
 
+  searchUser(cedula: string) {
+    this.getInfoService.getUserInfoByDocument(cedula).subscribe(user => {
+      this.user = user; 
+      console.log("Usuario:", this.user);
+    }
+    , error => {
+      this.message = 'El cliente no existe en la base de datos. ¿Desea registrarlo?';
+      this.setMessage(this.message);
+      this.setProccess('openAddClientDialog'); 
+      this.dialog.open(SuccessEditModalComponent, {
+       });     
+    });
+  }
+
+  setMessage(message: string): void {
+    this.messageService.setMessageSuccess(message);
+  }
+
+  setProccess(proccess: string): void {
+    this.messageService.setProcess(proccess);
+  }
 
   trackByProduct(index: number, product: Product): string {
     return product.id.toString(); // Asegúrate de que cada producto tenga un `id` único
   }
   
-  // Simular la acción de comprar un producto
-  buyProduct(product: any) {
-    alert(`Has comprado: ${product.nombreProducto}`);
-  }
 }

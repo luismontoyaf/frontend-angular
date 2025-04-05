@@ -82,6 +82,7 @@ export class AddProductDialogComponent {
         console.log('Producto Registrado');
         this.message = 'El producto ha sido agregado exitosamente ¿Desea agregar otro producto?';
         this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
+        this.setProccess('openAddProductDialog'); 
         this.dialogRef.close(true); // Cerrar diálogo y recargar datos en la vista principal
         this.openSuccessEditDialog(); // Abrir el diálogo de éxito
       },
@@ -94,6 +95,10 @@ export class AddProductDialogComponent {
 
   setMessage(message: string): void {
     this.messageService.setMessageSuccess(message);
+  }
+
+  setProccess(proccess: string): void {
+    this.messageService.setProcess(proccess);
   }
 
   openSuccessEditDialog(): void {

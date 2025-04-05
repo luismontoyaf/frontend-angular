@@ -80,21 +80,92 @@
         </div>
         </div>
         <div class="w-full flex flex-col items-center h-full border-gray-300 border-2 rounded-lg p-4 shadow-lg shadow-sky-300">
+          <div class="w-full bg-white text-center p-4">
+            <span class="text-xl text-sky-900 font-bold">Resumen de la venta</span>
+          </div>
+          <div class="w-full flex flex-col items-center justify-center mb-4">
+            <form class="flex items-center max-w-sm" (submit)="searchUser(cedulaInput.value)">   
+              <label for="simple-search" class="sr-only">Search</label>
+              <div class="relative w-full">
+                  <input #cedulaInput type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar cedula del cliente" required />
+              </div>
+              <button type="submit" class="p-2.5 ms-2 text-sm font-medium text-white bg-sky-900 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                  </svg>
+                  <span class="sr-only">Search</span>
+              </button>
+          </form>
+          </div>
+          <div class="w-full flex flex-col items-center justify-center mb-4">
+            <form class="grid grid-cols-1 gap-4 w-full max-w-lg">
+              <div class="flex flex-row">
+                <table class="w-full border-collapse border border-gray-300">
+                  <thead>
+                    <tr class="bg-gray-100 text-center">
+                      <th class="p-2 border border-gray-300 w-[65%]">Nombre Cliente</th>
+                      <th class="p-2 border border-gray-300 w-[35%]">Documento</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td class="p-2 border border-gray-300 font-normal">{{(user?.nombre || ' ') + ' ' + (user?.apellidos || ' ')}}</td>
+                      <td class="p-2 border border-gray-300 font-normal">{{user?.numDocumento || ' '}}</td>
+                    </tr>
+                    <!-- Agrega más filas según necesites -->
+                  </tbody>
+                </table>
+              </div>
+            <div class="flex flex-row">
+              <table class="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr class="bg-gray-100 text-center">
+                    <th class="p-2 border border-gray-300 w-[65%]">Email</th>
+                    <th class="p-2 border border-gray-300 w-[35%]">Celular</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="text-center">
+                    <td class="p-2 border border-gray-300 font-normal">{{user?.correo ||' '}}</td>
+                    <td class="p-2 border border-gray-300 font-normal">{{user?.celular || ' '}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            </form>
+          </div>
           <table class="w-full mt-auto">
-            <tr class="w-3/4 h-12 grid grid-cols-2 gray-200 border-2 rounded-lg">
-              <td class="bg-sky-900 flex flex-col justify-center font-bold text-lg text-white rounded-lg">
+            <tr class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg">
+              <td class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg">
+                <span class="ml-2">Aplicar Descuento</span>
+              </td>
+              <td class="grid-cols-2 justify-center text-sky-900 ml-2 font-normal">
+                <div class="h-full flex items-center border border-gray-300 rounded-md overflow-hidden justify-between">
+                  <input
+                    type="number"
+                    class="w-3/4 h-full px-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="0"
+                    min="0"
+                    max="100"
+                  />
+                  <span class="w-1/4 bg-gray-300 text-gray-700 h-full flex items-center justify-center">%</span>
+                </div>
+              </td>
+            </tr>
+            <tr class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg">
+              <td class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg">
                 <span class="ml-2">Saldo sin iva</span>
               </td>
               <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(valueWithoutIva) || 0}}</td>
             </tr>
-            <tr class="w-3/4 h-12 grid grid-cols-2 gray-200 border-2 rounded-lg">
-              <td class="bg-sky-900 flex flex-col justify-center font-bold text-lg text-white rounded-lg">
+            <tr class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg">
+              <td class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg">
                 <span class="ml-2">Iva</span>
               </td>
               <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(totalIva) || 0}}</td>
             </tr>
-            <tr class="w-3/4 h-12 grid grid-cols-2 gray-200 border-2 rounded-lg">
-              <td class="bg-sky-900 flex flex-col justify-center font-bold text-lg text-white rounded-lg">
+            <tr class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg">
+              <td class="bg-sky-900 flex flex-col justify-center text-sm font-normal text-white rounded-lg">
                 <span class="ml-2">Saldo total</span>
               </td>
               <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(totalValue) || 0}}</td>

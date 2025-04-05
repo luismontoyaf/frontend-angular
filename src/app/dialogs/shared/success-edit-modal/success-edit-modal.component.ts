@@ -22,9 +22,15 @@ constructor(private messageService: MessageServiceService,
   private dialog: MatDialog,
   private dialogRef: MatDialogRef<DeleteModalComponent>  ) {}
   messageModal: string = '';
+  proccessKey: string = ''; // Clave del proceso
+  proccessModal!: () => void;
   ngOnInit() {
     this.messageService.message$.subscribe((message) => {
       this.messageModal = message;
+    });
+
+    this.messageService.proccess$.subscribe((key) => {
+      this.proccessKey = key;
     });
   }
 
@@ -33,6 +39,28 @@ constructor(private messageService: MessageServiceService,
       this.dialog.open(AddProductDialogComponent, {
         width: '400px'
       });
+    };
+    
+    runProccess() {
+      switch (this.proccessKey) {
+        case 'openAddClientDialog':
+          this.openAddClientDialog();
+          break;
+        case 'openAddProductDialog':
+          this.openAddProductDialog();
+          break;
+        // podrías agregar más casos aquí
+        default:
+          console.warn('No se reconoció el proceso');
+      }
+    }
+
+    openAddClientDialog(): void {
+      this.dialogRef.close();
+      // this.dialog.open(AddProductDialogComponent, {
+      //   width: '400px'
+      // });
+      alert('No se ha implementado el modal de agregar cliente');
     };
 
   closeModal() {

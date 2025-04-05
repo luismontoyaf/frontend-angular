@@ -7,7 +7,10 @@ import { BehaviorSubject } from 'rxjs';
 export class MessageServiceService {
 
   private messageSubject = new BehaviorSubject<string>('');
+  private processSubject = new BehaviorSubject<string>('');
+
     message$ = this.messageSubject.asObservable();
+    proccess$ = this.processSubject.asObservable();
   
     setMessageSuccess(message: string): void {
       this.messageSubject.next(message);
@@ -15,5 +18,9 @@ export class MessageServiceService {
 
     setDeleteMessage(message: string): void {
       this.messageSubject.next(message);
+    }
+
+    setProcess(proccess: string): void {
+      this.processSubject.next(proccess);
     }
 }
