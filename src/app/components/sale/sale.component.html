@@ -37,7 +37,7 @@
       <mat-divider></mat-divider>
 
       <!-- Lista de productos -->
-      <div class="grid grid-cols-2 gap-8 h-[76vh]">
+      <div class="grid grid-cols-2 gap-8 h-[71vh] mt-4">
         <div class="flex flex-col items-center justify-start w-full  overflow-y-auto">
           <div class="w-full product-card bg-white shadow-md mt-2 rounded-lg overflow-hidden flex flex-row items-center justify-between px-2" 
             *ngFor="let product of addedProducts(); trackBy: trackByProduct">
@@ -53,13 +53,18 @@
             <p class="price text-blue-500 font-semibold">$ {{ product.precio | number: '1.2-2' }}</p>
             <form class="max-w-xs">
               <div class="relative flex items-center">
-                  <button type="button" id="decrement-button" (click)="decrementQuantity(product)" data-input-counter-decrement="counter-input" class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                  <button type="button" id="decrement-button" [disabled]="quantities[product.id] <= 1" [ngClass]="{
+                    'cursor-not-allowed opacity-50': quantities[product.id] <= 1, 'cursor-pointer': quantities[product.id] > 1}" 
+                    (click)="decrementQuantity(product)" data-input-counter-decrement="counter-input" 
+                    class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                       <svg class="w-2.5 h-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
                       </svg>
                   </button>
                   <input type="text" id="counter-input" data-input-counter class="shrink-0 text-gray-900 dark:text-white border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center" placeholder="" [value]="quantities[product.id] || 1" required />
-                  <button type="button" id="increment-button" (click)="increaseQuantity(product)" data-input-counter-increment="counter-input" class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
+                  <button type="button" id="increment-button" (click)="increaseQuantity(product)" data-input-counter-increment="counter-input" 
+                  [disabled]="quantities[product.id] >= product.stock" [ngClass]="{'cursor-not-allowed opacity-50': quantities[product.id] >= product.stock, 'cursor-pointer': quantities[product.id] < product.stock }"
+                  class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
                       <svg class="w-2.5 h-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
                       </svg>
@@ -74,25 +79,25 @@
             </button>
         </div>
         </div>
-        <div class="w-full flex flex-col items-center h-full">
+        <div class="w-full flex flex-col items-center h-full border-gray-300 border-2 rounded-lg p-4 shadow-lg shadow-sky-300">
           <table class="w-full mt-auto">
             <tr class="w-3/4 h-12 grid grid-cols-2 gray-200 border-2 rounded-lg">
               <td class="bg-sky-900 flex flex-col justify-center font-bold text-lg text-white rounded-lg">
                 <span class="ml-2">Saldo sin iva</span>
               </td>
-              <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">$126.800</td>
+              <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(valueWithoutIva) || 0}}</td>
             </tr>
             <tr class="w-3/4 h-12 grid grid-cols-2 gray-200 border-2 rounded-lg">
               <td class="bg-sky-900 flex flex-col justify-center font-bold text-lg text-white rounded-lg">
-                <span class="ml-2">iva</span>
+                <span class="ml-2">Iva</span>
               </td>
-              <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">$19.600</td>
+              <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(totalIva) || 0}}</td>
             </tr>
             <tr class="w-3/4 h-12 grid grid-cols-2 gray-200 border-2 rounded-lg">
               <td class="bg-sky-900 flex flex-col justify-center font-bold text-lg text-white rounded-lg">
                 <span class="ml-2">Saldo total</span>
               </td>
-              <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">$147.500</td>
+              <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(totalValue) || 0}}</td>
             </tr>
           </table>
         </div>

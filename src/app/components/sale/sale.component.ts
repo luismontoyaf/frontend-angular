@@ -1,4 +1,4 @@
-import { Component, HostListener, signal } from '@angular/core';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { MaterialModule } from '../../../material.module'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,9 +12,12 @@ import { Product } from '../../interfaces/product';
   templateUrl: './sale.component.html',
   styleUrl: './sale.component.css'
 })
-export default class SaleComponent {
+export default class SaleComponent{
 
   quantity: number = 1; // Cantidad inicial de productos a comprar
+  totalValue: number = 0; // Valor total de la compra
+  totalIva: number = 0; // IVA total de la compra
+  valueWithoutIva: number = 0; // Valor total sin IVA
   
   isMenuOpen = false;
   content: boolean = false;
@@ -71,25 +74,58 @@ export default class SaleComponent {
   }
 
   addToCart(product: Product) { // Mostrar las opciones de compra
-    this.addedProducts.set([...this.addedProducts(), { ...product }]) // Agregar el producto al carrito 
+    this.addedProducts.set([...this.addedProducts(), { ...product }]); // Agregar el producto al carrito 
+
+    this.quantities[product.id] = (this.quantities[product.id] || 1); // Inicializar la cantidad del producto en el carrito
+    
+    this.recalculateCartTotals();
+  }
+
+  recalculateCartTotals() {
+    let total = 0;
+  
+    this.addedProducts().forEach((p) => {
+      total += p.precio * (this.quantities[p.id] || 1);
+    });
+  
+    this.totalValue = total;
+    this.calculateValues(total);
+  }
+
+  calculateValues(totalValue: number) {
+    this.totalValue = totalValue; // Actualizar el valor total
+    this.totalIva = totalValue * 0.19; // Calcular el IVA total de la compra
+    this.valueWithoutIva = totalValue / 1.19; // Calcular el valor total sin IVA
+  }
+
+  increaseQuantity(product: Product) {
+    this.quantities[product.id] = (this.quantities[product.id] || 1) + 1;
+    
+    this.totalValue = product.precio * this.quantities[product.id]; // Aumentar el valor total al agregar un producto
+
+    this.recalculateCartTotals();
+  }
+  
+  decrementQuantity(product: Product) {
+    this.quantities[product.id] = (this.quantities[product.id]) - 1;
+
+    this.totalValue = product.precio * this.quantities[product.id]; // Aumentar el valor total al agregar un producto
+
+    this.recalculateCartTotals();
+  }
+
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(value);
   }
 
   removeFromCart(productId: number) { // Eliminar el producto del carrito
     this.addedProducts.set(this.addedProducts().filter(p => p.id !== productId)); // Eliminar el producto del carrito
+    this.recalculateCartTotals();
   }
 
 
   trackByProduct(index: number, product: Product): string {
     return product.id.toString(); // Asegúrate de que cada producto tenga un `id` único
-  }
-
-  increaseQuantity(product: Product) {
-    this.quantities[product.id] = (this.quantities[product.id] || 1) + 1;
-  }
-  
-
-  decrementQuantity(product: Product) {
-    this.quantities[product.id] = (this.quantities[product.id]) - 1;
   }
   
   // Simular la acción de comprar un producto
