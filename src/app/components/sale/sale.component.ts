@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, signal } from '@angular/core';
+import { Component, HostListener, OnInit, Output, signal } from '@angular/core';
 import { MaterialModule } from '../../../material.module'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { GetInfoService } from '../../services/GetInfo/get-info.service';
 import { SuccessEditModalComponent } from '../../dialogs/shared/success-edit-modal/success-edit-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageServiceService } from '../../dialogs/services/message-service.service';
+import { InvoiceService } from '../../services/Invoice/invoice.service';
 
 @Component({
   selector: 'app-sale',
@@ -18,6 +19,7 @@ import { MessageServiceService } from '../../dialogs/services/message-service.se
 })
 export default class SaleComponent{
 
+  @Output() userEmail: string = ''; // Email del usuario
   user: any; // Property to store user information
 
   quantity: number = 1; // Cantidad inicial de productos a comprar
@@ -35,14 +37,17 @@ export default class SaleComponent{
   filteredProducts: Product[] = [];
   quantities: { [productId: string]: number } = {};
 
+  metodoSeleccionado: string = '';
   searchTerm: string = '';
   message: string = '';
   proccess: string = '';
+  messageError: string = '';
 
   constructor(private sidebarService: SidebarService, 
     private productsService: ProductsService,
     private getInfoService: GetInfoService,
     private messageService: MessageServiceService,
+    private invoiceService: InvoiceService,
     private dialog: MatDialog,
   ) {
     this.sidebarService.isOpen$.subscribe(open => {
@@ -139,6 +144,7 @@ export default class SaleComponent{
   searchUser(cedula: string) {
     this.getInfoService.getUserInfoByDocument(cedula).subscribe(user => {
       this.user = user; 
+      this.userEmail = this.user.correo;
       console.log("Usuario:", this.user);
     }
     , error => {
@@ -148,6 +154,46 @@ export default class SaleComponent{
       this.dialog.open(SuccessEditModalComponent, {
        });     
     });
+  }
+
+  saveSale() {
+    if (this.addedProducts().length === 0) {
+      this.messageError = 'Debe agregar al menos un producto.';
+      return;
+    }
+
+    if (!this.user) {
+      this.messageError = 'Debe buscar un cliente antes de continuar.';
+      return;
+      
+    }
+
+    if (!this.metodoSeleccionado) {
+      this.messageError = 'Debe seleccionar un método de pago.';
+      return;
+    }
+
+    this.message = '¿Estas seguro de finalizar esta venta?';
+      this.setMessage(this.message);
+      this.setProccess('openSuccesSaleDialog'); 
+      
+      
+      this.dialog.open(SuccessEditModalComponent, {
+        data: {
+          userEmail: this.userEmail,
+          clientName: this.user.nombre + ' ' + this.user.apellidos,
+          clientEmail: this.user.correo,
+          clientPhone: this.user.celular,
+          ClientTypeDocument: this.user.tipoDocumento,
+          clientDocument: this.user.numDocumento,
+          PaymentMethod: this.metodoSeleccionado,
+          items: this.addedProducts().map(product => ({
+            ProductName: product.nombreProducto,
+            Quantity: this.quantities[product.id] || 1,
+            UnitPrice: product.precio,
+          }))
+        }
+    }); 
   }
 
   setMessage(message: string): void {

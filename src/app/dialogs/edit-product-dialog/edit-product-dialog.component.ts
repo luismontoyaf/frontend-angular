@@ -114,8 +114,9 @@ productForm: FormGroup;
         console.log('Producto actualizado:', response);
         this.message = 'El producto fue editado exitosamente';
         this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
-        this.dialogRef.close(true); // Cerrar diálogo y recargar datos en la vista principal
-        this.openSuccessDialog(); // Abrir el diálogo de éxito
+          this.setProccess('closeModalFromEditProduct'); 
+          this.dialogRef.close(true); // Cerrar diálogo y recargar datos en la vista principal
+          this.openSuccessDialog(); // Abrir el diálogo de éxito
       },
       (error) => {
         console.error('Error:', error);
@@ -126,6 +127,10 @@ productForm: FormGroup;
 
   setMessage(message: string): void {
     this.messageService.setMessageSuccess(message);
+  }
+
+  setProccess(proccess: string): void {
+    this.messageService.setProcess(proccess);
   }
 
   openSuccessDialog(): void {

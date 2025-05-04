@@ -14,10 +14,7 @@ export class HeaderComponent {
 
   constructor(private getInfoService: GetInfoService) { 
     this.getInfoService.getUserInfo().subscribe(user => {
-      console.log("Datos del usuario:", user);
       this.user = user; 
-      console.log("Usuario:", this.user);
-      
     });
   }
     

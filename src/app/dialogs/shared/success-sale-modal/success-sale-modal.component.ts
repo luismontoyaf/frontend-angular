@@ -1,0 +1,82 @@
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { MessageServiceService } from '../../services/message-service.service';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { InvoiceService } from '../../../services/Invoice/invoice.service';
+
+@Component({
+  selector: 'app-success-sale-modal',
+  imports: [],
+  templateUrl: './success-sale-modal.component.html',
+  styleUrl: './success-sale-modal.component.css'
+})
+export class SuccessSaleModalComponent implements OnInit {
+  
+  @Input() userEmail: string = ''; // Email del usuario
+  clientName: any;
+  clientEmail: any;
+  clientPhone: any;
+  clientTypeDocument: any;
+  clientDocument: any;
+  PaymentMethod: any;
+  items: any;
+  user: any;
+  metodoSeleccionado: any;
+  products: any;
+  quantities: any;
+  constructor(private messageService: MessageServiceService, 
+    private router: Router, 
+    private dialogRef: MatDialogRef<SuccessSaleModalComponent>,
+    private invoiceService: InvoiceService,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+      this.userEmail = data.userEmail;
+      this.clientName = data.clientName;
+      this.clientEmail = data.clientEmail;
+      this.clientPhone = data.clientPhone;
+      this.clientTypeDocument = data.clientTypeDocument;
+      this.clientDocument = data.clientDocument;
+      this.PaymentMethod = data.PaymentMethod;
+      this.items = data.items;
+    }
+  messageModal: string = '';
+  proccessKey: string = '';
+
+  ngOnInit() {
+    this.messageService.message$.subscribe((message) => {
+      this.messageModal = message;
+    });
+
+    this.messageService.proccess$.subscribe((key) => {
+      this.proccessKey = key;
+    });
+  }
+
+  downloadPDF() {
+    console.log('items:', this.items);
+    console.log('ClientTypeDocument:', this.clientTypeDocument);
+    
+    this.invoiceService.generateInvoice({
+        ClientName: this.clientName,
+        ClientEmail: this.clientEmail,
+        ClientPhone: this.clientPhone,
+        ClientTypeDocument: this.clientTypeDocument,
+        ClientDocument: this.clientDocument,
+        PaymentMethod: this.PaymentMethod,
+        Items: this.items
+      }).subscribe((blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'factura.pdf';
+        a.click();
+      });
+  }
+
+  closeModal() {
+    this.dialogRef.close();
+    
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/dashboard/sale']); // Recarga la vista actual
+    });
+  }
+}

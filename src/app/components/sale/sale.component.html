@@ -97,7 +97,7 @@
               </button>
           </form>
           </div>
-          <div class="w-full flex flex-col items-center justify-center mb-4">
+          <!-- <div class="w-full flex flex-col items-center justify-center mb-4">
             <form class="grid grid-cols-1 gap-4 w-full max-w-lg">
               <div class="flex flex-row">
                 <table class="w-full border-collapse border border-gray-300">
@@ -112,7 +112,6 @@
                       <td class="p-2 border border-gray-300 font-normal">{{(user?.nombre || ' ') + ' ' + (user?.apellidos || ' ')}}</td>
                       <td class="p-2 border border-gray-300 font-normal">{{user?.numDocumento || ' '}}</td>
                     </tr>
-                    <!-- Agrega más filas según necesites -->
                   </tbody>
                 </table>
               </div>
@@ -132,6 +131,48 @@
                 </tbody>
               </table>
             </div>
+            </form>
+          </div> -->
+          <div class="w-full flex flex-col items-center justify-center mb-4">
+            <form class="grid grid-cols-1 gap-4 w-full max-w-lg">
+              <div class="flex flex-row">
+                <table class="w-full border-collapse border border-gray-300">
+                  <thead>
+                    <tr class="bg-gray-100 text-center">
+                      <th class="p-2 border border-gray-300 w-[65%]">Datos del cliente</th>
+                      <th class="p-2 border border-gray-300 w-[65%]">Forma de Pago</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="">
+                      <td class="p-2 border border-gray-300 font-normal">
+                        <div class="flex flex-col gap-1">
+                          <div class="flex"><span class="w-24 font-semibold">Nombre:</span> <span>{{ user?.nombre }} {{ user?.apellidos }}</span></div>
+                          <div class="flex"><span class="w-24 font-semibold">Documento:</span> <span>{{ user?.numDocumento }}</span></div>
+                          <div class="flex"><span class="w-24 font-semibold">Correo:</span> <span>{{ user?.correo }}</span></div>
+                          <div class="flex"><span class="w-24 font-semibold">Celular:</span> <span>{{ user?.celular }}</span></div>
+                        </div>
+                      </td>
+                      <td class="p-2 border border-gray-300 font-normal">
+                        <div class="flex flex-col gap-1">
+                          <label class="inline-flex items-center">
+                            <input type="radio" name="metodoPago" [(ngModel)]="metodoSeleccionado" value="Efectivo" class="mr-2">
+                            Efectivo
+                          </label>
+                          <label class="inline-flex items-center">
+                            <input type="radio" name="metodoPago" [(ngModel)]="metodoSeleccionado" value="Tarjeta" class="mr-2">
+                            Tarjeta
+                          </label>
+                          <label class="inline-flex items-center">
+                            <input type="radio" name="metodoPago" [(ngModel)]="metodoSeleccionado" value="Transferencia" class="mr-2">
+                            Transferencia
+                          </label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </form>
           </div>
           <table class="w-full mt-auto">
@@ -171,6 +212,8 @@
               <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(totalValue) || 0}}</td>
             </tr>
           </table>
+          <button class="w-full justify-center bg-sky-900 mt-4 border rounded-lg text-white h-8" (click)="saveSale()">Confirmar Venta</button>
+          <p class="text-red-500 text-sm">{{messageError}}</p>
         </div>
       </div> 
       <!--<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">

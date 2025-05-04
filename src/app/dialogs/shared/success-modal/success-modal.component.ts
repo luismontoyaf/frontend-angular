@@ -13,10 +13,34 @@ export class SuccessModalComponent implements OnInit {
   
   constructor(private messageService: MessageServiceService, private router: Router, private dialogRef: MatDialogRef<SuccessModalComponent>) {}
   messageModal: string = '';
+  proccessKey: string = '';
+
   ngOnInit() {
     this.messageService.message$.subscribe((message) => {
       this.messageModal = message;
     });
+
+    this.messageService.proccess$.subscribe((key) => {
+      this.proccessKey = key;
+    });
+  }
+
+  runProccess() {
+    switch (this.proccessKey) {
+      case 'closeModalSuccess':
+        this.closeModalSuccess();
+        break;
+      case 'closeModalFromEditProduct':
+        this.closeModal();
+        break;
+      // podrías agregar más casos aquí
+      default:
+        console.warn('No se reconoció el proceso');
+    }
+  }
+
+  closeModalSuccess() {
+    this.dialogRef.close();
   }
 
   closeModal() {
