@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MessageServiceService } from '../../services/message-service.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -7,10 +8,12 @@ import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { AddProductDialogComponent } from '../../add-product-dialog/add-product-dialog.component';
 import { AddClientDialogComponent } from '../../add-client-dialog/add-client-dialog.component';
 import { SuccessSaleModalComponent } from '../success-sale-modal/success-sale-modal.component';
+import { SaleService } from '../../../services/Sale/sale.service';
+import { LoaderComponent } from '../../../shared/loader/loader.component';
 
 @Component({
   selector: 'app-success-edit-modal',
-  imports: [],
+  imports: [CommonModule, LoaderComponent],
   templateUrl: './success-edit-modal.component.html',
   styleUrl: './success-edit-modal.component.css'
 })
@@ -24,19 +27,17 @@ clientTypeDocument: string = ''; // Tipo de documento del cliente
 clientDocument: string = ''; // Número de documento del cliente
 PaymentMethod: string = ''; // Método de pago
 items: any[] = []; // Productos añadidos a la venta
-  //data: Product [] = []; // Datos del producto (puedes definirlo más específicamente si lo deseas)
+
+isLoading: boolean = false; // Estado de carga
 
 constructor(private messageService: MessageServiceService, 
   private router: Router, 
   private productsService: ProductsService,
+  private saleService: SaleService,
   private dialog: MatDialog,
   private dialogRef: MatDialogRef<DeleteModalComponent>,
   @Inject(MAT_DIALOG_DATA) public data: any,  ) {
     this.userEmail = data.userEmail;
-    this.clientName = data.clientName;
-    this.clientEmail = data.clientEmail;
-    this.clientPhone = data.clientPhone;
-    this.clientTypeDocument = data.ClientTypeDocument;
     this.clientDocument = data.clientDocument;
     this.PaymentMethod = data.PaymentMethod;
     this.items = data.items;
@@ -62,20 +63,32 @@ constructor(private messageService: MessageServiceService,
     };
 
     openSuccesSaleDialog(): void {
-      this.dialogRef.close();
-      
-      this.dialog.open(SuccessSaleModalComponent, {
-        width: '600px',
-        data: {
-          userEmail: this.userEmail
-          , clientName: this.clientName
-          , clientEmail: this.clientEmail
-          , clientPhone: this.clientPhone
-          , clientTypeDocument: this.clientTypeDocument
-          , clientDocument: this.clientDocument
-          , PaymentMethod: this.PaymentMethod
-          , items: this.items
-        }
+      this.isLoading = true;
+      this.saleService.saveSale({
+        ClientDocument: this.clientDocument,
+        PaymentMethod: this.PaymentMethod,
+        items: this.items
+      }).subscribe((response) => {
+        this.isLoading = false;
+        this.dialogRef.close();
+
+        this.dialog.open(SuccessSaleModalComponent, {
+          width: '600px',
+          data: {
+            userEmail: this.userEmail
+            , clientName: this.clientName
+            , clientEmail: this.clientEmail
+            , clientPhone: this.clientPhone
+            , clientTypeDocument: this.clientTypeDocument
+            , clientDocument: this.clientDocument
+            , PaymentMethod: this.PaymentMethod
+            , items: this.items
+          }
+        });
+      }, (error) => {
+        this.isLoading = false;
+        alert('Error al generar la factura. Por favor, inténtelo de nuevo.');
+        console.error('Error al generar la factura:', error);
       });
     };
     

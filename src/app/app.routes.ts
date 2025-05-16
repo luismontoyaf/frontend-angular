@@ -8,19 +8,39 @@ export const routes: Routes = [
       { path: 'dashboard', loadComponent: () => import ("./shared/layout/layout.component"), 
         children: [ 
         {
-          path: 'home', loadComponent: () => import('./components/home/home.component'),
+          path: 'home', 
+          loadComponent: () => import('./components/home/home.component'),
+          data: { title: 'Página Principal' }
         },
         { 
-          path: 'register', loadComponent: () => import('./components/register/register.component'), 
+          path: 'register', 
+          loadComponent: () => import('./components/register/register.component'), 
+          data: { title: 'Registro de Usuarios' }
         },
         { 
-          path: 'products', loadComponent: () => import('./components/products/products.component'),
+          path: 'products', 
+          loadComponent: () => import('./components/products/products.component'),
+          data: { title: 'Agrega Tus Productos' }
         },
         { 
-          path: 'sale', loadComponent: () => import('./components/sale/sale.component'),
+          path: 'sale', 
+          loadComponent: () => import('./components/sale/sale.component'),
+          data: { title: 'Facturación de Productos' }
         },
         { 
-          path: '**', loadComponent: () => import('./components/home/home.component'),
+          path: 'manageUsers', 
+          loadComponent: () => import('./components/manage-users/manage-users.component'),
+          data: { title: 'Administracion de Usuarios' }
+        },
+        { 
+          path: 'invoices', 
+          loadComponent: () => import('./components/sale/sale.component'),
+          data: { title: 'Historico de Facturas' }
+        },
+        { 
+          path: '**', 
+          loadComponent: () => import('./components/home/home.component'),
+          data: { title: 'Página Principal' }
         },
         ]
       },

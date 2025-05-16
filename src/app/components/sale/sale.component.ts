@@ -173,7 +173,7 @@ export default class SaleComponent{
       return;
     }
 
-    this.message = '¿Estas seguro de finalizar esta venta?';
+    this.message = '¿Estas seguro de confirmar esta venta?';
       this.setMessage(this.message);
       this.setProccess('openSuccesSaleDialog'); 
       
@@ -181,10 +181,10 @@ export default class SaleComponent{
       this.dialog.open(SuccessEditModalComponent, {
         data: {
           userEmail: this.userEmail,
-          clientName: this.user.nombre + ' ' + this.user.apellidos,
-          clientEmail: this.user.correo,
-          clientPhone: this.user.celular,
-          ClientTypeDocument: this.user.tipoDocumento,
+          // clientName: this.user.nombre + ' ' + this.user.apellidos,
+          // clientEmail: this.user.correo,
+          // clientPhone: this.user.celular,
+          // ClientTypeDocument: this.user.tipoDocumento,
           clientDocument: this.user.numDocumento,
           PaymentMethod: this.metodoSeleccionado,
           items: this.addedProducts().map(product => ({

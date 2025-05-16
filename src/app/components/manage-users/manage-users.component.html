@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="emptyContent" *ngIf="content == true">
+      <h1>Aún no tienes productos</h1>
+      <p>Agregar tus Productos</p>
+    </div>
+
+    <div class="products-container" *ngIf="content == false">
+      <input 
+        type="text" 
+        placeholder="Buscar productos..." 
+        [(ngModel)]="searchTerm"
+        (input)="filterProducts()"
+      />
+
+      <mat-divider></mat-divider>
+
+   <div class="card-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="card w-full max-w-xs bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center text-center mt-4">
+     <div class="card-body items-center justify-center">
+        <div class="image-container w-full h-44 flex justify-center items-center bg-gray-100">
+            <img src="assets/prueba.jpg" alt="Manage Users" class="w-full h-full object-contain">
+        </div>
+         <p class="text-lg mt-5">Nombre Usuario</p>
+        <p class="text-sm">Rol</p>
+        <p class="text-sm">Estado</p>
+      </div>
+      <div class="w-full max-w-xs bg-white flex justify-center items-center gap-4 m-4">
+         <button  class="mt-2 w-full h-11 bg-sky-900 text-white py-2 rounded-md hover:bg-blue-700">Editar</button>
+         <button  class="mt-2 w-full h-11 bg-red-800 text-white py-2 rounded-md hover:bg-blue-700">Desactivar</button>
+      </div>
+    </div>
+   </div>
+</div>

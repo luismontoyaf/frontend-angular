@@ -30,10 +30,6 @@ export class SuccessSaleModalComponent implements OnInit {
     private invoiceService: InvoiceService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.userEmail = data.userEmail;
-      this.clientName = data.clientName;
-      this.clientEmail = data.clientEmail;
-      this.clientPhone = data.clientPhone;
-      this.clientTypeDocument = data.clientTypeDocument;
       this.clientDocument = data.clientDocument;
       this.PaymentMethod = data.PaymentMethod;
       this.items = data.items;
@@ -54,12 +50,9 @@ export class SuccessSaleModalComponent implements OnInit {
   downloadPDF() {
     console.log('items:', this.items);
     console.log('ClientTypeDocument:', this.clientTypeDocument);
+    const formattedDate = new Date().toLocaleString('sv-SE').replace(' ', '_').replace(/:/g, '-');
     
     this.invoiceService.generateInvoice({
-        ClientName: this.clientName,
-        ClientEmail: this.clientEmail,
-        ClientPhone: this.clientPhone,
-        ClientTypeDocument: this.clientTypeDocument,
         ClientDocument: this.clientDocument,
         PaymentMethod: this.PaymentMethod,
         Items: this.items
@@ -67,7 +60,7 @@ export class SuccessSaleModalComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'factura.pdf';
+        a.download = `FacturaVenta_${formattedDate}.pdf`;
         a.click();
       });
   }

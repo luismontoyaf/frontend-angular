@@ -31,9 +31,9 @@ constructor(private sidebarService: SidebarService,
   private productsService: ProductsService,
   private messageService: MessageServiceService,
   private dialog: MatDialog) {
-    this.sidebarService.isOpen$.subscribe(open => {
-      this.isMenuOpen = open;
-    });
+    // this.sidebarService.isOpen$.subscribe(open => {
+    //   this.isMenuOpen = open;
+    // });
 
     this.productsService.getProducts().subscribe({
       next: (response: Product[]) => {
