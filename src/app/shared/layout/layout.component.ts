@@ -40,26 +40,20 @@ export default class LayoutComponent implements OnInit {
     //   this.pageTitle = title;
     // });
 
-    this.router.events.pipe(
-    filter(event => event instanceof NavigationEnd),
-    map(() => {
-      let route = this.activatedRoute;
-      while (route.firstChild) {
-        route = route.firstChild;
-      }
-      return route;
-    }),
-    filter(route => route.outlet === 'primary'),
-    switchMap(route => route.data)
-  ).subscribe(data => {
-    if (data['title']) {
-      console.log('ingrsa a if');
-      
-      this.pageTitle = data['title'];
-    } else {
-      console.log('ingrsa a else');
-      this.pageTitle = ''; // fallback si no hay título
-    }
-  });
+   this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe(() => {
+      const currentRoute = this.getDeepestChildWithData(this.activatedRoute);
+
+      const title = currentRoute?.snapshot?.data?.['title'];
+      this.pageTitle = title || '';
+    });
   }
+
+  private getDeepestChildWithData(route: ActivatedRoute): ActivatedRoute {
+  while (route.firstChild) {
+    route = route.firstChild;
+  }
+  return route;
+}
 }

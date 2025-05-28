@@ -35,12 +35,17 @@ export class SuccessModalComponent implements OnInit {
         break;
       // podrías agregar más casos aquí
       default:
-        console.warn('No se reconoció el proceso');
+        this.closeModalSuccess();
     }
   }
 
   closeModalSuccess() {
+    const currentUrl = this.router.url;
+
     this.dialogRef.close();
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl]); // Recarga la vista actual
+    });
   }
 
   closeModal() {

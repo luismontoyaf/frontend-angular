@@ -16,4 +16,8 @@ export class AuthService {
     const body = { username, password };
     return this.http.post(`${this.apiUrl}/auth/login`, body, { headers });
   }
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('token');
+  }
 }

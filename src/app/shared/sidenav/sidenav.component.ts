@@ -35,6 +35,6 @@ export class SidenavComponent implements OnInit {
   }
 
   setTitle(title: string): void {
-    this.titleService.setTitle(title);
+    // this.titleService.setTitle(title);
   }
 }

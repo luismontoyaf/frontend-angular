@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
+import { User } from '../../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -22,4 +23,22 @@ export class RegisterService {
       const body = { nombre, apellidos, tipoDocumento, numDocumento, correo, fechaNacimiento: fechaNacimiento ? fechaNacimiento: null, fechaIngreso, rol, contrasena, celular, direccion, genero };
       return this.http.post(`${this.apiUrl}/users/registerEmploye`, body, { headers });
     }
+
+    updateUser(data: User): Observable<any> {
+      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      const body = { data };
+      return this.http.put(`${this.apiUrl}/users/updateUser`, body, { headers });
+    }
+
+    getUsers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/getUsers`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    });
+  }
+
+  changeStatusUser(userId: number): Observable<any> {
+      return this.http.put(`${this.apiUrl}/users/changeStatusUser/${userId}`, {}, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+  }
 }

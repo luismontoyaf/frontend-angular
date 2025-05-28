@@ -9,7 +9,7 @@ import { GetInfoService } from '../../services/GetInfo/get-info.service';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  user: any; // Declare the user property
+  user: any = {}; // Declare the user property
 
 
   constructor(private getInfoService: GetInfoService) { 
