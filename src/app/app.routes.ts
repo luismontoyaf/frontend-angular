@@ -7,8 +7,8 @@ export const routes: Routes = [
     component: LoginComponent, // Componente contenedor
     },
       { path: 'dashboard', 
-        canMatch: [authGuardCanMatch],
         loadComponent: () => import ("./shared/layout/layout.component"), 
+        canMatch: [authGuardCanMatch],
         children: [ 
         {
           path: 'home', 

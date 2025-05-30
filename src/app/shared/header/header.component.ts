@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MaterialModule } from '../../../material.module'; 
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
+import { AuthService } from '../../services/Auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +13,9 @@ export class HeaderComponent {
   user: any = {}; // Declare the user property
 
 
-  constructor(private getInfoService: GetInfoService) { 
+  constructor(private getInfoService: GetInfoService,
+    private authService: AuthService
+  ) { 
     this.getInfoService.getUserInfo().subscribe(user => {
       this.user = user; 
     });
@@ -22,8 +25,18 @@ export class HeaderComponent {
 
   // Método para cerrar sesión
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userInfo');
-    window.location.href = '/login';
+    const refreshToken = localStorage.getItem('refreshToken');
+    
+    if (!refreshToken) return;
+    this.authService.logout(refreshToken).subscribe(
+      (response) => {
+      localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userInfo');
+        window.location.href = '/login';
+    },
+    (error) => {
+      
+    });
   }
 }

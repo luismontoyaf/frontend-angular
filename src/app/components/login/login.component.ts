@@ -95,11 +95,6 @@ export class LoginComponent {
     const formLoginData = this.loginForm.value;
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    console.log('formLoginData');
-    console.log(formLoginData);
-    console.log('formLoginData Json');
-    console.log(JSON.stringify(formLoginData));
     
     // Validar formato de correo
     if (!emailPattern.test(formLoginData.username)) {
@@ -110,9 +105,11 @@ export class LoginComponent {
 
     this.authService.login(formLoginData.username, formLoginData.password).subscribe(
       (response) => {
-        console.log('Token recibido:', response.token);
         this.message = 'Inicio de sesión exitoso';
         localStorage.setItem('token', response.token); // Almacenar el token
+        localStorage.setItem('refreshToken', response.refreshToken);
+
+        this.authService.startTokenMonitor();
 
         // Redirigir al componente Home
         this.router.navigate(['/dashboard/home']);
