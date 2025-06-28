@@ -17,4 +17,9 @@ export class InvoiceService {
       responseType: 'blob' // para recibir el PDF
     });
   }
+
+  getAllInvoicess() {
+    return this.http.get(`${this.apiUrl}/invoice/GetAllInvoices`, {   
+    })
+  }
 }

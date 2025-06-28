@@ -43,7 +43,7 @@ export const routes: Routes = [
         { 
           path: 'invoices', 
           canActivate: [authGuardCanActivate],
-          loadComponent: () => import('./components/sale/sale.component'),
+          loadComponent: () => import('./components/invoices/invoices.component'),
           data: { title: 'Historico de Facturas' }
         },
         { 
