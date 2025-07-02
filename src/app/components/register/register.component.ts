@@ -96,12 +96,8 @@ registerForm: FormGroup;
 
     const formData = this.registerForm.value;
 
-    console.log('Formulario:', JSON.stringify(formData));
-    
-
     this.registerService.registerUser(formData.name, formData.lastname, formData.tipoDocumento, formData.numDocumento, formData.correo, formData.fechaNacimiento, formData.fechaIngreso, formData.tipoUsuario, formData.contrasena, formData.cell, formData.direccion, formData.genero).subscribe(
       (response) => {
-        console.log('Usuario Creado');
         this.messageSuccess = 'Registro exitoso';
       },
       (error) => {

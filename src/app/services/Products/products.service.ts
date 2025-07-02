@@ -35,9 +35,6 @@ export class ProductsService {
         value: cambios[key as keyof Product]
       }));
 
-      console.log('patchData', JSON.stringify(patchData));
-      
-    
       return this.http.patch<Product>(`${this.apiUrl}/products/${id}`, patchData, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json-patch+json' })
       });
@@ -50,9 +47,6 @@ export class ProductsService {
         path: `/${key}`,
         value: cambios[key as keyof Product]
       }));
-
-      console.log('patchData', JSON.stringify(patchData));
-      
     
       return this.http.patch<Product>(`${this.apiUrl}/products/delete/${id}`, patchData, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json-patch+json' })

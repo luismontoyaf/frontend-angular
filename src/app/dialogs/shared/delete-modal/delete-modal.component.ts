@@ -34,8 +34,6 @@ constructor(private messageService: MessageServiceService,
     const cambios: Partial<Product> = {}; // Objeto para almacenar solo los cambios
 
     cambios.activo = 0;
-    
-    console.log('cambios', JSON.stringify(cambios));
 
     if (Object.keys(cambios).length === 0) {
       this.message = 'No se detectaron cambios.';
@@ -45,7 +43,6 @@ constructor(private messageService: MessageServiceService,
     // Enviar solo los cambios detectados en la solicitud PATCH
     this.productsService.editProduct(this.data.product.id, cambios).subscribe(
       (response) => {
-        console.log('Producto eliminado:', response);
         this.message = 'El producto fue eliminado correctamente';
         this.setMessage(this.message);
         this.dialogRef.close(true); // Cerrar diálogo y recargar datos en la vista principal

@@ -57,7 +57,6 @@ export class EditUserDialogComponent implements OnInit {
 
     const fechaNacimientoFormateada = formatDate(data.user.fechaNacimiento);
     const fechaIngresoFormateada = formatDate(data.user.fechaIngreso);
-      console.log('dataUser ' + JSON.stringify(data.user));
       
       this.registerForm = this.fb.group({
             id: [data.user.id],
@@ -83,8 +82,6 @@ export class EditUserDialogComponent implements OnInit {
   ngOnInit(): void {
     this.getInfoService.getUserInfo().subscribe(user => {
       this.userInfo = user; 
-      console.log('userInfo ' + JSON.stringify(this.userInfo));
-      
     });
 
     if (this.userInfo.role == "2") {

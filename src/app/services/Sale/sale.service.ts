@@ -12,7 +12,6 @@ export class SaleService {
     constructor(private http: HttpClient) { }
   
     saveSale(data: any) {
-      console.log("data:", JSON.stringify(data));
       
       const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
       return this.http.post(`${this.apiUrl}/sale/saveSale`, data, {headers});

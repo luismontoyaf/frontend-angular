@@ -30,7 +30,6 @@ export default class HomeComponent {
 
     this.productsService.getProducts().subscribe({
       next: (response: Product[]) => {
-        console.log('Productos obtenidos:', response);
     
         if (response && response.length > 0) {
           this.products = response;

@@ -25,6 +25,7 @@ clientEmail: string = ''; // Email del cliente
 clientPhone: string = ''; // Teléfono del cliente
 clientTypeDocument: string = ''; // Tipo de documento del cliente
 clientDocument: string = ''; // Número de documento del cliente
+idClient: string = ''; // id del cliente
 PaymentMethod: string = ''; // Método de pago
 items: any[] = []; // Productos añadidos a la venta
 
@@ -38,7 +39,7 @@ constructor(private messageService: MessageServiceService,
   private dialogRef: MatDialogRef<DeleteModalComponent>,
   @Inject(MAT_DIALOG_DATA) public data: any,  ) {
     this.userEmail = data.userEmail;
-    this.clientDocument = data.clientDocument;
+    this.idClient = data.idClient;
     this.PaymentMethod = data.PaymentMethod;
     this.items = data.items;
   }
@@ -65,7 +66,7 @@ constructor(private messageService: MessageServiceService,
     openSuccesSaleDialog(): void {
       this.isLoading = true;
       this.saleService.saveSale({
-        ClientDocument: this.clientDocument,
+        idClient: this.idClient,
         PaymentMethod: this.PaymentMethod,
         items: this.items
       }).subscribe((response) => {
@@ -75,7 +76,8 @@ constructor(private messageService: MessageServiceService,
         this.dialog.open(SuccessSaleModalComponent, {
           width: '600px',
           data: {
-            userEmail: this.userEmail
+            idClient: this.idClient
+            ,userEmail: this.userEmail
             , clientName: this.clientName
             , clientEmail: this.clientEmail
             , clientPhone: this.clientPhone

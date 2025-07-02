@@ -104,14 +104,10 @@ productForm: FormGroup;
       this.message = 'No se detectaron cambios.';
       return;
     }
-
-    console.log("cambios: " + JSON.stringify(cambios));
-    
   
     // Enviar solo los cambios detectados en la solicitud PATCH
     this.productsService.editProduct(this.data.product.id, cambios).subscribe(
       (response) => {
-        console.log('Producto actualizado:', response);
         this.message = 'El producto fue editado exitosamente';
         this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
           this.setProccess('closeModalFromEditProduct'); 

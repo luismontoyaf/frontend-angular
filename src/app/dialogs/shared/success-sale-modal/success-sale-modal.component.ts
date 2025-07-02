@@ -18,6 +18,7 @@ export class SuccessSaleModalComponent implements OnInit {
   clientPhone: any;
   clientTypeDocument: any;
   clientDocument: any;
+  idClient: any;
   PaymentMethod: any;
   items: any;
   user: any;
@@ -30,7 +31,7 @@ export class SuccessSaleModalComponent implements OnInit {
     private invoiceService: InvoiceService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.userEmail = data.userEmail;
-      this.clientDocument = data.clientDocument;
+      this.idClient = data.idClient;
       this.PaymentMethod = data.PaymentMethod;
       this.items = data.items;
     }
@@ -48,12 +49,10 @@ export class SuccessSaleModalComponent implements OnInit {
   }
 
   downloadPDF() {
-    console.log('items:', this.items);
-    console.log('ClientTypeDocument:', this.clientTypeDocument);
     const formattedDate = new Date().toLocaleString('sv-SE').replace(' ', '_').replace(/:/g, '-');
     
     this.invoiceService.generateInvoice({
-        ClientDocument: this.clientDocument,
+        idCLient: this.idClient,
         PaymentMethod: this.PaymentMethod,
         Items: this.items
       }).subscribe((blob: Blob) => {

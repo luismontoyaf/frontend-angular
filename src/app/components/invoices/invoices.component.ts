@@ -1,4 +1,4 @@
-import { Component, HostListener, Output, signal } from '@angular/core';
+import { Component, HostListener, OnInit, Output, signal } from '@angular/core';
 import { MaterialModule } from '../../../material.module'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { SuccessEditModalComponent } from '../../dialogs/shared/success-edit-mod
 import { MatDialog } from '@angular/material/dialog';
 import { MessageServiceService } from '../../dialogs/services/message-service.service';
 import { InvoiceService } from '../../services/Invoice/invoice.service';
+import { Invoice } from '../../interfaces/invoice';
 
 @Component({
   selector: 'app-invoices',
@@ -17,7 +18,7 @@ import { InvoiceService } from '../../services/Invoice/invoice.service';
   templateUrl: './invoices.component.html',
   styleUrl: './invoices.component.css'
 })
-export default class InvoicesComponent {
+export default class InvoicesComponent implements OnInit{
   @Output() userEmail: string = ''; // Email del usuario
     user: any; // Property to store user information
   
@@ -30,10 +31,11 @@ export default class InvoicesComponent {
     content: boolean = false;
     showOptions: boolean = false;
   
-    invoices =  signal<any[]>([]);
+    invoices =  signal<Invoice[]>([]);
   
     addedProducts = signal<Product[]>([]);
     filteredInvoices = signal<any[]>([]);
+    selectedInvoices = signal<any[]>([]);
     quantities: { [productId: string]: number } = {};
   
     metodoSeleccionado: string = '';
@@ -49,18 +51,20 @@ export default class InvoicesComponent {
       private invoiceService: InvoiceService,
       private dialog: MatDialog,
     ) {
-      this.sidebarService.isOpen$.subscribe(open => {
-        this.isMenuOpen = open;
-      });
-  
+
+    }
+
+    ngOnInit(): void {
       this.invoiceService.getAllInvoicess().subscribe({
         next: (response: any) => {
           console.log('Productos obtenidos:', response);
           const invoicesParsed = response.map((inv: { jsonFactura: string; }) => ({
             ...inv,
             parsedFactura: JSON.parse(inv.jsonFactura)
-          }));
+          }))
+          .sort((a: { fechaCreacion: string | number | Date; }, b: { fechaCreacion: string | number | Date; }) => new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime());
 
+          this.invoices.set(invoicesParsed);
           this.filteredInvoices.set(invoicesParsed);
         },
         error: (err) => {
@@ -84,7 +88,8 @@ export default class InvoicesComponent {
     filterProducts() {
       const term = this.searchTerm.toLowerCase();
       this.filteredInvoices.set( this.invoices().filter(invoice => 
-        invoice.numeroFactura.toLowerCase().includes(term)
+        invoice.numeroFactura.toLowerCase().includes(term) ||
+        invoice.nombreCliente.toLowerCase().includes(term)
       ));
     }
 
@@ -95,22 +100,79 @@ export default class InvoicesComponent {
   
     downloadPDF(invoice: any) {
       console.log('invoice : ' + JSON.stringify(invoice));
+
+    const parsedFactura = JSON.parse(invoice.jsonFactura);
       
-    const formattedDate = new Date().toLocaleString('sv-SE').replace(' ', '_').replace(/:/g, '-');
+    const formattedDate = invoice.fechaCreacion.toLocaleString('sv-SE').replace(' ', '_').replace(/:/g, '-');
     
-    // this.invoiceService.generateInvoice({
-    //     ClientDocument: invoice.,
-    //     PaymentMethod: '',
-    //     Items: ''//this.item0s
-    //   }).subscribe((blob: Blob) => {
-    //     const url = window.URL.createObjectURL(blob);
-    //     const a = document.createElement('a');
-    //     a.href = url;
-    //     a.download = `FacturaVenta_${formattedDate}.pdf`;
-    //     a.click();
-    //   });
+    this.invoiceService.generateInvoice({
+        numInvoice: invoice.numeroFactura,
+        idClient: invoice.idCliente,
+        PaymentMethod: invoice.formaPago,
+        items: parsedFactura.Productos.map((producto: any) => ({
+          ProductName: producto.Nombre,
+          Quantity: producto.Cantidad,
+          UnitPrice: producto.ValorUnitario
+        }))
+      }).subscribe((blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `FacturaVenta_${formattedDate}.pdf`;
+        a.click();
+      });
+  }
+
+    downloadSelectedPDFs() {
+    const selected = this.selectedInvoices();
+  if (!selected.length) return;
+
+  const invoiceRequests = selected.map(invoice => {
+    const parsedFactura = JSON.parse(invoice.jsonFactura);
+    return {
+      numInvoice: invoice.numeroFactura,
+      idClient: invoice.idCliente,
+      PaymentMethod: invoice.formaPago,
+      items: parsedFactura.Productos.map((producto: any) => ({
+        ProductName: producto.Nombre,
+        Quantity: producto.Cantidad,
+        UnitPrice: producto.ValorUnitario
+      }))
+    };
+  });
+
+  this.invoiceService.generateMultipleInvoices(invoiceRequests).subscribe((zipBlob: Blob) => {
+    const url = window.URL.createObjectURL(zipBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'FacturasSeleccionadas.zip';
+    a.click();
+  });
   }
   
+  toggleSelection(invoice: any) {
+    console.log('invoice ' + JSON.stringify(invoice));
+    
+  const current = this.selectedInvoices() ?? [];
+  const index = current.findIndex(i => i.idFactura == invoice.idFactura);
+    console.log('index ' + index);
+    
+  if (index > -1) {
+    // Ya estaba, se elimina
+    this.selectedInvoices.set(current.filter(i => i.idFactura !== invoice.idFactura));
+  } else {
+    // Se agrega
+    this.selectedInvoices.set([...current, invoice]);
+  }
+
+  console.log('this.selectedInvoices ' + JSON.stringify(this.selectedInvoices()));
+  
+}
+
+isSelected(invoice: any): boolean {
+  return this.selectedInvoices().some(i => i.idFactura === invoice.idFactura);
+}
+
     setMessage(message: string): void {
       this.messageService.setMessageSuccess(message);
     }

@@ -132,7 +132,6 @@ export class LoginComponent {
 
     this.registerService.register(formData.name, formData.lastname, formData.tipoDocumento, formData.numDocumento, formData.correo, formData.fechaNacimiento, formData.contrasena, formData.cell, formData.direccion, formData.genero).subscribe(
       (response) => {
-        console.log('Usuario Creado');
         this.message = 'Registro exitoso';
 
         // Redirigir al componente login

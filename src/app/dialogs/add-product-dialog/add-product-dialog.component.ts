@@ -69,7 +69,6 @@ export class AddProductDialogComponent {
   }
 
   addProducts() {
-    console.log('ingresa a la funcion addProducts');
     if (this.productForm.invalid || !this.selectedFile) {
       this.message = 'Por favor, corrige los errores en el formulario y selecciona una imagen.';
       return;
@@ -79,7 +78,6 @@ export class AddProductDialogComponent {
 
     this.productsService.addProduct(name, description, price, quantity, this.selectedFile).subscribe(
       (response) => {
-        console.log('Producto Registrado');
         this.message = 'El producto ha sido agregado exitosamente ¿Desea agregar otro producto?';
         this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
         this.setProccess('openAddProductDialog'); 

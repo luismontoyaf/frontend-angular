@@ -56,7 +56,6 @@ export default class SaleComponent{
 
     this.productsService.getProducts().subscribe({
       next: (response: Product[]) => {
-        console.log('Productos obtenidos:', response);
     
         if (response && response.length > 0) {
           this.products = response;
@@ -145,7 +144,6 @@ export default class SaleComponent{
     this.getInfoService.getUserInfoByDocument(cedula).subscribe(user => {
       this.user = user; 
       this.userEmail = this.user.correo;
-      console.log("Usuario:", this.user);
     }
     , error => {
       this.message = 'El cliente no existe en la base de datos. ¿Desea registrarlo?';
@@ -185,7 +183,7 @@ export default class SaleComponent{
           // clientEmail: this.user.correo,
           // clientPhone: this.user.celular,
           // ClientTypeDocument: this.user.tipoDocumento,
-          clientDocument: this.user.numDocumento,
+          idClient: this.user.id,
           PaymentMethod: this.metodoSeleccionado,
           items: this.addedProducts().map(product => ({
             ProductName: product.nombreProducto,
