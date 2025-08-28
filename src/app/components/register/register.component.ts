@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule, AbstractControl, ValidationErrors  } from '@angular/forms';
 import { RegisterService } from '../../services/Register/register.service';
 import { Router } from '@angular/router';
 import { MaterialModule } from '../../../material.module'; 
+import { TitleService } from '../../shared/services/title.service';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ import { MaterialModule } from '../../../material.module';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export default class RegisterComponent {
+export default class RegisterComponent implements OnInit{
 registerForm: FormGroup;
 
   username = '';
@@ -30,7 +31,10 @@ registerForm: FormGroup;
 
    tiposGenero: string[] = ['Masculino', 'Femenino', 'Otro'];
 
-  constructor(private fb: FormBuilder, private registerService: RegisterService, private router: Router) {
+  constructor(private fb: FormBuilder, 
+    private registerService: RegisterService, 
+    private router: Router,
+    private titleService: TitleService) {
     
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -49,6 +53,10 @@ registerForm: FormGroup;
     }, {
       validators: this.passwordMatchValidator
     });
+  }
+
+  ngOnInit(): void {
+    this.setTitle('Registro de Usuarios');
   }
 
   // Validador personalizado para confirmar contraseñas
@@ -105,6 +113,10 @@ registerForm: FormGroup;
         this.messageError = 'No se pudo crear el usuario';
       }
     );
+  }
+
+  setTitle(title: string): void {
+    this.titleService.setTitle(title);
   }
   
 }

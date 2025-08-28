@@ -37,4 +37,14 @@ export class SidenavComponent implements OnInit {
   setTitle(title: string): void {
     // this.titleService.setTitle(title);
   }
+
+  closeMenuOnMobile() {
+  if (this.isMobile()) {
+    this.sidebarService.toggleMenu();
+  }
+}
+
+  isMobile(): boolean {
+  return window.innerWidth < 768; // Tailwind "md"
+}
 }

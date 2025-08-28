@@ -12,7 +12,7 @@ export class InvoiceService {
 
   constructor(private http: HttpClient) { }
 
-  generateInvoice(data: any) {
+  generateInvoice(data: any): Observable<Blob> {
     return this.http.post(`${this.apiUrl}/invoice/generate`, data, {
       responseType: 'blob' // para recibir el PDF
     });

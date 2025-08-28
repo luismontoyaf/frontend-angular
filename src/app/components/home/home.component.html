@@ -1,47 +1,90 @@
-<div class="container">
-
-  <div class="main-content scroll-hidden overflow-auto" [class.menu-open]="isMenuOpen">
-    <div class="emptyContent" *ngIf="content == true">
-      <h1>Aún no tienes productos</h1>
-      <p>Ingresa a la opcion Agregar Productos desde el menu izquierdo para ingresar tus productos</p>
-    </div>
-
-    <div class="products-container" *ngIf="content == false">
-      <input 
-        type="text" 
-        placeholder="Buscar productos..." 
-        [(ngModel)]="searchTerm"
-        (input)="filterProducts()"
-      />
-      <mat-divider></mat-divider>
-    <div class="products-content" *ngIf="content == false">
-      <!-- Lista de productos -->
-      @for (product of filteredProducts; track $index) {
-        <div class="product-card w-full max-w-xs bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center text-center">
-          <div class="w-full h-44 flex justify-center items-center bg-gray-100">
-            <img *ngIf="product.imagenBase64" 
-              [src]="'data:image/jpeg;base64,' + product.imagenBase64"
-              class="w-full h-full object-contain">
-          </div>
-          <div class="p-4 flex flex-col items-center text-center">
-            <h3 class="text-lg font-semibold">{{ product.nombreProducto }}</h3>
-            <p class="text-gray-600">{{ product.descripcion }}</p>
-            <p class="text-xl font-bold text-sky-900">$ {{ product.precio | number: '1.0-0' }}</p>
-            <button (click)="buyProduct(product)" class="mt-2 w-full bg-sky-900 text-white py-2 rounded-md hover:bg-blue-700">Comprar</button>
-          </div>
-        </div>
-       }
-      <!-- <div class="product-card" *ngFor="let product of filteredProducts">
-        <img *ngIf="product.imagenBase64" 
-        [src]="'data:image/jpeg;base64,' + product.imagenBase64" 
-        alt="{{ product.nombreProducto }}" 
-        class="mx-auto block"/>
-        <h3>{{ product.nombreProducto }}</h3>
-        <p>{{ product.descripcion }}</p>
-        <p class="price">$ {{ product.precio | number: '1.2-2' }}</p>
-        <button (click)="buyProduct(product)">Comprar</button>
-      </div> -->
-    </div>
+<div
+  class="w-full grid grid-cols-1 md: grid-cols-2 lg: grid-cols-3 justify-between gap-4"
+>
+  <div class="rounded-lg shadow-lg shadow-black justify-between gap-4">
+    <span class="text-xl mt-4">Total vendido en el dia</span>
+    <p class="text-2xl mt-4 text-sky-900">
+      $ <span class="text-2xl">255.369</span>
+    </p>
+    <p class="text-xl mt-4">
+      <span class="text-xl italic">{{
+        fechaDiaActual() | date : "dd-MM-yyyy"
+      }}</span>
+    </p>
+  </div>
+  <div class="rounded-lg shadow-lg shadow-black">
+    <span class="text-xl">Productos sin stock</span>
+    <p class="text-2xl">Todos los proudctos tienen stock</p>
+    <p class="text-2xl">¡Tienes productos sin stock!</p>
+    <div class="grid grid-cols-2 gap-4 p-4">
+      <button class="h-10 rounded-lg bg-sky-900 text-white">
+        Ir a productos
+      </button>
+      <button class="h-10 rounded-lg bg-sky-900 text-white">
+        Ir a reportes
+      </button>
     </div>
   </div>
+  <div class="rounded-lg shadow-lg shadow-black">
+    <span class="text-xl">Productos sin stock</span>
+    <p class="text-2xl">Todos los proudctos tienen stock</p>
+    <p class="text-2xl">¡Tienes productos sin stock!</p>
+    <div class="grid grid-cols-2 gap-4 p-4">
+      <button class="h-10 rounded-lg bg-sky-900 text-white">
+        Ir a productos
+      </button>
+      <button class="h-10 rounded-lg bg-sky-900 text-white">
+        Ir a reportes
+      </button>
+    </div>
+  </div>
+
+  <!-- Segundo bloque -->
+    <div class="h-[60vh] rounded-lg shadow-lg shadow-black mt-4">
+      <span class="text-xl">Productos sin stock</span>
+      <p class="text-2xl">Todos los proudctos tienen stock</p>
+      <p class="text-2xl">¡Tienes productos sin stock!</p>
+      <div class="grid grid-cols-2 gap-4 p-4">
+        <button class="h-10 rounded-lg bg-sky-900 text-white">
+          Ir a productos
+        </button>
+        <button class="h-10 rounded-lg bg-sky-900 text-white">
+          Ir a reportes
+        </button>
+      </div>
+    </div>
+    <div class="h-[60vh] rounded-lg shadow-lg shadow-black mt-4 flex flex-col">
+      <span class="text-xl">Productos sin stock</span>
+      <div class="flex-1 overflow-y-auto p-2">
+        @for(product of noStockProducts(); track product){
+      <ul>
+        <li class="m-4">- {{ product.nombreProducto }}</li>
+      </ul>
+      }
+      <p class="text-2xl" *ngIf="noStockProducts().length == 0">
+        Todos los proudctos tienen stock
+      </p>
+      </div>
+      <div class="grid grid-cols-2 gap-4 p-4">
+        <button class="h-10 rounded-lg bg-sky-900 text-white">
+          Ir a productos
+        </button>
+        <button class="h-10 rounded-lg bg-sky-900 text-white">
+          Ir a reportes
+        </button>
+      </div>
+    </div>
+    <div class="h-[60vh] rounded-lg shadow-lg shadow-black mt-4">
+      <span class="text-xl">Productos sin stock</span>
+      <p class="text-2xl">Todos los proudctos tienen stock</p>
+      <p class="text-2xl">¡Tienes productos sin stock!</p>
+      <div class="grid grid-cols-2 gap-4 p-4">
+        <button class="h-10 rounded-lg bg-sky-900 text-white">
+          Ir a productos
+        </button>
+        <button class="h-10 rounded-lg bg-sky-900 text-white">
+          Ir a reportes
+        </button>
+      </div>
+    </div>
 </div>

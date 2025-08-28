@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from '../../../material.module'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { EditProductDialogComponent } from '../../dialogs/edit-product-dialog/ed
 import { MessageServiceService } from '../../dialogs/services/message-service.service';
 import { DeleteModalComponent } from '../../dialogs/shared/delete-modal/delete-modal.component';
 import { Product } from '../../interfaces/product';
+import { TitleService } from '../../shared/services/title.service';
 
 @Component({
   selector: 'app-products',
@@ -18,7 +19,7 @@ import { Product } from '../../interfaces/product';
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })
-export default class ProductsComponent {
+export default class ProductsComponent implements OnInit{
   isMenuOpen = false;
   content: boolean = false;
 
@@ -30,7 +31,8 @@ export default class ProductsComponent {
 constructor(private sidebarService: SidebarService, 
   private productsService: ProductsService,
   private messageService: MessageServiceService,
-  private dialog: MatDialog) {
+  private dialog: MatDialog,
+  private titleService: TitleService) {
     // this.sidebarService.isOpen$.subscribe(open => {
     //   this.isMenuOpen = open;
     // });
@@ -50,6 +52,10 @@ constructor(private sidebarService: SidebarService,
         this.content = true; // Mostrar mensaje de "No hay productos"
       }
     });
+}
+
+ngOnInit(): void {
+  this.setTitle('Agrega Tus Productos');
 }
 
 openAddProductDialog(): void {
@@ -82,5 +88,9 @@ openEditProductDialog(product: Product): void {
     this.dialog.open(DeleteModalComponent, {
       data: { product },
     });
+  }
+
+  setTitle(title: string): void {
+    this.titleService.setTitle(title);
   }
 }

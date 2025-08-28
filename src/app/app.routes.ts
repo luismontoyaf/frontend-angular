@@ -38,13 +38,19 @@ export const routes: Routes = [
           path: 'manageUsers', 
           canActivate: [authGuardCanActivate],
           loadComponent: () => import('./components/manage-users/manage-users.component'),
-          data: { title: 'Administracion de Usuarios' }
+          data: { title: 'Administrar Usuarios' }
         },
         { 
           path: 'invoices', 
           canActivate: [authGuardCanActivate],
           loadComponent: () => import('./components/invoices/invoices.component'),
           data: { title: 'Historico de Facturas' }
+        },
+        { 
+          path: 'reports', 
+          canActivate: [authGuardCanActivate],
+          loadComponent: () => import('./components/reports/reports.component'),
+          data: { title: 'Descargar Reportes' }
         },
         { 
           path: '**', 

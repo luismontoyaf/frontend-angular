@@ -2,16 +2,18 @@
   <div class="main-content h-full" [class.menu-open]="isMenuOpen">
     <!-- Mensaje cuando no hay productos -->
     <div class="emptyContent text-center" *ngIf="content == true">
-      <h1 class="text-2xl font-bold mb-2">Aún no tienes productos para facturar</h1>
+      <h1 class="text-2xl font-bold mb-2">
+        Aún no tienes productos para facturar
+      </h1>
     </div>
 
     <!-- Contenedor de productos -->
-    <div class="products-container  h-full" *ngIf="content == false">
+    <div class="products-container h-full" *ngIf="content == false">
       <!-- Barra de búsqueda -->
-      <div class="relative  mb-4 search-container">
-        <input 
-          type="text" 
-          placeholder="Buscar productos..." 
+      <div class="relative mb-4 search-container">
+        <input
+          type="text"
+          placeholder="Buscar productos..."
           [(ngModel)]="searchTerm"
           (input)="filterProducts()"
           (click)="showOptions = true"
@@ -19,83 +21,182 @@
         />
 
         <!-- Lista de sugerencias -->
-        <ul *ngIf="showOptions" class="absolute w-full bg-white border rounded-lg shadow mt-1 max-h-40 overflow-y-auto z-10">
+        <ul
+          *ngIf="showOptions"
+          class="absolute w-full bg-white border rounded-lg shadow mt-1 max-h-40 overflow-y-auto z-10"
+        >
           <li
             *ngFor="let product of filteredProducts"
             (click)="addToCart(product)"
             (blur)="showOptions = false"
             class="p-2 hover:bg-blue-200 cursor-pointer"
           >
-          <span class="text-gray-900 font-semibold">{{ product.nombreProducto }} - </span>
-          <span class="text-sky-900 font-bold">${{ product.precio | number: '1.0-0' }} - </span>
-          <span [ngClass]="product.stock > 0 ? 'text-gray-900' : 'text-red-500'">
-            {{ product.stock }} Uds.
-          </span>
+            <span class="text-gray-900 font-semibold"
+              >{{ product.nombreProducto }} -
+            </span>
+            <span class="text-sky-900 font-bold"
+              >${{ product.precio | number : "1.0-0" }} -
+            </span>
+            <span
+              [ngClass]="product.stock > 0 ? 'text-gray-900' : 'text-red-500'"
+            >
+              {{ product.stock }} Uds.
+            </span>
           </li>
         </ul>
       </div>
       <mat-divider></mat-divider>
 
       <!-- Lista de productos -->
-      <div class="grid grid-cols-2 gap-8 h-[71vh] mt-4">
-        <div class="flex flex-col items-center justify-start w-full  overflow-y-auto">
-          <div class="w-full product-card bg-white shadow-md mt-2 rounded-lg overflow-hidden flex flex-row items-center justify-between px-2" 
-            *ngFor="let product of addedProducts(); trackBy: trackByProduct">
-          <!-- Imagen del producto -->
-          <img 
-            *ngIf="product.imagenBase64" 
-            [src]="'data:image/jpeg;base64,' + product.imagenBase64" 
-            alt="{{ product.nombreProducto }}" 
-            class="w-16 h-16 object-contain bg-gray-100"
-          />
-          <!-- Contenido del producto -->
-            <h3 class="text-lg font-bold text-gray-800">{{ product.nombreProducto }}</h3>
-            <p class="price text-blue-500 font-semibold">$ {{ product.precio | number: '1.2-2' }}</p>
+      <div class="grid grid-cols-1 h-auto md:grid-cols-2 gap-8 md:h-[71vh] mt-4">
+        <div
+          class="flex flex-col items-center justify-start w-full overflow-y-auto"
+        >
+          <div
+            class="w-full product-card bg-white shadow-md mt-2 rounded-lg overflow-hidden flex flex-row items-center justify-between px-2"
+            *ngFor="let product of addedProducts(); trackBy: trackByProduct"
+          >
+            <!-- Imagen del producto -->
+            <img
+              *ngIf="product.imagenBase64"
+              [src]="'data:image/jpeg;base64,' + product.imagenBase64"
+              alt="{{ product.nombreProducto }}"
+              class="w-16 h-16 object-contain bg-gray-100"
+            />
+            <!-- Contenido del producto -->
+            <h3 class="text-lg font-bold text-gray-800">
+              {{ product.nombreProducto }}
+            </h3>
+            <p class="price text-blue-500 font-semibold">
+              $ {{ product.precio | number : "1.2-2" }}
+            </p>
             <form class="max-w-xs">
               <div class="relative flex items-center">
-                  <button type="button" id="decrement-button" [disabled]="quantities[product.id] <= 1" [ngClass]="{
-                    'cursor-not-allowed opacity-50': quantities[product.id] <= 1, 'cursor-pointer': quantities[product.id] > 1}" 
-                    (click)="decrementQuantity(product)" data-input-counter-decrement="counter-input" 
-                    class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
-                      <svg class="w-2.5 h-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16"/>
-                      </svg>
-                  </button>
-                  <input type="text" id="counter-input" data-input-counter class="shrink-0 text-gray-900 dark:text-white border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center" placeholder="" [value]="quantities[product.id] || 1" required />
-                  <button type="button" id="increment-button" (click)="increaseQuantity(product)" data-input-counter-increment="counter-input" 
-                  [disabled]="quantities[product.id] >= product.stock" [ngClass]="{'cursor-not-allowed opacity-50': quantities[product.id] >= product.stock, 'cursor-pointer': quantities[product.id] < product.stock }"
-                  class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none">
-                      <svg class="w-2.5 h-2.5 text-gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
-                      </svg>
-                  </button>
+                <button
+                  type="button"
+                  id="decrement-button"
+                  [disabled]="quantities[product.id] <= 1"
+                  [ngClass]="{
+                    'cursor-not-allowed opacity-50':
+                      quantities[product.id] <= 1,
+                    'cursor-pointer': quantities[product.id] > 1
+                  }"
+                  (click)="decrementQuantity(product)"
+                  data-input-counter-decrement="counter-input"
+                  class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                >
+                  <svg
+                    class="w-2.5 h-2.5 text-gray-900 dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 18 2"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M1 1h16"
+                    />
+                  </svg>
+                </button>
+                <input
+                  type="text"
+                  id="counter-input"
+                  data-input-counter
+                  class="shrink-0 text-gray-900 dark:text-white border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center"
+                  placeholder=""
+                  [value]="quantities[product.id] || 1"
+                  required
+                />
+                <button
+                  type="button"
+                  id="increment-button"
+                  (click)="increaseQuantity(product)"
+                  data-input-counter-increment="counter-input"
+                  [disabled]="quantities[product.id] >= product.stock"
+                  [ngClass]="{
+                    'cursor-not-allowed opacity-50':
+                      quantities[product.id] >= product.stock,
+                    'cursor-pointer': quantities[product.id] < product.stock
+                  }"
+                  class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                >
+                  <svg
+                    class="w-2.5 h-2.5 text-gray-900 dark:text-white"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 18 18"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 1v16M1 9h16"
+                    />
+                  </svg>
+                </button>
               </div>
-          </form>
-            <button 
+            </form>
+            <button
               (click)="removeFromCart(product.id)"
               class="w-10 h-10 bg-red-500 text-white rounded hover:bg-blue-600 transition duration-200"
             >
-            <mat-icon class="text-white text-lg">delete</mat-icon>
+              <mat-icon class="text-white text-lg">delete</mat-icon>
             </button>
+          </div>
         </div>
-        </div>
-        <div class="w-full flex flex-col items-center h-full border-gray-300 border-2 rounded-lg p-4 shadow-lg shadow-sky-300">
+
+        <!-- Resumen de la venta -->
+        <div
+          class="w-full flex flex-col items-center h-full border-gray-300 border-2 rounded-lg p-4 shadow-lg shadow-sky-300"
+        >
           <div class="w-full bg-white text-center p-4">
-            <span class="text-xl text-sky-900 font-bold">Resumen de la venta</span>
+            <span class="text-xl text-sky-900 font-bold"
+              >Resumen de la venta</span
+            >
           </div>
           <div class="w-full flex flex-col items-center justify-center mb-4">
-            <form class="flex items-center max-w-sm" (submit)="searchUser(cedulaInput.value)">   
+            <form
+              class="flex items-center max-w-sm"
+              (submit)="searchUser(cedulaInput.value)"
+            >
               <label for="simple-search" class="sr-only">Search</label>
               <div class="relative w-full">
-                  <input #cedulaInput type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Buscar cedula del cliente" required />
+                <input
+                  #cedulaInput
+                  type="text"
+                  id="simple-search"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Buscar cedula del cliente"
+                  required
+                />
               </div>
-              <button type="submit" class="p-2.5 ms-2 text-sm font-medium text-white bg-sky-900 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                  </svg>
-                  <span class="sr-only">Search</span>
+              <button
+                type="submit"
+                class="p-2.5 ms-2 text-sm font-medium text-white bg-sky-900 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                <svg
+                  class="w-4 h-4"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+                <span class="sr-only">Search</span>
               </button>
-          </form>
+            </form>
           </div>
           <!-- <div class="w-full flex flex-col items-center justify-center mb-4">
             <form class="grid grid-cols-1 gap-4 w-full max-w-lg">
@@ -136,35 +237,81 @@
           <div class="w-full flex flex-col items-center justify-center mb-4">
             <form class="grid grid-cols-1 gap-4 w-full max-w-lg">
               <div class="flex flex-row">
-                <table class="w-full border-collapse border border-gray-300">
-                  <thead>
+                <table class="w-full border-collapse">
+                  <thead class="hidden md:table-header-group">
                     <tr class="bg-gray-100 text-center">
-                      <th class="p-2 border border-gray-300 w-[65%]">Datos del cliente</th>
-                      <th class="p-2 border border-gray-300 w-[65%]">Forma de Pago</th>
+                      <th class="p-2 border border-gray-300">
+                        Datos del cliente
+                      </th>
+                      <th class="p-2 border border-gray-300">Forma de Pago</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="">
-                      <td class="p-2 border border-gray-300 font-normal">
+                    <tr
+                      class="grid grid-cols-1 md:table-row border-b border-gray-300"
+                    >
+                      <!-- Columna Datos del Cliente -->
+                      <td class="p-2 border md:border-0">
+                        <!-- En móvil, mostramos el título antes del contenido -->
+                        <div class="md:hidden font-semibold mb-1">
+                          Datos del cliente
+                        </div>
                         <div class="flex flex-col gap-1">
-                          <div class="flex"><span class="w-24 font-semibold">Nombre:</span> <span>{{ user?.nombre }} {{ user?.apellidos }}</span></div>
-                          <div class="flex"><span class="w-24 font-semibold">Documento:</span> <span>{{ user?.numDocumento }}</span></div>
-                          <div class="flex"><span class="w-24 font-semibold">Correo:</span> <span>{{ user?.correo }}</span></div>
-                          <div class="flex"><span class="w-24 font-semibold">Celular:</span> <span>{{ user?.celular }}</span></div>
+                          <div class="flex">
+                            <span class="w-24 font-semibold">Nombre:</span>
+                            <span
+                              >{{ user?.nombre }} {{ user?.apellidos }}</span
+                            >
+                          </div>
+                          <div class="flex">
+                            <span class="w-24 font-semibold">Documento:</span>
+                            <span>{{ user?.numDocumento }}</span>
+                          </div>
+                          <div class="flex">
+                            <span class="w-24 font-semibold">Correo:</span>
+                            <span>{{ user?.correo }}</span>
+                          </div>
+                          <div class="flex">
+                            <span class="w-24 font-semibold">Celular:</span>
+                            <span>{{ user?.celular }}</span>
+                          </div>
                         </div>
                       </td>
-                      <td class="p-2 border border-gray-300 font-normal">
+
+                      <!-- Columna Forma de Pago -->
+                      <td class="p-2 border md:border-0">
+                        <div class="md:hidden font-semibold mb-1">
+                          Forma de Pago
+                        </div>
                         <div class="flex flex-col gap-1">
                           <label class="inline-flex items-center">
-                            <input type="radio" name="metodoPago" [(ngModel)]="metodoSeleccionado" value="Efectivo" class="mr-2">
+                            <input
+                              type="radio"
+                              name="metodoPago"
+                              [(ngModel)]="metodoSeleccionado"
+                              value="Efectivo"
+                              class="mr-2"
+                            />
                             Efectivo
                           </label>
                           <label class="inline-flex items-center">
-                            <input type="radio" name="metodoPago" [(ngModel)]="metodoSeleccionado" value="Tarjeta" class="mr-2">
+                            <input
+                              type="radio"
+                              name="metodoPago"
+                              [(ngModel)]="metodoSeleccionado"
+                              value="Tarjeta"
+                              class="mr-2"
+                            />
                             Tarjeta
                           </label>
                           <label class="inline-flex items-center">
-                            <input type="radio" name="metodoPago" [(ngModel)]="metodoSeleccionado" value="Transferencia" class="mr-2">
+                            <input
+                              type="radio"
+                              name="metodoPago"
+                              [(ngModel)]="metodoSeleccionado"
+                              value="Transferencia"
+                              class="mr-2"
+                            />
                             Transferencia
                           </label>
                         </div>
@@ -176,12 +323,20 @@
             </form>
           </div>
           <table class="w-full mt-auto">
-            <tr class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg">
-              <td class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg">
+            <tr
+              class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
+            >
+              <td
+                class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg"
+              >
                 <span class="ml-2">Aplicar Descuento</span>
               </td>
-              <td class="grid-cols-2 justify-center text-sky-900 ml-2 font-normal">
-                <div class="h-full flex items-center border border-gray-300 rounded-md overflow-hidden justify-between">
+              <td
+                class="grid-cols-2 justify-center text-sky-900 ml-2 font-normal"
+              >
+                <div
+                  class="h-full flex items-center border border-gray-300 rounded-md overflow-hidden justify-between"
+                >
                   <input
                     type="number"
                     class="w-3/4 h-full px-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -189,33 +344,65 @@
                     min="0"
                     max="100"
                   />
-                  <span class="w-1/4 bg-gray-300 text-gray-700 h-full flex items-center justify-center">%</span>
+                  <span
+                    class="w-1/4 bg-gray-300 text-gray-700 h-full flex items-center justify-center"
+                    >%</span
+                  >
                 </div>
               </td>
             </tr>
-            <tr class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg">
-              <td class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg">
+            <tr
+              class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
+            >
+              <td
+                class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg"
+              >
                 <span class="ml-2">Saldo sin iva</span>
               </td>
-              <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(valueWithoutIva) || 0}}</td>
+              <td
+                class="flex flex-col justify-center text-sky-900 ml-2 font-semibold"
+              >
+                {{ formatCurrency(valueWithoutIva) || 0 }}
+              </td>
             </tr>
-            <tr class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg">
-              <td class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg">
+            <tr
+              class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
+            >
+              <td
+                class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg"
+              >
                 <span class="ml-2">Iva</span>
               </td>
-              <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(totalIva) || 0}}</td>
+              <td
+                class="flex flex-col justify-center text-sky-900 ml-2 font-semibold"
+              >
+                {{ formatCurrency(totalIva) || 0 }}
+              </td>
             </tr>
-            <tr class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg">
-              <td class="bg-sky-900 flex flex-col justify-center text-sm font-normal text-white rounded-lg">
+            <tr
+              class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
+            >
+              <td
+                class="bg-sky-900 flex flex-col justify-center text-sm font-normal text-white rounded-lg"
+              >
                 <span class="ml-2">Saldo total</span>
               </td>
-              <td class="flex flex-col justify-center text-sky-900 ml-2 font-semibold">{{ formatCurrency(totalValue) || 0}}</td>
+              <td
+                class="flex flex-col justify-center text-sky-900 ml-2 font-semibold"
+              >
+                {{ formatCurrency(totalValue) || 0 }}
+              </td>
             </tr>
           </table>
-          <button class="w-full justify-center bg-sky-900 mt-4 border rounded-lg text-white h-8" (click)="saveSale()">Confirmar Venta</button>
-          <p class="text-red-500 text-sm">{{messageError}}</p>
+          <button
+            class="w-full justify-center bg-sky-900 mt-4 border rounded-lg text-white h-8"
+            (click)="saveSale()"
+          >
+            Confirmar Venta
+          </button>
+          <p class="text-red-500 text-sm">{{ messageError }}</p>
         </div>
-      </div> 
+      </div>
       <!--<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
        <!-- <div class="product-card bg-white shadow-md rounded-lg overflow-hidden flex flex-col items-center" *ngFor="let product of filteredProducts">
           <!-- Imagen del producto 

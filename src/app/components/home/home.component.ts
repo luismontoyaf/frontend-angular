@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Signal, signal } from '@angular/core';
 import { MaterialModule } from '../../../material.module'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +6,7 @@ import { SidebarService } from '../../services/Sidebar/sidebar.service';
 import { ProductsService } from '../../services/Products/products.service';
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
 import { Product } from '../../interfaces/product'; // Asegúrate de que la ruta sea correcta
+import { TitleService } from '../../shared/services/title.service';
 
 @Component({
   selector: 'app-home',
@@ -14,16 +15,22 @@ import { Product } from '../../interfaces/product'; // Asegúrate de que la ruta
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export default class HomeComponent {
+export default class HomeComponent implements OnInit{
   isMenuOpen = false;
   content: boolean = false;
+  fechaDiaActual = signal<Date>(new Date());
+
+  noStockProducts = signal<Product[]>([]);
   products: Product[] = [];
   filteredProducts: Product[] = [];
 
   searchTerm: string = '';
   user: any = null; // Variable para almacenar la información del usuario
 
-  constructor(private sidebarService: SidebarService, private productsService: ProductsService, private getInfoService: GetInfoService) {
+  constructor(private sidebarService: SidebarService, 
+    private productsService: ProductsService, 
+    private getInfoService: GetInfoService,
+    private titleService: TitleService) {
     this.sidebarService.isOpen$.subscribe(open => {
       this.isMenuOpen = open;
     });
@@ -45,6 +52,12 @@ export default class HomeComponent {
       }
     });
   }
+
+  ngOnInit(): void {
+    this.setTitle('Página Principal');
+
+    this.getNonStockProducts();
+  }
   
   // Método para filtrar productos por nombre
   filterProducts() {
@@ -57,5 +70,21 @@ export default class HomeComponent {
   // Simular la acción de comprar un producto
   buyProduct(product: any) {
     alert(`Has comprado: ${product.nombreProducto}`);
+  }
+
+  getNonStockProducts() {
+    this.productsService.getProducts().subscribe({
+      next: (response) => {
+        const noStock = response//.filter((f: Product) => f.stock === 0);
+        this.noStockProducts.set(noStock);
+      },
+      error(err) {
+        console.log('No se pudieron obtener los productos');
+      },
+    })
+  }
+
+  setTitle(title: string): void {
+    this.titleService.setTitle(title);
   }
 }

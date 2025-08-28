@@ -8,6 +8,7 @@ import { SuccessModalComponent } from '../../dialogs/shared/success-modal/succes
 import { MessageServiceService } from '../../dialogs/services/message-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EditUserDialogComponent } from '../../dialogs/edit-user-dialog/edit-user-dialog.component';
+import { TitleService } from '../../shared/services/title.service';
 
 @Component({
   selector: 'app-manage-users',
@@ -32,7 +33,8 @@ export default class ManageUsersComponent implements OnInit {
 
     constructor(private registerServices: RegisterService,
       private messageService: MessageServiceService,
-      private dialog: MatDialog
+      private dialog: MatDialog,
+      private titleService: TitleService
     ) {
 
     }
@@ -56,6 +58,8 @@ export default class ManageUsersComponent implements OnInit {
         }
       }
     });
+
+    this.setTitle('Administrar Usuarios');
   }
 
   openEditUserDialog(user: any) {
@@ -106,5 +110,9 @@ export default class ManageUsersComponent implements OnInit {
     setProcess(process: string): void {
       this.messageService.setProcess(process);
     }
+
+  setTitle(title: string): void {
+    this.titleService.setTitle(title);
+  }
 
 }

@@ -10,6 +10,7 @@ import { SuccessEditModalComponent } from '../../dialogs/shared/success-edit-mod
 import { MatDialog } from '@angular/material/dialog';
 import { MessageServiceService } from '../../dialogs/services/message-service.service';
 import { InvoiceService } from '../../services/Invoice/invoice.service';
+import { TitleService } from '../../shared/services/title.service';
 
 @Component({
   selector: 'app-sale',
@@ -17,7 +18,7 @@ import { InvoiceService } from '../../services/Invoice/invoice.service';
   templateUrl: './sale.component.html',
   styleUrl: './sale.component.css'
 })
-export default class SaleComponent{
+export default class SaleComponent implements OnInit{
 
   @Output() userEmail: string = ''; // Email del usuario
   user: any; // Property to store user information
@@ -49,6 +50,7 @@ export default class SaleComponent{
     private messageService: MessageServiceService,
     private invoiceService: InvoiceService,
     private dialog: MatDialog,
+    private titleService: TitleService
   ) {
     this.sidebarService.isOpen$.subscribe(open => {
       this.isMenuOpen = open;
@@ -70,6 +72,10 @@ export default class SaleComponent{
         this.content = true; // Mostrar mensaje de "No hay productos"
       }
     });
+  }
+
+  ngOnInit(): void{
+    this.setTitle('Facturación de Productos');
   }
 
   @HostListener('document:click', ['$event'])
@@ -204,6 +210,10 @@ export default class SaleComponent{
 
   trackByProduct(index: number, product: Product): string {
     return product.id.toString(); // Asegúrate de que cada producto tenga un `id` único
+  }
+
+  setTitle(title: string): void {
+    this.titleService.setTitle(title);
   }
   
 }

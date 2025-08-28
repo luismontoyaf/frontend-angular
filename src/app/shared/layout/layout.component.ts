@@ -7,6 +7,7 @@ import { LoaderService } from '../../services/Loader/loader.service';
 import { MaterialModule } from '../../../material.module';
 import { TitleService } from '../services/title.service';
 import { filter, map, mergeMap, switchMap } from 'rxjs';
+import { SidebarService } from '../../services/Sidebar/sidebar.service';
 
 @Component({
   selector: 'app-layout',
@@ -19,7 +20,7 @@ export default class LayoutComponent implements OnInit {
   loading = false;
   pageTitle: string = '';
 
-  constructor(private router: Router, private loaderService: LoaderService, private activatedRoute: ActivatedRoute, private titleService: TitleService) {
+  constructor(private router: Router, public sidebarService: SidebarService, private loaderService: LoaderService, private activatedRoute: ActivatedRoute, private titleService: TitleService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         this.loaderService.show();
@@ -36,9 +37,9 @@ export default class LayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.titleService.title$.subscribe((title) => {
-    //   this.pageTitle = title;
-    // });
+    this.titleService.title$.subscribe((title) => {
+      this.pageTitle = title;
+    });
 
    this.router.events
     .pipe(filter(event => event instanceof NavigationEnd))

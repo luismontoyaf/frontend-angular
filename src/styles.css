@@ -3,3 +3,62 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.ngx-datatable.material.custom-datatable .datatable-header .datatable-header-cell{
+    font-size: 1rem;
+    color: #575757;
+    font-weight: 600;
+}
+
+.ngx-datatable.material.custom-datatable.single-selection .datatable-body-row.active .datatable-row-group{
+    background-color: #00893e;
+}
+
+.ngx-datatable.material.custom-datatable.single-selection .datatable-body-row.active .datatable-row-group .datatable-body-cell{
+    color: white;
+}
+
+.ngx-datatable.material.custom-datatable.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell .datatable-header-cell-template-wrap{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+    margin: 0;
+    line-height: 50px;
+    height: 50px;
+}
+
+.ngx-datatable.material.custom-datatable .datatable-body .progress-linear .container{
+    background-color: #d6d313;
+}
+
+.ngx-datatable.material.custom-datatable .datatable-body .progress-linear .container .bar{
+    background-color: #d6d313;
+}
+
+.ngx-datatable.material.custom-datatable .datatable-body-row.unsuccessfully-row .datatable-row-group .datatable-body-cell{
+    color: red;
+}
+
+.ngx-datatable.material.custom-datatable .datatable-body .datatable-body-row .datatable-body-cell{
+    word-wrap: normal;
+}
+
+.ngx-datatable.material .datatable-footer .datatable-pager {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.ngx-datatable.material .datatable-footer .datatable-pager li {
+  list-style: none;
+  display: inline-block;
+  margin: 0 4px;
+}
+
+.ngx-datatable.material .datatable-footer .datatable-pager li.active a {
+  background-color: #00893e;
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+}

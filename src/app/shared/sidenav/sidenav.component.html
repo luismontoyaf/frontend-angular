@@ -1,4 +1,11 @@
-<div class="sidebar bg-sky-950 my-5" [class.open]="(sidebarService.isOpen$ | async)">
+<!-- <div class="sidebar bg-sky-950 my-5" [class.open]="(sidebarService.isOpen$ | async)"> -->
+
+<!-- Sidebar -->
+<div
+  class=" bg-sky-950 transform transition-transform duration-300 ease-in-out
+         w-full md:w-[230px] md:translate-x-0 md:my-5 sidebar z-50"
+  [class.-translate-x-full]="isMobile() && !(sidebarService.isOpen$ | async)"
+>
     <div class="sidebar-header">
       <img src="assets/images/{{imageLogo}}" class="w-28 mt-5 h-auto mx-auto" alt="Logo">
       <br>
@@ -9,14 +16,61 @@
     <button class="menu-toggle" (click)="toggleMenu()">
       <mat-icon>menu</mat-icon>
     </button> -->
-    <ul>
-      @for (item of opcionesMenu; track $index) {
+     <button 
+      class="md:hidden absolute top-4 right-4 text-white"
+      (click)="sidebarService.toggleMenu()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <ul class="mt-6 space-y-3">
+      <li>
+          <a routerLink="/dashboard/home" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+            <mat-icon class="icon" routerLinkActive="text-sky-500">dashboard</mat-icon>
+            <span class="ml-2" routerLinkActive="text-sky-500">Inicio</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/dashboard/products" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+            <mat-icon class="icon" routerLinkActive="text-sky-500">inventory_2</mat-icon>
+            <span class="ml-2" routerLinkActive="text-sky-500">Agregar Productos</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/dashboard/register"routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+            <mat-icon class="icon" routerLinkActive="text-sky-500">person_add</mat-icon>
+            <span class="ml-2" routerLinkActive="text-sky-500">Registrar Usuarios</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/dashboard/sale" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+            <mat-icon class="icon" routerLinkActive="text-sky-500">point_of_sale</mat-icon>
+            <span class="ml-2" routerLinkActive="text-sky-500">Realizar Venta</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/dashboard/manageUsers" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+            <mat-icon class="icon" routerLinkActive="text-sky-500">manage_accounts</mat-icon>
+            <span class="ml-2" routerLinkActive="text-sky-500">Administrar Usuarios</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/dashboard/invoices" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+            <mat-icon class="icon" routerLinkActive="text-sky-500">receipt_long</mat-icon>
+            <span class="ml-2" routerLinkActive="text-sky-500">Historico Facturas</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/dashboard/reports" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+            <mat-icon class="icon" routerLinkActive="text-sky-500">view_kanban</mat-icon>
+            <span class="ml-2" routerLinkActive="text-sky-500">Reportes</span>
+          </a>
+        </li>
+      <!-- @for (item of opcionesMenu; track $index) {
         <li>
           <a routerLink={{item.Opcion.Ruta}} routerLinkActive="text-sky-500" class="flex items-center" (click)="setTitle(item.Opcion.TituloPrincipal)">
             <mat-icon class="icon" routerLinkActive="text-sky-500">{{item.Opcion.NombreIcono}}</mat-icon>
             <span class="ml-2" routerLinkActive="text-sky-500">{{item.Opcion.NombreEnMenu}}</span>
           </a>
         </li>
-      }
+      } -->
     </ul>
   </div>

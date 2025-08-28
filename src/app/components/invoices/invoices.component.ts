@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, Output, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../../material.module'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageServiceService } from '../../dialogs/services/message-service.service';
 import { InvoiceService } from '../../services/Invoice/invoice.service';
 import { Invoice } from '../../interfaces/invoice';
+import { TitleService } from '../../shared/services/title.service';
 
 @Component({
   selector: 'app-invoices',
@@ -19,6 +20,7 @@ import { Invoice } from '../../interfaces/invoice';
   styleUrl: './invoices.component.css'
 })
 export default class InvoicesComponent implements OnInit{
+
   @Output() userEmail: string = ''; // Email del usuario
     user: any; // Property to store user information
   
@@ -32,10 +34,11 @@ export default class InvoicesComponent implements OnInit{
     showOptions: boolean = false;
   
     invoices =  signal<Invoice[]>([]);
-  
     addedProducts = signal<Product[]>([]);
     filteredInvoices = signal<any[]>([]);
     selectedInvoices = signal<any[]>([]);
+    selectAllChecked = signal(false);
+
     quantities: { [productId: string]: number } = {};
   
     metodoSeleccionado: string = '';
@@ -45,11 +48,9 @@ export default class InvoicesComponent implements OnInit{
     messageError: string = '';
   
     constructor(private sidebarService: SidebarService, 
-      private productsService: ProductsService,
-      private getInfoService: GetInfoService,
       private messageService: MessageServiceService,
       private invoiceService: InvoiceService,
-      private dialog: MatDialog,
+      private titleService: TitleService
     ) {
 
     }
@@ -72,6 +73,9 @@ export default class InvoicesComponent implements OnInit{
           this.content = true; // Mostrar mensaje de "No hay productos"
         }
       });
+
+      this.setTitle('Historico de Facturas');
+
     }
   
     @HostListener('document:click', ['$event'])
@@ -89,7 +93,8 @@ export default class InvoicesComponent implements OnInit{
       const term = this.searchTerm.toLowerCase();
       this.filteredInvoices.set( this.invoices().filter(invoice => 
         invoice.numeroFactura.toLowerCase().includes(term) ||
-        invoice.nombreCliente.toLowerCase().includes(term)
+        invoice.nombreCliente.toLowerCase().includes(term) ||
+        invoice.fechaCreacion.toLowerCase().includes(term)
       ));
     }
 
@@ -123,65 +128,85 @@ export default class InvoicesComponent implements OnInit{
       });
   }
 
-    downloadSelectedPDFs() {
+  downloadSelectedPDFs() {
     const selected = this.selectedInvoices();
-  if (!selected.length) return;
+    if (!selected.length) return;
 
-  const invoiceRequests = selected.map(invoice => {
-    const parsedFactura = JSON.parse(invoice.jsonFactura);
-    return {
-      numInvoice: invoice.numeroFactura,
-      idClient: invoice.idCliente,
-      PaymentMethod: invoice.formaPago,
-      items: parsedFactura.Productos.map((producto: any) => ({
-        ProductName: producto.Nombre,
-        Quantity: producto.Cantidad,
-        UnitPrice: producto.ValorUnitario
-      }))
-    };
-  });
+    const invoiceRequests = selected.map(invoice => {
+      const parsedFactura = JSON.parse(invoice.jsonFactura);
+      return {
+        numInvoice: invoice.numeroFactura,
+        idClient: invoice.idCliente,
+        PaymentMethod: invoice.formaPago,
+        items: parsedFactura.Productos.map((producto: any) => ({
+          ProductName: producto.Nombre,
+          Quantity: producto.Cantidad,
+          UnitPrice: producto.ValorUnitario
+        }))
+      };
+    });
 
-  this.invoiceService.generateMultipleInvoices(invoiceRequests).subscribe((zipBlob: Blob) => {
-    const url = window.URL.createObjectURL(zipBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'FacturasSeleccionadas.zip';
-    a.click();
-  });
+    this.invoiceService.generateMultipleInvoices(invoiceRequests).subscribe((zipBlob: Blob) => {
+      const url = window.URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'FacturasSeleccionadas.zip';
+      a.click();
+    });
   }
   
   toggleSelection(invoice: any) {
     console.log('invoice ' + JSON.stringify(invoice));
     
-  const current = this.selectedInvoices() ?? [];
-  const index = current.findIndex(i => i.idFactura == invoice.idFactura);
-    console.log('index ' + index);
+    const current = this.selectedInvoices() ?? [];
+    const index = current.findIndex(i => i.idFactura == invoice.idFactura);
+      console.log('index ' + index);
+      
+    if (index > -1) {
+      // Ya estaba, se elimina
+      this.selectedInvoices.set(current.filter(i => i.idFactura !== invoice.idFactura));
+    } else {
+      // Se agrega
+      this.selectedInvoices.set([...current, invoice]);
+    }
+
+    const allSelected = this.selectedInvoices().length == this.filteredInvoices().length;
+    this.selectAllChecked.set(allSelected);
+
+    console.log('this.selectedInvoices ' + JSON.stringify(this.selectedInvoices()));
     
-  if (index > -1) {
-    // Ya estaba, se elimina
-    this.selectedInvoices.set(current.filter(i => i.idFactura !== invoice.idFactura));
-  } else {
-    // Se agrega
-    this.selectedInvoices.set([...current, invoice]);
   }
 
-  console.log('this.selectedInvoices ' + JSON.stringify(this.selectedInvoices()));
-  
-}
+  isSelected(invoice: any): boolean {
+    return this.selectedInvoices().some(i => i.idFactura === invoice.idFactura);
+  }
 
-isSelected(invoice: any): boolean {
-  return this.selectedInvoices().some(i => i.idFactura === invoice.idFactura);
-}
+  selectAll(event: Event){
 
-    setMessage(message: string): void {
-      this.messageService.setMessageSuccess(message);
+    const isChecked = (event.target as HTMLInputElement).checked;
+    
+    this.selectAllChecked.set(isChecked);
+
+    if (isChecked) {
+      this.selectedInvoices.set(this.filteredInvoices());
+    }else{
+      this.selectedInvoices.set([]);
     }
+  }
+
+  setMessage(message: string): void {
+    this.messageService.setMessageSuccess(message);
+  }
   
-    setProccess(proccess: string): void {
-      this.messageService.setProcess(proccess);
-    }
+  setProccess(proccess: string): void {
+    this.messageService.setProcess(proccess);
+  }
+
+  setTitle(title: string): void {
+    this.titleService.setTitle(title);
+  }
   
-    trackByProduct(index: number, invoices: any): string {
-      return invoices.idFactura.toString(); // Asegúrate de que cada producto tenga un `id` único
-    }
+  trackByProduct(index: number, invoices: any): string {
+    return invoices.idFactura.toString(); // Asegúrate de que cada producto tenga un `id` único
+  }
 }
