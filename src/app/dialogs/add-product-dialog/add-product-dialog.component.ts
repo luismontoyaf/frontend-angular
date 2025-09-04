@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../material.module';
 import { ProductsService } from '../../services/Products/products.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MessageServiceService } from '../services/message-service.service';
+import { MessageService } from '../services/message-service.service';
 import { SuccessEditModalComponent } from '../shared/success-edit-modal/success-edit-modal.component';
 import { Router } from '@angular/router';
 
@@ -28,7 +28,7 @@ export class AddProductDialogComponent {
   constructor(private dialogRef: MatDialogRef<AddProductDialogComponent>, 
     private fb: FormBuilder, 
     private productsService: ProductsService,
-  private messageService: MessageServiceService,
+  private messageService: MessageService,
   private router: Router,
     private dialog: MatDialog) {
     this.productForm = this.fb.group({

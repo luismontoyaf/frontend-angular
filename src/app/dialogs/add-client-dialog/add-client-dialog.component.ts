@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { SuccessModalComponent } from '../shared/success-modal/success-modal.component';
-import { MessageServiceService } from '../services/message-service.service';
+import { MessageService } from '../services/message-service.service';
 
 @Component({
   selector: 'app-add-client-dialog',
@@ -36,7 +36,7 @@ export class AddClientDialogComponent {
     constructor(private fb: FormBuilder, 
       private registerService: RegisterService, 
       private router: Router,
-      private messageService: MessageServiceService,
+      private messageService: MessageService,
           private dialog: MatDialog,
       private dialogRef: MatDialogRef<AddClientDialogComponent>
     ) {

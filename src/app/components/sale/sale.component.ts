@@ -8,9 +8,9 @@ import { Product } from '../../interfaces/product';
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
 import { SuccessEditModalComponent } from '../../dialogs/shared/success-edit-modal/success-edit-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MessageServiceService } from '../../dialogs/services/message-service.service';
-import { InvoiceService } from '../../services/Invoice/invoice.service';
+import { MessageService } from '../../dialogs/services/message-service.service';
 import { TitleService } from '../../shared/services/title.service';
+import { AlertService } from '../../services/Alert/alert.service';
 
 @Component({
   selector: 'app-sale',
@@ -47,8 +47,8 @@ export default class SaleComponent implements OnInit{
   constructor(private sidebarService: SidebarService, 
     private productsService: ProductsService,
     private getInfoService: GetInfoService,
-    private messageService: MessageServiceService,
-    private invoiceService: InvoiceService,
+    private messageService: MessageService,
+    private alertService: AlertService,
     private dialog: MatDialog,
     private titleService: TitleService
   ) {
@@ -96,7 +96,15 @@ export default class SaleComponent implements OnInit{
     );
   }
 
-  addToCart(product: Product) { // Mostrar las opciones de compra
+  addToCart(product: Product) { 
+    const productosActuales = this.addedProducts();
+
+    const yaExiste = productosActuales.some(p => p.id === product.id);
+    if (yaExiste) {
+      this.alertService.showWarning('No se puede agregar este producto. Ya se encuentra en el carrito.');
+      return;
+    }
+
     this.addedProducts.set([...this.addedProducts(), { ...product }]); // Agregar el producto al carrito 
 
     this.quantities[product.id] = (this.quantities[product.id] || 1); // Inicializar la cantidad del producto en el carrito
@@ -134,6 +142,17 @@ export default class SaleComponent implements OnInit{
 
     this.totalValue = product.precio * this.quantities[product.id]; // Aumentar el valor total al agregar un producto
 
+    this.recalculateCartTotals();
+  }
+
+  updateQuantity(product: Product){
+  // Si no hay cantidad, la dejamos en 1 por seguridad
+    const newQuantity = this.quantities[product.id] || 1;
+
+    // Actualiza el total del producto
+    this.totalValue = product.precio * newQuantity;
+
+    // Recalcula totales generales
     this.recalculateCartTotals();
   }
 

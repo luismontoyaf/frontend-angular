@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MessageServiceService } from '../../services/message-service.service';
+import { MessageService } from '../../services/message-service.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class SuccessModalComponent implements OnInit {
   
-  constructor(private messageService: MessageServiceService, private router: Router, private dialogRef: MatDialogRef<SuccessModalComponent>) {}
+  constructor(private messageService: MessageService, private router: Router, private dialogRef: MatDialogRef<SuccessModalComponent>) {}
   messageModal: string = '';
   proccessKey: string = '';
 

@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessageServiceService } from '../../services/message-service.service';
+import { MessageService } from '../../services/message-service.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ProductsService } from '../../../services/Products/products.service';
@@ -31,7 +31,7 @@ items: any[] = []; // Productos añadidos a la venta
 
 isLoading: boolean = false; // Estado de carga
 
-constructor(private messageService: MessageServiceService, 
+constructor(private messageService: MessageService, 
   private router: Router, 
   private productsService: ProductsService,
   private saleService: SaleService,

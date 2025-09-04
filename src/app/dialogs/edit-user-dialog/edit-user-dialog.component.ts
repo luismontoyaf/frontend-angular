@@ -6,7 +6,7 @@ import { RegisterService } from '../../services/Register/register.service';
 import { User } from '../../interfaces/user';
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
 import { SuccessModalComponent } from '../shared/success-modal/success-modal.component';
-import { MessageServiceService } from '../services/message-service.service';
+import { MessageService } from '../services/message-service.service';
 
 @Component({
   selector: 'app-edit-user-dialog',
@@ -37,7 +37,7 @@ export class EditUserDialogComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private registerService: RegisterService,
     private getInfoService: GetInfoService,
-    private messageService: MessageServiceService,
+    private messageService: MessageService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<EditUserDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { user: User })

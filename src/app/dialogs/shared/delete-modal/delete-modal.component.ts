@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MessageServiceService } from '../../services/message-service.service';
+import { MessageService } from '../../services/message-service.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ProductsService } from '../../../services/Products/products.service';
@@ -17,7 +17,7 @@ export class DeleteModalComponent implements OnInit {
   message: string = ''; // Mensaje de error o éxito
   //data: Product [] = []; // Datos del producto (puedes definirlo más específicamente si lo deseas)
 
-constructor(private messageService: MessageServiceService, 
+constructor(private messageService: MessageService, 
   private router: Router, 
   private productsService: ProductsService,
   private dialog: MatDialog,

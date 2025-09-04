@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class MessageServiceService {
+export class MessageService {
 
   private messageSubject = new BehaviorSubject<string>('');
   private processSubject = new BehaviorSubject<string>('');

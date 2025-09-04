@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { MessageServiceService } from '../../services/message-service.service';
+import { MessageService } from '../../services/message-service.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { InvoiceService } from '../../../services/Invoice/invoice.service';
@@ -25,7 +25,7 @@ export class SuccessSaleModalComponent implements OnInit {
   metodoSeleccionado: any;
   products: any;
   quantities: any;
-  constructor(private messageService: MessageServiceService, 
+  constructor(private messageService: MessageService, 
     private router: Router, 
     private dialogRef: MatDialogRef<SuccessSaleModalComponent>,
     private invoiceService: InvoiceService,

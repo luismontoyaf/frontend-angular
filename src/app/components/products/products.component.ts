@@ -8,7 +8,7 @@ import { AddProductDialogComponent } from '../../dialogs/add-product-dialog/add-
 import { MatDialog } from '@angular/material/dialog';
 import { ProductsService } from '../../services/Products/products.service';
 import { EditProductDialogComponent } from '../../dialogs/edit-product-dialog/edit-product-dialog.component';
-import { MessageServiceService } from '../../dialogs/services/message-service.service';
+import { MessageService } from '../../dialogs/services/message-service.service';
 import { DeleteModalComponent } from '../../dialogs/shared/delete-modal/delete-modal.component';
 import { Product } from '../../interfaces/product';
 import { TitleService } from '../../shared/services/title.service';
@@ -30,7 +30,7 @@ export default class ProductsComponent implements OnInit{
 
 constructor(private sidebarService: SidebarService, 
   private productsService: ProductsService,
-  private messageService: MessageServiceService,
+  private messageService: MessageService,
   private dialog: MatDialog,
   private titleService: TitleService) {
     // this.sidebarService.isOpen$.subscribe(open => {

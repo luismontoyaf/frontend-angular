@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../material.module';
 import { ProductsService } from '../../services/Products/products.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MessageServiceService } from '../services/message-service.service';
+import { MessageService } from '../services/message-service.service';
 import { SuccessModalComponent } from '../shared/success-modal/success-modal.component';
 import { Product } from '../../interfaces/product';
 
@@ -26,7 +26,7 @@ productForm: FormGroup;
   constructor(private dialogRef: MatDialogRef<EditProductDialogComponent>, 
     private fb: FormBuilder, 
     private productsService: ProductsService,
-    private messageService: MessageServiceService,
+    private messageService: MessageService,
     private dialog: MatDialog, 
     @Inject(MAT_DIALOG_DATA) public data: { product: Product }  ) {
       

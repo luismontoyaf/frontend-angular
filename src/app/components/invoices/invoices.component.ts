@@ -3,12 +3,8 @@ import { MaterialModule } from '../../../material.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarService } from '../../services/Sidebar/sidebar.service';
-import { ProductsService } from '../../services/Products/products.service';
 import { Product } from '../../interfaces/product';
-import { GetInfoService } from '../../services/GetInfo/get-info.service';
-import { SuccessEditModalComponent } from '../../dialogs/shared/success-edit-modal/success-edit-modal.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MessageServiceService } from '../../dialogs/services/message-service.service';
+import { MessageService } from '../../dialogs/services/message-service.service';
 import { InvoiceService } from '../../services/Invoice/invoice.service';
 import { Invoice } from '../../interfaces/invoice';
 import { TitleService } from '../../shared/services/title.service';
@@ -48,7 +44,7 @@ export default class InvoicesComponent implements OnInit{
     messageError: string = '';
   
     constructor(private sidebarService: SidebarService, 
-      private messageService: MessageServiceService,
+      private messageService: MessageService,
       private invoiceService: InvoiceService,
       private titleService: TitleService
     ) {

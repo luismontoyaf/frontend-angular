@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../interfaces/product';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../material.module'; 
 import { RegisterService } from '../../services/Register/register.service';
 import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
-import { MessageServiceService } from '../../dialogs/services/message-service.service';
+import { MessageService } from '../../dialogs/services/message-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EditUserDialogComponent } from '../../dialogs/edit-user-dialog/edit-user-dialog.component';
 import { TitleService } from '../../shared/services/title.service';
@@ -32,7 +31,7 @@ export default class ManageUsersComponent implements OnInit {
     clients: any[] = []; // Cambiado a any[] para evitar errores de tipo
 
     constructor(private registerServices: RegisterService,
-      private messageService: MessageServiceService,
+      private messageService: MessageService,
       private dialog: MatDialog,
       private titleService: TitleService
     ) {
