@@ -53,101 +53,94 @@
           class="flex flex-col items-center justify-start w-full overflow-y-auto"
         >
           <div
-            class="w-full product-card bg-white shadow-md mt-2 rounded-lg overflow-hidden flex flex-row items-center justify-between px-2"
-            *ngFor="let product of addedProducts(); trackBy: trackByProduct"
-          >
-            <!-- Imagen del producto -->
-            <img
-              *ngIf="product.imagenBase64"
-              [src]="'data:image/jpeg;base64,' + product.imagenBase64"
-              alt="{{ product.nombreProducto }}"
-              class="w-16 h-16 object-contain bg-gray-100"
-            />
-            <!-- Contenido del producto -->
-            <h3 class="text-lg font-bold text-gray-800">
-              {{ product.nombreProducto }}
-            </h3>
-            <p class="price text-blue-500 font-semibold">
-              $ {{ product.precio | number : "1.0-0" }}
-            </p>
-            <form class="max-w-xs">
-              <div class="relative flex items-center">
-                <button
-                  type="button"
-                  id="decrement-button"
-                  [disabled]="quantities[product.id] <= 1"
-                  [ngClass]="{
-                    'cursor-not-allowed opacity-50':
-                      quantities[product.id] <= 1,
-                    'cursor-pointer': quantities[product.id] > 1
-                  }"
-                  (click)="decrementQuantity(product)"
-                  data-input-counter-decrement="counter-input"
-                  class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
-                >
-                  <svg
-                    class="w-2.5 h-2.5 text-gray-900 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 2"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M1 1h16"
-                    />
-                  </svg>
-                </button>
-                <input
-                  type="text"
-                  id="counter-input"
-                  data-input-counter
-                  class="shrink-0 text-gray-900 dark:text-white border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center"
-                  placeholder=""
-                  [value]="quantities[product.id] || 1"
-                  required
-                />
-                <button
-                  type="button"
-                  id="increment-button"
-                  (click)="increaseQuantity(product)"
-                  data-input-counter-increment="counter-input"
-                  [disabled]="quantities[product.id] >= product.stock"
-                  [ngClass]="{
-                    'cursor-not-allowed opacity-50':
-                      quantities[product.id] >= product.stock,
-                    'cursor-pointer': quantities[product.id] < product.stock
-                  }"
-                  class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
-                >
-                  <svg
-                    class="w-2.5 h-2.5 text-gray-900 dark:text-white"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 18 18"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 1v16M1 9h16"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </form>
-            <button
-              (click)="removeFromCart(product.id)"
-              class="w-10 h-10 bg-red-500 text-white rounded hover:bg-blue-600 transition duration-200"
-            >
-              <mat-icon class="text-white text-lg">delete</mat-icon>
-            </button>
-          </div>
+  class="w-full product-card bg-white shadow-md mt-2 rounded-lg overflow-hidden 
+         flex flex-row items-center justify-between px-3 py-2"
+  *ngFor="let product of addedProducts(); trackBy: trackByProduct"
+>
+  <!-- Imagen -->
+  <img
+    *ngIf="product.imagenBase64"
+    [src]="'data:image/jpeg;base64,' + product.imagenBase64"
+    alt="{{ product.nombreProducto }}"
+    class="w-16 h-16 object-contain bg-gray-100 mr-3 shrink-0"
+  />
+
+  <!-- Contenido -->
+  <div
+    class="w-full grid grid-cols-2 gap-x-3 gap-y-1
+           md:flex md:items-center md:justify-between"
+  >
+    <!-- Título -->
+    <h3
+      class="col-span-2 text-sm md:text-lg font-bold text-gray-800
+             md:col-auto md:flex-1 md:pr-4 md:min-w-0 md:truncate"
+    >
+      {{ product.nombreProducto }}
+    </h3>
+
+    <!-- Cantidad + Eliminar (móvil) -->
+    <div class="flex items-center gap-2 col-span-1 md:col-auto">
+      <!-- Controles escritorio -->
+      <form class="hidden md:block">
+        <div class="relative flex items-center">
+          <button
+            type="button"
+            [disabled]="quantities[product.id] <= 1"
+            (click)="decrementQuantity(product)"
+            class="shrink-0 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md h-5 w-5"
+          >-</button>
+          <input
+            type="text"
+            class="shrink-0 text-gray-900 border-0 bg-transparent text-sm font-normal focus:outline-none max-w-[2.5rem] text-center"
+            [value]="quantities[product.id] || 1"
+            readonly
+          />
+          <button
+            type="button"
+            (click)="increaseQuantity(product)"
+            [disabled]="quantities[product.id] >= product.stock"
+            class="shrink-0 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md h-5 w-5"
+          >+</button>
+        </div>
+      </form>
+
+      <!-- Select móvil -->
+      <select
+        class="block md:hidden border border-gray-300 rounded-md p-1 text-sm"
+        [(ngModel)]="quantities[product.id]"
+        (ngModelChange)="updateQuantity(product)"
+      >
+        <option *ngFor="let qty of [].constructor(product.stock); let i = index" [value]="i + 1">
+          {{ i + 1 }}
+        </option>
+      </select>
+
+      <!-- Eliminar móvil -->
+      <span
+        (click)="removeFromCart(product.id)"
+        class="block md:hidden text-red-500 text-xs underline cursor-pointer"
+      >
+        Eliminar
+      </span>
+    </div>
+
+    <!-- Precio -->
+    <p
+      class="col-span-1 text-right text-xs md:text-base text-blue-500 font-semibold
+             md:col-auto md:ml-4"
+    >
+      $ {{ product.precio | number : "1.0-0" }}
+    </p>
+
+    <!-- Eliminar escritorio -->
+    <button
+      (click)="removeFromCart(product.id)"
+      class="hidden md:flex w-10 h-10 bg-red-500 text-white rounded hover:bg-blue-600 transition duration-200 items-center justify-center ml-2"
+    >
+      <mat-icon class="text-white text-lg">delete</mat-icon>
+    </button>
+  </div>
+</div>
         </div>
 
         <!-- Resumen de la venta -->
@@ -324,7 +317,7 @@
           </div>
           <table class="w-full mt-auto">
             <tr
-              class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
+              class="w-full h-8 md:w-3/4 md:h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
             >
               <td
                 class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg"
@@ -352,7 +345,7 @@
               </td>
             </tr>
             <tr
-              class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
+              class="w-full h-8 md:w-3/4 md:h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
             >
               <td
                 class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg"
@@ -366,7 +359,7 @@
               </td>
             </tr>
             <tr
-              class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
+              class="w-full h-8 md:w-3/4 md:h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
             >
               <td
                 class="bg-sky-900 flex flex-col justify-center font-normal text-sm text-white rounded-lg"
@@ -380,7 +373,7 @@
               </td>
             </tr>
             <tr
-              class="w-3/4 h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
+              class="w-full h-8 md:w-3/4 md:h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
             >
               <td
                 class="bg-sky-900 flex flex-col justify-center text-sm font-normal text-white rounded-lg"
