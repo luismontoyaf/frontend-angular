@@ -25,8 +25,10 @@ export default class SaleComponent implements OnInit{
 
   quantity: number = 1; // Cantidad inicial de productos a comprar
   totalValue: number = 0; // Valor total de la compra
+  originalValue: number = 0; // Valor original de la compra
   totalIva: number = 0; // IVA total de la compra
   valueWithoutIva: number = 0; // Valor total sin IVA
+  discount: number =0;
   
   isMenuOpen = false;
   content: boolean = false;
@@ -125,8 +127,28 @@ export default class SaleComponent implements OnInit{
 
   calculateValues(totalValue: number) {
     this.totalValue = totalValue; // Actualizar el valor total
-    this.totalIva = totalValue * 0.19; // Calcular el IVA total de la compra
-    this.valueWithoutIva = totalValue / 1.19; // Calcular el valor total sin IVA
+    this.originalValue = this.totalValue;
+
+    if (this.discount != 0) {
+      this.calculateWithDiscount(this.discount)
+    }
+
+    // this.totalIva = totalValue * 0.19; // Calcular el IVA total de la compra
+    // this.valueWithoutIva = totalValue / 1.19; // Calcular el valor total sin IVA
+  }
+
+  calculateWithDiscount(discount: number) {
+    // Calcular el porcentaje
+  const discountFactor = discount / 100;
+
+  // Aplicar el descuento al valor original
+  const discountAmount = this.originalValue * discountFactor;
+  const finalValue = this.originalValue - discountAmount;
+
+  console.log('Monto del descuento: ', discountAmount);
+  console.log('Valor final con descuento: ', finalValue);
+
+  this.totalValue = finalValue;
   }
 
   increaseQuantity(product: Product) {

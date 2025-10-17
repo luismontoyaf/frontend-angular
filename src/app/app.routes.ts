@@ -10,12 +10,12 @@ export const routes: Routes = [
         loadComponent: () => import ("./shared/layout/layout.component"), 
         canMatch: [authGuardCanMatch],
         children: [ 
-        {
-          path: 'home', 
-          canActivate: [authGuardCanActivate],
-          loadComponent: () => import('./components/home/home.component'),
-          data: { title: 'Página Principal' }
-        },
+        // {
+        //   path: 'home', 
+        //   canActivate: [authGuardCanActivate],
+        //   loadComponent: () => import('./components/home/home.component'),
+        //   data: { title: 'Página Principal' }
+        // },
         { 
           path: 'register', 
           canActivate: [authGuardCanActivate],
@@ -26,6 +26,12 @@ export const routes: Routes = [
           path: 'products', 
           canActivate: [authGuardCanActivate],
           loadComponent: () => import('./components/products/products.component'),
+          data: { title: 'Agrega Tus Productos' }
+        },
+        { 
+          path: 'add-products', 
+          canActivate: [authGuardCanActivate],
+          loadComponent: () => import('./components/add-product/add-product.component'),
           data: { title: 'Agrega Tus Productos' }
         },
         { 
@@ -54,7 +60,7 @@ export const routes: Routes = [
         },
         { 
           path: '**', 
-          loadComponent: () => import('./components/home/home.component'),
+          loadComponent: () => import('./components/sale/sale.component'),
           data: { title: 'Página Principal' }
         },
         ]

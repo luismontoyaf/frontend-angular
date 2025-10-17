@@ -12,6 +12,7 @@ import { MessageService } from '../../dialogs/services/message-service.service';
 import { DeleteModalComponent } from '../../dialogs/shared/delete-modal/delete-modal.component';
 import { Product } from '../../interfaces/product';
 import { TitleService } from '../../shared/services/title.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-products',
@@ -32,7 +33,8 @@ constructor(private sidebarService: SidebarService,
   private productsService: ProductsService,
   private messageService: MessageService,
   private dialog: MatDialog,
-  private titleService: TitleService) {
+  private titleService: TitleService,
+private router: Router) {
     // this.sidebarService.isOpen$.subscribe(open => {
     //   this.isMenuOpen = open;
     // });
@@ -63,6 +65,10 @@ openAddProductDialog(): void {
     width: '400px'
   });
 };
+
+openAddProductComponent(): void{
+  this.router.navigate(['/dashboard/add-products'])
+}
 
 openEditProductDialog(product: Product): void {
   this.dialog.open(EditProductDialogComponent, {

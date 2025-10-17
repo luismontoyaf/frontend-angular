@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule  } from '@angular/forms';
+import { FormsModule, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray  } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../../material.module';
 import { ProductsService } from '../../services/Products/products.service';
@@ -36,7 +36,8 @@ export class AddProductDialogComponent {
       description: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(1)]],
       quantity: [0, [Validators.required, Validators.min(1)]],
-      image: [null] // Este campo almacenará el archivo seleccionado
+      image: [null], // Este campo almacenará el archivo seleccionado
+      variants: this.fb.array([])
     });
   }
 
@@ -51,6 +52,10 @@ export class AddProductDialogComponent {
 
     this.productForm.get('price')?.setValue(inputElement.value);
     this.productForm.get('price')?.markAsDirty(); 
+  }
+
+    get variants(): FormArray {
+    return this.productForm.get('variants') as FormArray;
   }
 
   onFileSelected(event: Event): void {
@@ -90,6 +95,19 @@ export class AddProductDialogComponent {
       }
     );
   }
+
+  addVariant() {
+  const variantGroup = this.fb.group({
+    name: ['', Validators.required],
+    value: ['', Validators.required],
+    stock: [0, [Validators.required, Validators.min(1)]]
+  });
+  this.variants.push(variantGroup);
+}
+
+removeVariant(index: number) {
+  this.variants.removeAt(index);
+}
 
   setMessage(message: string): void {
     this.messageService.setMessageSuccess(message);

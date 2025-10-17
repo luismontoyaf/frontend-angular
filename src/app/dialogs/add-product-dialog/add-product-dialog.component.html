@@ -35,6 +35,35 @@
       </mat-error>
     </mat-form-field>
 
+    <h3 class="mt-4">Variantes</h3>
+
+<div formArrayName="variants">
+  <div *ngFor="let variant of variants.controls; let i = index" [formGroupName]="i" class="variant-row">
+    <mat-form-field>
+      <mat-label>Tipo</mat-label>
+      <input matInput placeholder="Ej: Color, Talla" formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Valor</mat-label>
+      <input matInput placeholder="Ej: Rojo, M, Algodón" formControlName="value">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Stock</mat-label>
+      <input matInput type="number" formControlName="stock">
+    </mat-form-field>
+
+    <button mat-icon-button color="warn" (click)="removeVariant(i)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>
+
+<button mat-stroked-button color="primary" type="button" (click)="addVariant()">
+  + Agregar Variante
+</button>
+
     <div class="custom-file-upload">
       <label for="file">Imagen</label>
       <input type="file" id="file" (change)="onFileSelected($event)" />

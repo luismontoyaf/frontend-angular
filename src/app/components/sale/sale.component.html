@@ -87,7 +87,12 @@
             type="button"
             [disabled]="quantities[product.id] <= 1"
             (click)="decrementQuantity(product)"
-            class="shrink-0 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md h-5 w-5"
+            [ngClass]="{
+                    'cursor-not-allowed opacity-50':
+                      quantities[product.id] <= 1,
+                    'cursor-pointer': quantities[product.id] > 1
+                  }"
+            class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
           >-</button>
           <input
             type="text"
@@ -99,7 +104,12 @@
             type="button"
             (click)="increaseQuantity(product)"
             [disabled]="quantities[product.id] >= product.stock"
-            class="shrink-0 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-md h-5 w-5"
+            [ngClass]="{
+                    'cursor-not-allowed opacity-50':
+                      quantities[product.id] >= product.stock,
+                    'cursor-pointer': quantities[product.id] < product.stock
+                  }"
+            class="shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
           >+</button>
         </div>
       </form>
@@ -191,42 +201,6 @@
               </button>
             </form>
           </div>
-          <!-- <div class="w-full flex flex-col items-center justify-center mb-4">
-            <form class="grid grid-cols-1 gap-4 w-full max-w-lg">
-              <div class="flex flex-row">
-                <table class="w-full border-collapse border border-gray-300">
-                  <thead>
-                    <tr class="bg-gray-100 text-center">
-                      <th class="p-2 border border-gray-300 w-[65%]">Nombre Cliente</th>
-                      <th class="p-2 border border-gray-300 w-[35%]">Documento</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="text-center">
-                      <td class="p-2 border border-gray-300 font-normal">{{(user?.nombre || ' ') + ' ' + (user?.apellidos || ' ')}}</td>
-                      <td class="p-2 border border-gray-300 font-normal">{{user?.numDocumento || ' '}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            <div class="flex flex-row">
-              <table class="w-full border-collapse border border-gray-300">
-                <thead>
-                  <tr class="bg-gray-100 text-center">
-                    <th class="p-2 border border-gray-300 w-[65%]">Email</th>
-                    <th class="p-2 border border-gray-300 w-[35%]">Celular</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="text-center">
-                    <td class="p-2 border border-gray-300 font-normal">{{user?.correo ||' '}}</td>
-                    <td class="p-2 border border-gray-300 font-normal">{{user?.celular || ' '}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            </form>
-          </div> -->
           <div class="w-full flex flex-col items-center justify-center mb-4">
             <form class="grid grid-cols-1 gap-4 w-full max-w-lg">
               <div class="flex flex-row">
@@ -332,7 +306,9 @@
                 >
                   <input
                     type="number"
+                    [(ngModel)]="discount"
                     class="w-3/4 h-full px-0 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    (change)="calculateWithDiscount(discount)"
                     placeholder="0"
                     min="0"
                     max="100"
@@ -344,7 +320,7 @@
                 </div>
               </td>
             </tr>
-            <tr
+            <!-- <tr
               class="w-full h-8 md:w-3/4 md:h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
             >
               <td
@@ -357,8 +333,8 @@
               >
                 {{ formatCurrency(valueWithoutIva) || 0 }}
               </td>
-            </tr>
-            <tr
+            </tr> -->
+            <!-- <tr
               class="w-full h-8 md:w-3/4 md:h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
             >
               <td
@@ -371,7 +347,7 @@
               >
                 {{ formatCurrency(totalIva) || 0 }}
               </td>
-            </tr>
+            </tr> -->
             <tr
               class="w-full h-8 md:w-3/4 md:h-10 grid grid-cols-2 gray-200 border-2 rounded-lg"
             >
