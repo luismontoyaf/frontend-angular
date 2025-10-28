@@ -15,11 +15,11 @@
     width: 60px;
   }
 
-  .sidebar ul {
+  /* .sidebar ul {
     list-style: none;
     margin-top: 50px;
     width: 100%;
-  }
+  } */
   
   .sidebar ul li {
     display: block;
@@ -44,8 +44,30 @@
     transition: background-color 0.3s, color 0.3s, box-shadow 0.3s; /* Transición suave */
 }
 
+.sidebar ul li button {
+    display: flex;
+    align-items: center;
+    color: white; /* Color predeterminado */
+    text-decoration: none;
+    width: 100%;
+    padding: 10px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s; /* Transición suave */
+}
+
 .sidebar ul li a span{
-  font-size: 15px;
+  font-size: 13px;
+}
+
+.sidebar ul li button span{
+  font-size: 13px;
+}
+
+.sidebar ul li button mat-icon {
+  margin-right: 15px;
+  font-size: 20px;
+  transition: color 0.3s; /* Transición suave para el color del ícono */
 }
 
 .sidebar ul li a mat-icon {
@@ -113,7 +135,7 @@
     position: sticky;
     left: 10px;
     height: 95vh;
-    width: 230px;
+    width: 240px;
     border-radius: 20px;
     overflow: hidden;
     transition: width 0.3s, padding 0.3s;

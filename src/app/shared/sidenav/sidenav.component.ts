@@ -15,6 +15,7 @@ import { TitleService } from '../services/title.service';
 export class SidenavComponent implements OnInit {
 
   isMenuOpen = false;
+  isProductsMenuOpen = false;
   imageLogo: any;
   opcionesMenu: any[] = [];
 
@@ -42,6 +43,10 @@ export class SidenavComponent implements OnInit {
   if (this.isMobile()) {
     this.sidebarService.toggleMenu();
   }
+}
+
+toggleProductsMenu() {
+  this.isProductsMenuOpen = !this.isProductsMenuOpen;
 }
 
   isMobile(): boolean {

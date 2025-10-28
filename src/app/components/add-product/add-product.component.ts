@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MessageService } from '../../dialogs/services/message-service.service';
 import { Router } from '@angular/router';
 import { SuccessEditModalComponent } from '../../dialogs/shared/success-edit-modal/success-edit-modal.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-product',
@@ -74,8 +75,8 @@ export default class AddProductComponent {
       }
     }
   
-    addProducts() {
-      if (this.productForm.invalid || !this.selectedFile) {
+  addProducts() {
+      if (this.productForm.invalid) {
         this.message = 'Por favor, corrige los errores en el formulario.';
         return;
       }
@@ -87,22 +88,57 @@ export default class AddProductComponent {
       }
 
       const { name, description, price, quantity } = this.productForm.value;
+      
+      const file = this.selectedFile as File;
   
-      this.productsService.addProduct(name, description, price, quantity, this.selectedFile).subscribe(
-        (response) => {
-          this.message = 'El producto ha sido agregado exitosamente ¿Desea agregar otro producto?';
-          this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
-          this.setProccess('openAddProductDialog'); 
-          // this.dialogRef.close(true); // Cerrar diálogo y recargar datos en la vista principal
-          this.openSuccessEditDialog(); // Abrir el diálogo de éxito
-        },
-        (error) => {
-          console.error('Error:', error);
-          this.message = 'No se pudo crear agregar el producto';
-        }
-      );
-    }
+      //  Si NO hay variantes, se envía un solo producto
+      if (!this.hasVariants) {
+        const stock = 0; // O podrías añadir un campo "stock" en el form principal
+        this.productsService.addProduct(name, description, price, stock, file)
+          .subscribe(
+            (response) => {
+              this.handleSuccess();
+            },
+            (error) => {
+              console.error('Error:', error);
+              this.message = 'No se pudo agregar el producto';
+            }
+          );
+        return;
+      }
+
+      // Si hay variantes, dispersa los productos
+      const variants = this.variants.value; // del FormArray
+      const requests = variants.map((variant: any) => {
+        const variantName = `${name} (${variant.value})`; // Ej: Camiseta (Negro)
+        return this.productsService.addProduct(
+          variantName,
+          description,
+          price,
+          variant.stock,
+          file
+        );
+      });
+
+    // Ejecutar todas las peticiones
+    forkJoin(requests).subscribe(
+      (responses) => {
+        this.handleSuccess();
+      },
+      (error) => {
+        console.error('Error al crear variantes:', error);
+        this.message = 'No se pudieron crear las variantes';
+      }
+    );
+  }
   
+  handleSuccess() {
+    this.message = 'El producto ha sido agregado exitosamente ¿Desea agregar otro producto?';
+    this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
+    this.setProccess('openAddProductDialog'); 
+    this.openSuccessEditDialog();
+  }
+
     addVariant() {
     
     if (this.validVariantsInputs()) {

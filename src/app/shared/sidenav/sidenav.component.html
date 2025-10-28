@@ -3,7 +3,7 @@
 <!-- Sidebar -->
 <div
   class=" bg-sky-950 transform transition-transform duration-300 ease-in-out
-         w-full md:w-[230px] md:translate-x-0 md:my-5 sidebar z-50"
+         w-full md:w-[250px] md:translate-x-0 md:my-5 sidebar z-50"
   [class.-translate-x-full]="isMobile() && !(sidebarService.isOpen$ | async)"
 >
     <div class="sidebar-header">
@@ -21,7 +21,7 @@
       (click)="sidebarService.toggleMenu()">
       <mat-icon>close</mat-icon>
     </button>
-    <ul class="mt-6 space-y-3">
+    <ul class="mt-8 space-y-3">
       <!-- <li>
           <a routerLink="/dashboard/home" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">dashboard</mat-icon>
@@ -35,10 +35,46 @@
           </a>
         </li>
         <li>
-          <a routerLink="/dashboard/products" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
-            <mat-icon class="icon" routerLinkActive="text-sky-500">inventory_2</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">Administrar Productos</span>
-          </a>
+          <!-- Botón principal -->
+            <button
+            (click)="toggleProductsMenu()"
+            class="flex items-center w-full text-left"
+          >
+            <mat-icon class="icon text-white ">inventory_2</mat-icon>
+            <span class="text-white">Productos</span>
+            <mat-icon class="ml-auto transform transition-transform text-white"
+              [class.rotate-180]="isProductsMenuOpen">expand_more</mat-icon>
+          </button>
+          <!-- Submenú -->
+          <ul
+            *ngIf="isProductsMenuOpen"
+            class="ml-1 mt-0 overflow-hidden transition-all duration-300 ease-in-out"
+            [ngClass]="{ 'max-h-40 opacity-100': isProductsMenuOpen, 'max-h-0 opacity-0': !isProductsMenuOpen }"
+          >
+            <li>
+              <a
+                routerLink="/dashboard/products"
+                routerLinkActive="text-sky-500"
+                (click)="closeMenuOnMobile()"
+                class="flex items-center"
+              >
+                <mat-icon class="icon" routerLinkActive="text-sky-500">add</mat-icon>
+                <span class="ml-2" routerLinkActive="text-sky-500">Administrar Productos</span>
+              </a>
+            </li>
+
+            <li>
+              <a
+                routerLink="/dashboard/products/list"
+                routerLinkActive="text-sky-500"
+                (click)="closeMenuOnMobile()"
+                class="flex items-center"
+              >
+                <mat-icon class="icon">list</mat-icon>
+                <span class="ml-2">Administrar Variantes</span>
+              </a>
+            </li>
+          </ul>
         </li>
         <li>
           <a routerLink="/dashboard/register"routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
