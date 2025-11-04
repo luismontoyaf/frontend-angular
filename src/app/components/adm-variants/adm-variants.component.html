@@ -1,0 +1,44 @@
+    <div class="col-span w-1/2 border rounded-md border-gray-600 shadow-lg shadow-gray-600 m-5 p-4">
+      <h3 class="text-lg font-semibold text-sky-900 mt-4 mb-2">Nueva Variante</h3>
+
+      <form  [formGroup]="variantsForm" class="space-y-2">
+        <div>
+            <p>Nombre</p>
+            <input type="text" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+        </div>
+
+        <div>
+            <span>Valores</span>
+        </div>
+        <div formArrayName="atributes">
+            <div
+          *ngFor="let atribute of atributes.controls; let i = index"
+          [formGroupName]="i"
+          class="flex gap-2 items-center"
+        >
+          <input
+            type="text"
+            placeholder="Valor (Ej: Rojo, M, Algodón)"
+            formControlName="value"
+            class="border rounded p-2 w-full mt-2"
+          />
+          <button
+            type="button"
+            (click)="removeVariant(i)"
+            class="text-red-500 hover:text-red-700"
+          >
+            ❌
+          </button>
+        </div>
+        </div>
+      </form >
+
+      <button
+        type="button"
+        (click)="addVariant()"
+        class="mt-2 px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-50"
+      >
+        + Agregar Variante
+      </button>
+      <p *ngIf="message" class="col-span-full text-red-600 mt-4">{{ message }}</p>
+    </div>
