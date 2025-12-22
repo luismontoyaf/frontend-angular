@@ -71,6 +71,12 @@ export const routes: Routes = [
           data: { title: 'Agregar Variantes' }
         },
         { 
+          path: 'variants/adm-variants/:id', 
+          canActivate: [authGuardCanActivate],
+          loadComponent: () => import('./components/adm-variants/adm-variants.component'),
+          data: { title: 'Agregar Variantes' }
+        },
+        { 
           path: '**', 
           loadComponent: () => import('./components/sale/sale.component'),
           data: { title: 'Página Principal' }

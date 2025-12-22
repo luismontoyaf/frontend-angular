@@ -33,7 +33,6 @@ export class SuccessModalComponent implements OnInit {
       case 'closeModalFromEditProduct':
         this.closeModal();
         break;
-      // podrías agregar más casos aquí
       default:
         this.closeModalSuccess();
     }

@@ -44,8 +44,9 @@ constructor(private messageService: MessageService,
     this.items = data.items;
   }
   messageModal: string = '';
-  proccessKey: string = ''; // Clave del proceso
+  proccessKey: string = ''; 
   proccessModal!: () => void;
+
   ngOnInit() {
     this.messageService.message$.subscribe((message) => {
       this.messageModal = message;
@@ -105,7 +106,6 @@ constructor(private messageService: MessageService,
         case 'openSuccesSaleDialog':
           this.openSuccesSaleDialog();
           break;
-        // podrías agregar más casos aquí
         default:
           console.warn('No se reconoció el proceso');
       }

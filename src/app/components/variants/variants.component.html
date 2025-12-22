@@ -41,19 +41,22 @@
       <tbody>
         @for (variant of filteredVariants(); track $index) {
         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 text-center">
-          <td class="px-4 py-2 font-bold text-black">{{ variant.nombreCliente }}</td>
-          <td class="px-4 py-2 text-black font-bold">$ {{ variant.parsedFactura?.Total }}</td>
-          <td class="px-4 py-2 text-black">{{ variant.formaPago }}</td>
+          <td class="px-4 py-2 font-bold text-black">{{ variant.name }}</td>
+          <td class="px-4 py-2 text-black font-bold">{{ getAtributesText(variant.jsonValues) }}</td>
+          <td class="px-4 py-2 text-black">{{variant.state == true  ? 'Activo' : 'Inactivo'}}</td>
           <td class="px-4 py-2 items-center">
             <mat-icon class="text-blue-600"
                 matTooltip="Activar/Desactivar"
-                [class.hover:cursor-pointer]="true">touch_app</mat-icon>
+                [class.hover:cursor-pointer]="true"
+                (click)="changeStatusVariant(variant.id)">touch_app</mat-icon>
             <mat-icon class="text-blue-600 ml-2"
                 matTooltip="Editar"
-                [class.hover:cursor-pointer]="true">edit</mat-icon>
+                [class.hover:cursor-pointer]="true"
+                [routerLink]="['/dashboard/variants/adm-variants', variant.id]">edit</mat-icon>
             <mat-icon class="text-blue-600 ml-2"
                 matTooltip="Eliminar"
-                [class.hover:cursor-pointer]="true">delete_forever</mat-icon>
+                [class.hover:cursor-pointer]="true"
+                (click)="deleteVariant(variant.id)">delete_forever</mat-icon>
           </td>
         </tr>
         }

@@ -8,7 +8,11 @@ import { Product } from '../../interfaces/product';
 import { MaterialModule } from '../../../material.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { VariantsService } from '../../services/Variants/variants.service';
+import { Variants } from '../../interfaces/variants';
+import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-variants',
@@ -24,10 +28,10 @@ export default class VariantsComponent {
   content: boolean = false;
   showOptions: boolean = false;
 
-  variants = signal<Invoice[]>([]);
-  addedVariants = signal<Product[]>([]);
-  filteredVariants = signal<any[]>([]);
-  selectedVariants = signal<any[]>([]);
+  variants = signal<Variants[]>([]);
+  addedVariants = signal<Variants[]>([]);
+  filteredVariants = signal<Variants[]>([]);
+  selectedVariant = signal<Variants[]>([]);
   selectAllChecked = signal(false);
 
   searchTerm: string = '';
@@ -36,35 +40,23 @@ export default class VariantsComponent {
   messageError: string = '';
 
   constructor(
-    private sidebarService: SidebarService,
     private messageService: MessageService,
-    private invoiceService: InvoiceService,
-    private titleService: TitleService
+    private variantService: VariantsService,
+    private titleService: TitleService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.invoiceService.getAllInvoicess().subscribe({
-      next: (response: any) => {
-        const invoicesParsed = response
-          .map((inv: { jsonFactura: string }) => ({
-            ...inv,
-            parsedFactura: JSON.parse(inv.jsonFactura),
-          }))
-          .sort(
-            (
-              a: { fechaCreacion: string | number | Date },
-              b: { fechaCreacion: string | number | Date }
-            ) =>
-              new Date(b.fechaCreacion).getTime() -
-              new Date(a.fechaCreacion).getTime()
-          );
+    this.variantService.getVariants().subscribe({
+      next: (response: Variants) => {
+        const variantsParsed = Array.isArray(response) ? response : [response];
 
-        this.variants.set(invoicesParsed);
-        this.filteredVariants.set(invoicesParsed);
+        this.variants.set(variantsParsed);
+        this.filteredVariants.set(variantsParsed);
       },
       error: (err) => {
         console.error('Error al obtener variantes:', err);
-        this.content = true; // Mostrar mensaje de "No hay productos"
+        this.content = true; 
       },
     });
 
@@ -87,12 +79,57 @@ export default class VariantsComponent {
     this.filteredVariants.set(
       this.variants().filter(
         (variant) =>
-          variant.numeroFactura.toLowerCase().includes(term) ||
-          variant.nombreCliente.toLowerCase().includes(term) ||
-          variant.fechaCreacion.toLowerCase().includes(term)
+          variant.name.toLowerCase().includes(term)
       )
     );
   }
+
+  getAtributesText(atributes: { value: string }[]): string {
+    if (!atributes) return '';
+
+    const parsed = typeof atributes === 'string' ? JSON.parse(atributes) : atributes;
+    
+    return parsed.map((a: any) => a.Value ).join(', ');
+  }
+
+  editVariant(id: number){
+    
+  }
+
+  changeStatusVariant(id : number){
+    this.variantService.changeStatusVariant(id).subscribe({
+      next: (response: any )=>{
+        this.handleSuccess("update");
+      },error(err){
+        throw console.error('no se pudo cambiar estado de la variante');
+        
+      }
+    });
+  }
+
+  deleteVariant(id : number){
+    this.variantService.deleteVariant(id).subscribe({
+      next: (response: any )=>{
+        this.handleSuccess("delete");
+      },error(err){
+        throw console.error('no se pudo cambiar estado de la variante');
+        
+      }
+    });
+  }
+
+  handleSuccess(flag: string) {
+    this.message = flag=="update" 
+      ? 'El estado de la variante ha sido modificado exitosamente'
+      : 'La variante se ha eliminado correctamente.';
+    this.setMessage(this.message);
+    this.setProccess(''); 
+    this.openSuccessDialog();
+  }
+
+  openSuccessDialog(): void {
+      this.dialog.open(SuccessModalComponent, {});
+    }
 
   setMessage(message: string): void {
     this.messageService.setMessageSuccess(message);

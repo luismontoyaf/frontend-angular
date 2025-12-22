@@ -24,8 +24,8 @@ export default class ProductsComponent implements OnInit{
   isMenuOpen = false;
   content: boolean = false;
 
-  products: Product[] = []; // Cambiado a any[] para evitar errores de tipo
-  filteredProducts: Product[] = []; // Cambiado a any[] para evitar errores de tipo
+  products: Product[] = [];   
+  filteredProducts: Product[] = []; 
 
   searchTerm: string = '';
 
@@ -44,14 +44,14 @@ private router: Router) {
         if (response && response.length > 0) {
           this.products = response;
           this.filteredProducts = response;
-          this.content = false; // Si hay productos, mostramos la lista
+          this.content = false; 
         } else {
-          this.content = true; // Si no hay productos, mostramos el mensaje vacío
+          this.content = true; 
         }
       },
       error: (err) => {
         console.error('Error al obtener productos:', err);
-        this.content = true; // Mostrar mensaje de "No hay productos"
+        this.content = true;
       }
     });
 }
@@ -81,7 +81,6 @@ openEditProductDialog(product: Product): void {
   //   this.isMenuOpen = !this.isMenuOpen;
   // }
 
-  // Método para filtrar productos por nombre
   filterProducts() {
     const term = this.searchTerm.toLowerCase();
     this.filteredProducts = this.products.filter(product => 
