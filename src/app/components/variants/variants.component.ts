@@ -1,14 +1,10 @@
 import { Component, HostListener, Output, signal } from '@angular/core';
-import { SidebarService } from '../../services/Sidebar/sidebar.service';
 import { MessageService } from '../../dialogs/services/message-service.service';
-import { InvoiceService } from '../../services/Invoice/invoice.service';
 import { TitleService } from '../../shared/services/title.service';
-import { Invoice } from '../../interfaces/invoice';
-import { Product } from '../../interfaces/product';
 import { MaterialModule } from '../../../material.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { VariantsService } from '../../services/Variants/variants.service';
 import { Variants } from '../../interfaces/variants';
 import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
@@ -144,6 +140,6 @@ export default class VariantsComponent {
   }
 
   trackByProduct(index: number, invoices: any): string {
-    return invoices.idFactura.toString(); // Asegúrate de que cada producto tenga un `id` único
+    return invoices.idFactura.toString();
   }
 }

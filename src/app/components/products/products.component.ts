@@ -7,10 +7,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AddProductDialogComponent } from '../../dialogs/add-product-dialog/add-product-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductsService } from '../../services/Products/products.service';
-import { EditProductDialogComponent } from '../../dialogs/edit-product-dialog/edit-product-dialog.component';
 import { MessageService } from '../../dialogs/services/message-service.service';
 import { DeleteModalComponent } from '../../dialogs/shared/delete-modal/delete-modal.component';
-import { Product } from '../../interfaces/product';
+import { Product} from '../../interfaces/product';
 import { TitleService } from '../../shared/services/title.service';
 import { Router } from '@angular/router';
 
@@ -70,16 +69,15 @@ openAddProductComponent(): void{
   this.router.navigate(['/dashboard/add-products'])
 }
 
-openEditProductDialog(product: Product): void {
-  this.dialog.open(EditProductDialogComponent, {
-    width: '400px',
-    data: { product }
-  });
-};
+openEditProductComponent(product: Product): void {
+  
+  this.router.navigate(['/dashboard/add-products', product.id]);
 
-  // toggleMenu() {
-  //   this.isMenuOpen = !this.isMenuOpen;
-  // }
+  // this.dialog.open(EditProductDialogComponent, {
+  //   width: '400px',
+  //   data: { product }
+  // });
+};
 
   filterProducts() {
     const term = this.searchTerm.toLowerCase();

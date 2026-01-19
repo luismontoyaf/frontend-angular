@@ -51,7 +51,7 @@ export default class AdmVariantsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.setTitle('Facturación de Productos');
+    this.setTitle('Administrar Variantes');
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');

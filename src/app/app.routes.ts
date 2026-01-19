@@ -35,6 +35,12 @@ export const routes: Routes = [
           data: { title: 'Agrega Tus Productos' }
         },
         { 
+          path: 'add-products/:id', 
+          canActivate: [authGuardCanActivate],
+          loadComponent: () => import('./components/add-product/add-product.component'),
+          data: { title: 'Agregar Tus Productos' }
+        },
+        { 
           path: 'sale', 
           canActivate: [authGuardCanActivate],
           loadComponent: () => import('./components/sale/sale.component'),

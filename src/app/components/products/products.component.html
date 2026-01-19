@@ -6,7 +6,7 @@
       <p>Agregar tus Productos</p>
     </div>
 
-    <div class="products-container" *ngIf="content == false">
+    <div class="products-container">
       <input 
         type="text" 
         placeholder="Buscar productos..." 
@@ -15,9 +15,9 @@
       />
 
       <button mat-flat-button class="AgregarProd" (click)="openAddProductComponent()">Agregar Producto</button>
-      <mat-divider></mat-divider>
+      <mat-divider></mat-divider> 
     <div class="products-content grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" *ngIf="content == false">
-      <!-- Lista de productos -->
+      <!-- Lista de productos  -->
        @for (product of filteredProducts; track $index) {
         <div class="product-card w-full max-w-xs bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center text-center mt-4">
           <div class="w-full h-44 flex justify-center items-center bg-gray-100">
@@ -31,7 +31,7 @@
             <p class="text-gray-600">{{product.stock}} Uds.</p>
             <p class="text-xl font-bold text-sky-900">$ {{ product.precio | number: '1.0-0' }}</p>
             <div class="w-full max-w-xs bg-white flex justify-center items-center gap-4">
-              <button (click)="openEditProductDialog(product)" class="mt-2 w-11 h-11 bg-sky-900 text-white py-2 rounded-md hover:bg-blue-700">
+              <button (click)="openEditProductComponent(product)" class="mt-2 w-11 h-11 bg-sky-900 text-white py-2 rounded-md hover:bg-blue-700">
                 <mat-icon>edit</mat-icon>
               </button>
               <button (click)="openDeleteProductDialog(product)" class="mt-2 w-11 h-11 bg-red-800 text-white py-2 rounded-md hover:bg-red-700">

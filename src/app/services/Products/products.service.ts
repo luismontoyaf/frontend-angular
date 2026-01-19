@@ -11,7 +11,7 @@ export class ProductsService {
   private apiUrl = environment.apiUrl; // URL de la API
   
     constructor(private http: HttpClient) {}
-  
+    
     addProduct(nombreProducto: string, descripcion: string, precio: string, stock: number, imagen: File): Observable<any> {
       const formData = new FormData();
       formData.append('nombreProducto', nombreProducto);
@@ -40,6 +40,16 @@ export class ProductsService {
       });
     }
 
+    removeProduct(id: number) {
+      return this.http.delete<Product>(`${this.apiUrl}/products/${id}`, {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json-patch+json' })
+      });
+    }
+
+    updateProductImage(id: number, formData: FormData): Observable<any> {  
+      return this.http.put(`${this.apiUrl}/products/${id}/image`, formData);
+    }
+
     deleteProduct(id: number, cambios: Partial<any>) {
       // Convertimos el objeto de cambios en formato JSON Patch
       const patchData = Object.keys(cambios).map(key => ({
@@ -51,5 +61,9 @@ export class ProductsService {
       return this.http.patch<Product>(`${this.apiUrl}/products/delete/${id}`, patchData, {
         headers: new HttpHeaders({ 'Content-Type': 'application/json-patch+json' })
       });
+    }
+
+    getProductById(id:number): Observable<Product>{
+      return this.http.get<Product>(`${this.apiUrl}/products/GetProductById/${id}`);
     }
 }

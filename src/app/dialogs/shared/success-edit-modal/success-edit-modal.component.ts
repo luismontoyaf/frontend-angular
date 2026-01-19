@@ -38,10 +38,10 @@ constructor(private messageService: MessageService,
   private dialog: MatDialog,
   private dialogRef: MatDialogRef<DeleteModalComponent>,
   @Inject(MAT_DIALOG_DATA) public data: any,  ) {
-    this.userEmail = data.userEmail;
-    this.idClient = data.idClient;
-    this.PaymentMethod = data.PaymentMethod;
-    this.items = data.items;
+    this.userEmail = data?.userEmail;
+    this.idClient = data?.idClient;
+    this.PaymentMethod = data?.PaymentMethod;
+    this.items = data?.items;
   }
   messageModal: string = '';
   proccessKey: string = ''; 

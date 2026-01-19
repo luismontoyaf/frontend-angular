@@ -40,13 +40,12 @@ constructor(private messageService: MessageService,
       return;
     }
   
-    // Enviar solo los cambios detectados en la solicitud PATCH
-    this.productsService.editProduct(this.data.product.id, cambios).subscribe(
+    this.productsService.removeProduct(this.data.product.id).subscribe(
       (response) => {
         this.message = 'El producto fue eliminado correctamente';
         this.setMessage(this.message);
-        this.dialogRef.close(true); // Cerrar diálogo y recargar datos en la vista principal
-        this.openSuccessDialog(); // Abrir el diálogo de éxito
+        this.dialogRef.close(true);
+        this.openSuccessDialog();
       },
       (error) => {
         console.error('Error:', error);
