@@ -5,10 +5,13 @@ import { RegisterService } from '../../services/Register/register.service';
 import { Router } from '@angular/router';
 import { MaterialModule } from '../../../material.module'; 
 import { TitleService } from '../../shared/services/title.service';
+import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
+import { MessageService } from '../../dialogs/services/message-service.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, MatDialogModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -34,7 +37,9 @@ registerForm: FormGroup;
   constructor(private fb: FormBuilder, 
     private registerService: RegisterService, 
     private router: Router,
-    private titleService: TitleService) {
+    private titleService: TitleService,
+    private messageService: MessageService,
+    private dialog: MatDialog) {
     
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -106,7 +111,10 @@ registerForm: FormGroup;
 
     this.registerService.registerUser(formData.name, formData.lastname, formData.tipoDocumento, formData.numDocumento, formData.correo, formData.fechaNacimiento, formData.fechaIngreso, formData.tipoUsuario, formData.contrasena, formData.cell, formData.direccion, formData.genero).subscribe(
       (response) => {
-        this.messageSuccess = 'Registro exitoso';
+        this.message = 'El colaborador ha sido registrado exitosamente';
+        this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
+        this.setProccess('closeModalSuccess'); 
+        this.openSuccessDialog();
       },
       (error) => {
         console.error('Error:', error);
@@ -118,5 +126,17 @@ registerForm: FormGroup;
   setTitle(title: string): void {
     this.titleService.setTitle(title);
   }
+
+  setMessage(message: string): void {
+    this.messageService.setMessageSuccess(message);
+  }
+          
+  setProccess(proccess: string): void {
+    this.messageService.setProcess(proccess);
+  }
+  openSuccessDialog(): void {
+            this.dialog.open(SuccessModalComponent, {
+    });
+  };
   
 }

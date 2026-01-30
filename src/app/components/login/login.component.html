@@ -11,12 +11,12 @@
 
   <!-- Columna derecha con formulario -->
   <div class="h-screen flex items-center justify-center">
-    <div class="bg-white p-10 rounded-lg shadow-xl w-full max-w-md shadow-sm shadow-cyan-500">
+    <div class="bg-white p-10 m-3 rounded-lg shadow-xl w-full max-w-md shadow-sm shadow-cyan-500">
       <div class="w-full items-center flex justify-center mb-5" >
         <img
         src="../../../assets/images/likecell.png"
         alt="Login image"
-        class="w-[15vw] h-[10vh] object-cover"
+        class="w-full sm:w-[15vw] h-[10vh] object-cover"
       />
       </div>
       <h2 class="text-3xl font-bold text-center mb-8 text-sky-900">Iniciar Sesión</h2>
@@ -33,9 +33,6 @@
           />
           <p *ngIf="loginForm.get('username')?.hasError('email') && loginForm.get('username')?.touched" class="text-red-500 text-sm mt-1">
             El correo electrónico no es válido.
-          </p>
-          <p *ngIf="loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched" class="text-red-500 text-sm mt-1">
-            El correo es obligatorio.
           </p>
         </div>
 
@@ -57,65 +54,15 @@
           Iniciar Sesión
         </button>
 
-        <button type="button" class="w-full mt-4 bg-sky-600 text-white py-2 rounded-md hover:bg-sky-500 transition duration-300" (click)="goToRegister()">
+        <!-- <button type="button" class="w-full mt-4 bg-sky-600 text-white py-2 rounded-md hover:bg-sky-500 transition duration-300" (click)="goToRegister()">
           Registrarse
-        </button>
+        </button> -->
 
         <p *ngIf="message" class="text-red-600 mt-4 text-center">{{ message }}</p>
       </form>
     </div>
   </div>
 </div>
-  
-  <!-- <div class="login-container w-1/2 h-2/3 flex grid grid-cols-2 bg-sky-700 shadow-xl shadow-cyan-500" *ngIf="selectedForm != 'form2'">
-    <div class="bg-sky-900 w-full h-full flex flex-col justify-center items-center rounded-lg shadow-sm shadow-black">
-      <hr class="bg-white w-3/4 ml-5">
-      <h1 class="m-5 text-white text-4xl">LikeCell</h1>
-      <hr class="bg-white w-3/4 ml-5">
-    </div>
-    <div class="flex flex-col">
-      <div class="w-2/4 h-10 mt-4 ml-[-20px] bg-sky-900 rounded-lg flex justify-center items-center">
-        <a class="text-white text-xl">Bienvenido</a>
-      </div>
-      <div class="p-5 mt-10">
-        <h2>Iniciar Sesión</h2>
-      <form [formGroup]="loginForm" (ngSubmit)="login()">
-        <div class="form-group">
-          <label for="username">Correo</label>
-          <input
-            type="email"
-            id="username"
-            formControlName="username"
-            placeholder="Ingresa tu correo"
-            (input)="validateEmail()"
-          />
-          <p *ngIf="loginForm.get('username')?.hasError('email') && loginForm.get('username')?.touched" class="message">
-            El correo electrónico no es válido.
-          </p>
-          <p *ngIf="loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched" class="message">
-            El correo es obligatorio.
-          </p>
-        </div>
-        <div class="form-group">
-          <label for="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            placeholder="Ingresa tu contraseña"
-          />
-          <p *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched" class="message">
-            La contraseña es obligatoria.
-          </p>
-        </div>
-        <button type="submit" class="btn bg-sky-900" [disabled]="loginForm.invalid">Iniciar Sesión</button>
-        <button type="button" class="btn bg-sky-900" (click)="goToRegister()">Registrarse</button>
-      </form>
-      <p *ngIf="message" class="message">{{ message }}</p>
-      </div>
-    </div>
-  </div> -->
-  <!-- <a class="text-xl text-center text-sky-900" *ngIf="selectedForm == 'form1'">POWERED BY LM</a> -->
 
   <div class="register-container shadow-xl shadow-cyan-500/50 w-[800px]" *ngIf="selectedForm == 'form2'">
     <label for="return" class="regresar" (click)="backToLogin()">

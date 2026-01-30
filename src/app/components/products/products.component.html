@@ -1,47 +1,106 @@
-<div class="container">
-  
-  <div class="main-content scroll-hidden overflow-auto" [class.menu-open]="isMenuOpen">
-    <div class="emptyContent" *ngIf="content == true">
-      <h1>Aún no tienes productos</h1>
-      <p>Agregar tus Productos</p>
+<div class="flex h-[92.5vh] overflow-hidden">
+
+  <div 
+    class="flex-1 p-4 sm:p-6 overflow-auto scrollbar-hide transition-all duration-300"
+    [class.ml-16]="isMenuOpen"
+  >
+
+    <!-- Estado vacío -->
+    <div 
+      *ngIf="content == true"
+      class="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
+    >
+      <h1 class="text-xl sm:text-2xl font-semibold mb-2">
+        Aún no tienes productos
+      </h1>
+      <p class="text-sm sm:text-base text-gray-600">
+        Agregar tus Productos
+      </p>
     </div>
 
-    <div class="products-container">
-      <input 
-        type="text" 
-        placeholder="Buscar productos..." 
-        [(ngModel)]="searchTerm"
-        (input)="filterProducts()"
-      />
+    <!-- Contenedor principal -->
+    <div class="w-full">
 
-      <button mat-flat-button class="AgregarProd" (click)="openAddProductComponent()">Agregar Producto</button>
-      <mat-divider></mat-divider> 
-    <div class="products-content grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" *ngIf="content == false">
-      <!-- Lista de productos  -->
-       @for (product of filteredProducts; track $index) {
-        <div class="product-card w-full max-w-xs bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center text-center mt-4">
-          <div class="w-full h-44 flex justify-center items-center bg-gray-100">
-            <img *ngIf="product.imagenBase64" 
-              [src]="'data:image/jpeg;base64,' + product.imagenBase64"
-              class="w-full h-full object-contain">
-          </div>
-          <div class="p-4 flex flex-col items-center text-center">
-            <h3 class="text-lg font-semibold">{{ product.nombreProducto }}</h3>
-            <p class="text-gray-600">{{ product.descripcion }}</p>
-            <p class="text-gray-600">{{product.stock}} Uds.</p>
-            <p class="text-xl font-bold text-sky-900">$ {{ product.precio | number: '1.0-0' }}</p>
-            <div class="w-full max-w-xs bg-white flex justify-center items-center gap-4">
-              <button (click)="openEditProductComponent(product)" class="mt-2 w-11 h-11 bg-sky-900 text-white py-2 rounded-md hover:bg-blue-700">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button (click)="openDeleteProductDialog(product)" class="mt-2 w-11 h-11 bg-red-800 text-white py-2 rounded-md hover:bg-red-700">
-                <mat-icon>delete</mat-icon>
-              </button>
+      <!-- Buscador + botón -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+        <input 
+          type="text"
+          placeholder="Buscar productos..."
+          [(ngModel)]="searchTerm"
+          (input)="filterProducts()"
+          class="w-full sm:w-72 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
+        />
+
+        <button 
+          mat-flat-button
+          (click)="openAddProductComponent()"
+          class="w-full sm:w-auto bg-white text-sky-700 px-4 py-2 rounded-md hover:bg-sky-50 transition"
+        >
+          Agregar Producto
+        </button>
+      </div>
+
+      <mat-divider class="mb-4"></mat-divider>
+
+      <!-- Grid de productos -->
+      <div 
+        *ngIf="content == false"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"
+      >
+        @for (product of filteredProducts; track $index) {
+
+          <div class="w-full bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center text-center">
+            
+            <!-- Imagen -->
+            <div class="w-full h-40 bg-gray-100 flex items-center justify-center">
+              <img 
+                *ngIf="product.imagenBase64"
+                [src]="'data:image/jpeg;base64,' + product.imagenBase64"
+                class="w-full h-full object-contain"
+              />
+            </div>
+
+            <!-- Info -->
+            <div class="p-4 flex flex-col items-center gap-1 w-full">
+              <h3 class="text-base sm:text-lg font-semibold">
+                {{ product.nombreProducto }}
+              </h3>
+
+              <p class="text-sm text-gray-600">
+                {{ product.descripcion }}
+              </p>
+
+              <p class="text-sm text-gray-600">
+                {{ product.stock }} Uds.
+              </p>
+
+              <p class="text-lg sm:text-xl font-bold text-sky-900">
+                $ {{ product.precio | number:'1.0-0' }}
+              </p>
+
+              <!-- Acciones -->
+              <div class="flex gap-4 mt-3">
+                <button
+                  (click)="openEditProductComponent(product)"
+                  class="w-10 h-10 flex items-center justify-center bg-sky-900 text-white rounded-md hover:bg-blue-700 transition"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                <button
+                  (click)="openDeleteProductDialog(product)"
+                  class="w-10 h-10 flex items-center justify-center bg-red-800 text-white rounded-md hover:bg-red-700 transition"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
             </div>
           </div>
-        </div>
-       }
+
+        }
+      </div>
     </div>
-    </div>
+
   </div>
 </div>

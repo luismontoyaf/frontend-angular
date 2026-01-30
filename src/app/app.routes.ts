@@ -17,10 +17,16 @@ export const routes: Routes = [
         //   data: { title: 'Página Principal' }
         // },
         { 
-          path: 'register', 
+          path: 'register/registerEmployee', 
           canActivate: [authGuardCanActivate],
           loadComponent: () => import('./components/register/register.component'), 
           data: { title: 'Registro de Usuarios' }
+        },
+        { 
+          path: 'register/registerClient', 
+          canActivate: [authGuardCanActivate],
+          loadComponent: () => import('./components/register-client/register-client.component'), 
+          data: { title: 'Registro de Clientes' }
         },
         { 
           path: 'products', 

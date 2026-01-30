@@ -16,6 +16,7 @@ export class SidenavComponent implements OnInit {
 
   isMenuOpen = false;
   isProductsMenuOpen = false;
+  isUsersMenuOpen = false;
   imageLogo: any;
   opcionesMenu: any[] = [];
 
@@ -47,6 +48,10 @@ export class SidenavComponent implements OnInit {
 
 toggleProductsMenu() {
   this.isProductsMenuOpen = !this.isProductsMenuOpen;
+}
+
+toggleUsersMenu() {
+  this.isUsersMenuOpen = !this.isUsersMenuOpen;
 }
 
   isMobile(): boolean {

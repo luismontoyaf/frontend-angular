@@ -14,3 +14,26 @@
     divider-color: black
   ));
 }
+
+@layer components {
+  .label {
+    @apply text-sm font-semibold text-gray-700;
+  }
+
+  .input-base {
+    @apply w-full rounded-lg border border-gray-300 bg-gray-50
+           px-4 py-2.5 text-sm text-gray-800
+           placeholder:text-gray-400
+           shadow-sm
+           transition
+           hover:border-sky-400
+           focus:bg-white
+           focus:outline-none
+           focus:ring-2 focus:ring-sky-500
+           focus:border-sky-500;
+  }
+
+  .error-text {
+    @apply text-xs text-red-600 mt-1;
+  }
+}

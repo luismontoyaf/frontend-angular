@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { User } from '../../interfaces/user';
+import { Client } from '../../interfaces/client';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,12 @@ export class RegisterService {
       const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
       const body = { data };
       return this.http.put(`${this.apiUrl}/users/updateUser`, body, { headers });
+    }
+
+    updateClient(data: Client): Observable<any> {
+      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      const body = { data };
+      return this.http.put(`${this.apiUrl}/users/updateClient`, body, { headers });
     }
 
     getUsers(): Observable<any> {

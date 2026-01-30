@@ -150,6 +150,12 @@
         placeholder="Ingresa tu contraseña"
         class="border rounded p-2"
       />
+      <p
+        *ngIf="registerForm.get('contrasena')?.touched && registerForm.get('contrasena')?.invalid"
+        class="text-red-500 text-sm"
+      >
+        La contraseña debe tener al menos 6 digitos.
+      </p>
     </div>
 
     <!-- Confirmar contraseña -->
@@ -162,6 +168,12 @@
         placeholder="Confirma tu contraseña"
         class="border rounded p-2"
       />
+      <p
+        *ngIf="registerForm.get('confirmContrasena')?.touched && registerForm.hasError('mismatch')"
+        class="text-red-500 text-sm"
+      >
+        Las contraseñas no coinciden.
+      </p>
     </div>
 
     <!-- Celular -->

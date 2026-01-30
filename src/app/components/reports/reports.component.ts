@@ -66,14 +66,12 @@ perPage = 10;
     let startDate = (this.reportParamsForm.get('fechaInicio')?.value ==null || this.reportParamsForm.get('fechaInicio')?.value =="")?
                     "" : this.reportParamsForm.get('fechaInicio')?.value;
 
-    let endDate = (this.reportParamsForm.get('fechaFin')?.value ==null || this.reportParamsForm.get('fechaFin')?.value =="")?
-                    "" : this.reportParamsForm.get('fechaFin')?.value;
+    let endDate = (this.reportParamsForm.get('fechaFinal')?.value ==null || this.reportParamsForm.get('fechaFinal')?.value =="")?
+                    "" : this.reportParamsForm.get('fechaFinal')?.value;
 
     this.tableLoadingIndicator = true;
 
     this.reportsService.getReport(Id, startDate, endDate, true).subscribe (response => {
-
-      console.log('response ' + JSON.stringify(response));
       
       const result = response;
 

@@ -25,6 +25,7 @@ export class SuccessSaleModalComponent implements OnInit {
   metodoSeleccionado: any;
   products: any;
   quantities: any;
+  numeroFactura: any;
   constructor(private messageService: MessageService, 
     private router: Router, 
     private dialogRef: MatDialogRef<SuccessSaleModalComponent>,
@@ -34,6 +35,7 @@ export class SuccessSaleModalComponent implements OnInit {
       this.idClient = data.idClient;
       this.PaymentMethod = data.PaymentMethod;
       this.items = data.items;
+      this.numeroFactura = data.numeroFactura;
     }
   messageModal: string = '';
   proccessKey: string = '';
@@ -54,7 +56,9 @@ export class SuccessSaleModalComponent implements OnInit {
     this.invoiceService.generateInvoice({
         idCLient: this.idClient,
         PaymentMethod: this.PaymentMethod,
-        Items: this.items
+        numInvoice: this.numeroFactura,
+        Items: this.items,
+        sendEmail: false
       }).subscribe((blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');

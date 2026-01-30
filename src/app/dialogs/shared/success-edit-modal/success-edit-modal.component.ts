@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, RESPONSE_INIT } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageService } from '../../services/message-service.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -40,6 +40,7 @@ constructor(private messageService: MessageService,
   @Inject(MAT_DIALOG_DATA) public data: any,  ) {
     this.userEmail = data?.userEmail;
     this.idClient = data?.idClient;
+    this.clientDocument = data?.clientDocument;
     this.PaymentMethod = data?.PaymentMethod;
     this.items = data?.items;
   }
@@ -68,9 +69,11 @@ constructor(private messageService: MessageService,
       this.isLoading = true;
       this.saleService.saveSale({
         idClient: this.idClient,
+        ClientDocument: this.clientDocument,
         PaymentMethod: this.PaymentMethod,
-        items: this.items
-      }).subscribe((response) => {
+        items: this.items,
+        sendEmail: true
+      }).subscribe((response: any) => {
         this.isLoading = false;
         this.dialogRef.close();
 
@@ -86,6 +89,7 @@ constructor(private messageService: MessageService,
             , clientDocument: this.clientDocument
             , PaymentMethod: this.PaymentMethod
             , items: this.items
+            , numeroFactura: response.invoiceNumber
           }
         });
       }, (error) => {

@@ -77,11 +77,53 @@
           </ul>
         </li>
         <li>
+          <!-- Botón principal -->
+            <button
+            (click)="toggleUsersMenu()"
+            class="flex items-center w-full text-left"
+          >
+            <mat-icon class="icon text-white ">person_add</mat-icon>
+            <span class="text-white">Registrar Usuarios</span>
+            <mat-icon class="ml-auto transform transition-transform text-white"
+              [class.rotate-180]="isUsersMenuOpen">expand_more</mat-icon>
+          </button>
+          <!-- Submenú -->
+          <ul
+            *ngIf="isUsersMenuOpen"
+            class="ml-1 mt-0 overflow-hidden transition-all duration-300 ease-in-out"
+            [ngClass]="{ 'max-h-40 opacity-100': isUsersMenuOpen, 'max-h-0 opacity-0': !isUsersMenuOpen }"
+          >
+            <li>
+              <a
+                routerLink="/dashboard/register/registerClient"
+                routerLinkActive="text-sky-500"
+                (click)="closeMenuOnMobile()"
+                class="flex items-center"
+              >
+                <mat-icon class="icon" routerLinkActive="text-sky-500">person_book</mat-icon>
+                <span class="ml-2" routerLinkActive="text-sky-500">Clientes</span>
+              </a>
+            </li>
+
+            <li>
+              <a
+                routerLink="/dashboard/register/registerEmployee"
+                routerLinkActive="text-sky-500"
+                (click)="closeMenuOnMobile()"
+                class="flex items-center"
+              >
+                <mat-icon class="icon">engineering</mat-icon>
+                <span class="ml-2">Colaboradores</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- <li>
           <a routerLink="/dashboard/register"routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">person_add</mat-icon>
             <span class="ml-2" routerLinkActive="text-sky-500">Registrar Usuarios</span>
           </a>
-        </li>
+        </li> -->
         <li>
           <a routerLink="/dashboard/manageUsers" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">manage_accounts</mat-icon>

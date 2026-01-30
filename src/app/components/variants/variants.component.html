@@ -1,68 +1,120 @@
-<div class="container mx-auto p-4 w-full h-full">
-  <div class="main-content h-full" [class.menu-open]="isMenuOpen">
-    <!-- Mensaje cuando no hay productos -->
-    <div class="emptyContent text-center" *ngIf="content == true">
-      <h1 class="text-2xl font-bold mb-2">Aún no tienes productos para facturar</h1>
+<div class="mx-auto p-2 sm:p-4 w-full h-full">
+  <div
+    class="h-full transition-all duration-300"
+    [class.ml-16]="isMenuOpen"
+  >
+
+    <!-- Empty state -->
+    <div
+      *ngIf="content == true"
+      class="flex items-center justify-center h-full text-center px-4"
+    >
+      <h1 class="text-lg sm:text-2xl font-bold">
+        Aún no tienes productos para facturar
+      </h1>
     </div>
 
-    <!-- Contenedor de productos -->
-    <div class="products-container  h-full" *ngIf="content == false">
-      <!-- Barra de búsqueda -->
-      <div class="relative  mb-4 search-container">
-        <input 
-          type="text" 
-          placeholder="Buscar variante..." 
+    <!-- Contenido -->
+    <div *ngIf="content == false" class="h-full">
+
+      <!-- Buscador -->
+      <div class="mb-4">
+        <input
+          type="text"
+          placeholder="Buscar variante..."
           [(ngModel)]="searchTerm"
           (input)="filterVariants()"
           (click)="showOptions = true"
-          class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+          class="w-full p-2 border border-gray-300 rounded-md
+                 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+      </div>
 
-      <mat-divider></mat-divider>
-        <div class="w-full grid grid-row mt-4 justify-end items-end">
-          <button 
-            class="w-[15vw] bg-sky-900 text-white px-4 py-2 rounded mb-4 disabled:opacity-50" 
-            routerLink="/dashboard/variants/adm-variants"
-            >
-            Agregar Variante
-          </button>
-        </div>
+      <mat-divider class="mb-4"></mat-divider>
 
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr class="bg-gray-200 text-center">
-          <th class="px-4 py-2 ">Nombre Variante</th>
-          <th class="px-4 py-2 ">Valores</th>
-          <th class="px-4 py-2 ">Estado</th>
-          <th class="px-4 py-2 ">Opciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (variant of filteredVariants(); track $index) {
-        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 text-center">
-          <td class="px-4 py-2 font-bold text-black">{{ variant.name }}</td>
-          <td class="px-4 py-2 text-black font-bold">{{ getAtributesText(variant.jsonValues) }}</td>
-          <td class="px-4 py-2 text-black">{{variant.state == true  ? 'Activo' : 'Inactivo'}}</td>
-          <td class="px-4 py-2 items-center">
-            <mat-icon class="text-blue-600"
-                matTooltip="Activar/Desactivar"
-                [class.hover:cursor-pointer]="true"
-                (click)="changeStatusVariant(variant.id)">touch_app</mat-icon>
-            <mat-icon class="text-blue-600 ml-2"
-                matTooltip="Editar"
-                [class.hover:cursor-pointer]="true"
-                [routerLink]="['/dashboard/variants/adm-variants', variant.id]">edit</mat-icon>
-            <mat-icon class="text-blue-600 ml-2"
-                matTooltip="Eliminar"
-                [class.hover:cursor-pointer]="true"
-                (click)="deleteVariant(variant.id)">delete_forever</mat-icon>
-          </td>
-        </tr>
-        }
-      </tbody>
-      </table>
-        </div>
+      <!-- Botón agregar -->
+      <div class="flex justify-center sm:justify-end mb-4">
+        <button
+          routerLink="/dashboard/variants/adm-variants"
+          class="w-full mt-4 sm:w-auto sm:min-w-[200px]
+                 bg-sky-900 text-white px-4 py-2 rounded
+                 hover:bg-sky-800 transition disabled:opacity-50"
+        >
+          Agregar Variante
+        </button>
+      </div>
+
+      <!-- Tabla responsive -->
+      <div class="relative overflow-x-auto shadow-md rounded-lg">
+        <table class="w-full min-w-[640px] text-sm text-left text-gray-600">
+          
+          <thead class="text-xs uppercase bg-gray-100 text-gray-700">
+            <tr class="text-center">
+              <th class="px-4 py-3">Nombre Variante</th>
+              <th class="px-4 py-3">Valores</th>
+              <th class="px-4 py-3">Estado</th>
+              <th class="px-4 py-3">Opciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (variant of filteredVariants(); track $index) {
+              <tr
+                class="bg-white border-b text-center hover:bg-gray-50 transition"
+              >
+                <td class="px-4 py-2 font-semibold text-gray-900">
+                  {{ variant.name }}
+                </td>
+
+                <td class="px-4 py-2 font-medium text-gray-800">
+                  {{ getAtributesText(variant.jsonValues) }}
+                </td>
+
+                <td class="px-4 py-2">
+                  <span
+                    class="px-2 py-1 rounded text-xs font-semibold"
+                    [ngClass]="variant.state
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-red-100 text-red-700'"
+                  >
+                    {{ variant.state ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+
+                <td class="px-4 py-2">
+                  <div class="flex justify-center gap-3">
+                    <mat-icon
+                      class="text-blue-600 cursor-pointer hover:text-blue-800"
+                      matTooltip="Activar/Desactivar"
+                      (click)="changeStatusVariant(variant.id)"
+                    >
+                      touch_app
+                    </mat-icon>
+
+                    <mat-icon
+                      class="text-blue-600 cursor-pointer hover:text-blue-800"
+                      matTooltip="Editar"
+                      [routerLink]="['/dashboard/variants/adm-variants', variant.id]"
+                    >
+                      edit
+                    </mat-icon>
+
+                    <mat-icon
+                      class="text-blue-600 cursor-pointer hover:text-red-600"
+                      matTooltip="Eliminar"
+                      (click)="deleteVariant(variant.id)"
+                    >
+                      delete_forever
+                    </mat-icon>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
   </div>
-</div>
 </div>

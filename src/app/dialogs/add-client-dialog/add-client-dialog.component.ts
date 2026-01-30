@@ -29,7 +29,7 @@ export class AddClientDialogComponent {
   
   
      // Opciones de la lista desplegable
-     tiposDocumento: string[] = ['Cédula de Ciudadanía', 'Pasaporte', 'Tarjeta de Identidad', 'Cédula de Extranjería'];
+     tiposDocumento: string[] = ['Cédula de Ciudadanía', 'Nit', 'Pasaporte', 'Tarjeta de Identidad', 'Cédula de Extranjería'];
   
      tiposGenero: string[] = ['Masculino', 'Femenino', 'Otro'];
   

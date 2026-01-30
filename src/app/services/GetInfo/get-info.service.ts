@@ -15,7 +15,7 @@ export class GetInfoService {
   getParameter(nombreParametro: string): Observable<string> {
     return this.http.post(`${this.apiUrl}/info/getParameter`, 
       { NombreParametro: nombreParametro }, 
-      { headers: { 'Content-Type': 'application/json' }, responseType: 'text' } // Importante: responseType: 'text'
+      { headers: { 'Content-Type': 'application/json' }, responseType: 'text' }
     );
   }
 

@@ -8,6 +8,9 @@ import { MessageService } from '../../dialogs/services/message-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EditUserDialogComponent } from '../../dialogs/edit-user-dialog/edit-user-dialog.component';
 import { TitleService } from '../../shared/services/title.service';
+import { EditClientDialogComponent } from '../../dialogs/edit-client-dialog/edit-client-dialog.component';
+import { User } from '../../interfaces/user';
+import { Client } from '../../interfaces/client';
 
 @Component({
   selector: 'app-manage-users',
@@ -19,7 +22,7 @@ export default class ManageUsersComponent implements OnInit {
 
   content: boolean = false;
 
-  activeTab: string = 'users';
+  activeTab: string = 'clients';
   message: string = '';
   process: string = '';
   
@@ -61,9 +64,15 @@ export default class ManageUsersComponent implements OnInit {
     this.setTitle('Administrar Usuarios');
   }
 
-  openEditUserDialog(user: any) {
+  openEditUserDialog(user: User) {
     this.dialog.open(EditUserDialogComponent, {
         data: { user }
+      });
+  }
+
+  openEditClientDialog(client: Client) {
+    this.dialog.open(EditClientDialogComponent, {
+        data: { client }
       });
   }
 

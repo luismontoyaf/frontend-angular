@@ -1,0 +1,157 @@
+<div
+  class="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6 overflow-y-auto max-h-[90vh]"
+>
+  <h2 mat-dialog-title class="text-2xl font-semibold text-center mb-6">
+    Editar Cliente
+  </h2>
+
+  <span class="block text-center font-bold mb-6 text-gray-700">
+    ¡Estos son los campos que puedes modificar!
+  </span>
+
+  <form
+    [formGroup]="registerForm"
+    (ngSubmit)="saveData()"
+    class="grid grid-cols-1 md:grid-cols-2 gap-5"
+  >
+    <!-- Nombres -->
+    <div class="flex flex-col gap-1">
+      <label for="name" class="text-sm font-medium text-gray-600">Nombres</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        placeholder="Ingresa tu nombre"
+        class="input-base"
+      />
+      <p
+        *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid"
+        class="error-text"
+      >
+        El nombre es requerido y debe tener al menos 3 caracteres.
+      </p>
+    </div>
+
+    <!-- Apellidos -->
+    <div class="flex flex-col gap-1">
+      <label for="lastname" class="label">Apellidos</label>
+      <input
+        id="lastname"
+        type="text"
+        formControlName="lastname"
+        placeholder="Ingresa tus apellidos"
+        class="input-base"
+      />
+      <p *ngIf="registerForm.get('lastname')?.touched && registerForm.get('lastname')?.invalid" class="error-text">
+        El apellido es requerido y debe tener al menos 3 caracteres.
+      </p>
+    </div>
+
+    <!-- Tipo Documento -->
+    <div class="flex flex-col gap-1">
+      <label class="label">Tipo de Documento</label>
+      <select formControlName="tipoDocumento" class="input-base">
+        <option value="" disabled selected>Selecciona un tipo de documento</option>
+        <option *ngFor="let tipo of tiposDocumento" [value]="tipo">
+          {{ tipo }}
+        </option>
+      </select>
+      <p *ngIf="registerForm.get('tipoDocumento')?.touched && registerForm.get('tipoDocumento')?.invalid" class="error-text">
+        El tipo de documento es obligatorio.
+      </p>
+    </div>
+
+    <!-- Número Documento -->
+    <div class="flex flex-col gap-1">
+      <label class="label">Número de Documento</label>
+      <input
+        type="text"
+        formControlName="numDocumento"
+        placeholder="Ingresa tu número de documento"
+        class="input-base"
+      />
+      <p *ngIf="registerForm.get('numDocumento')?.touched && registerForm.get('numDocumento')?.invalid" class="error-text">
+        La cédula debe contener entre 5 y 10 dígitos.
+      </p>
+    </div>
+
+    <!-- Email -->
+    <div class="flex flex-col gap-1">
+      <label class="label">Email</label>
+      <input
+        type="email"
+        formControlName="correo"
+        placeholder="Ingresa tu correo"
+        class="input-base"
+      />
+      <p *ngIf="registerForm.get('correo')?.touched && registerForm.get('correo')?.invalid" class="error-text">
+        Debes ingresar un correo válido.
+      </p>
+    </div>
+
+    <!-- Fecha nacimiento -->
+    <div class="flex flex-col gap-1">
+      <label class="label">Fecha de nacimiento</label>
+      <input
+        type="date"
+        formControlName="fechaNacimiento"
+        class="input-base"
+      />
+    </div>
+
+    <!-- Celular -->
+    <div class="flex flex-col gap-1">
+      <label class="label">Celular</label>
+      <input
+        type="text"
+        formControlName="cell"
+        placeholder="Ingresa tu celular"
+        class="input-base"
+      />
+      <p *ngIf="registerForm.get('cell')?.touched && registerForm.get('cell')?.invalid" class="error-text">
+        El celular debe tener exactamente 10 dígitos.
+      </p>
+    </div>
+
+    <!-- Dirección -->
+    <div class="flex flex-col gap-1">
+      <label class="label">Dirección</label>
+      <input
+        type="text"
+        formControlName="direccion"
+        placeholder="Ingresa tu dirección"
+        class="input-base"
+      />
+    </div>
+
+    <!-- Género -->
+    <div class="flex flex-col gap-1">
+      <label class="label">Género</label>
+      <select formControlName="genero" class="input-base">
+        <option value="" disabled selected>Selecciona género</option>
+        <option *ngFor="let genero of tiposGenero" [value]="genero">
+          {{ genero }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Botón -->
+    <div class="md:col-span-2">
+      <button
+        type="submit"
+        [disabled]="registerForm.invalid"
+        class="w-full bg-sky-900 hover:bg-sky-800 text-white font-semibold py-3 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Editar Cliente
+      </button>
+    </div>
+  </form>
+
+  <p *ngIf="messageSuccess" class="mt-4 text-green-700 text-center font-medium">
+    {{ messageSuccess }}
+  </p>
+
+  <p *ngIf="messageError" class="mt-4 text-red-600 text-center font-medium">
+    {{ messageError }}
+  </p>
+</div>

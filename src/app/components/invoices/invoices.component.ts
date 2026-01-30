@@ -54,7 +54,6 @@ export default class InvoicesComponent implements OnInit{
     ngOnInit(): void {
       this.invoiceService.getAllInvoicess().subscribe({
         next: (response: any) => {
-          console.log('Productos obtenidos:', response);
           const invoicesParsed = response.map((inv: { jsonFactura: string; }) => ({
             ...inv,
             parsedFactura: JSON.parse(inv.jsonFactura)
@@ -100,8 +99,6 @@ export default class InvoicesComponent implements OnInit{
     }
   
     downloadPDF(invoice: any) {
-      console.log('invoice : ' + JSON.stringify(invoice));
-
     const parsedFactura = JSON.parse(invoice.jsonFactura);
       
     const formattedDate = invoice.fechaCreacion.toLocaleString('sv-SE').replace(' ', '_').replace(/:/g, '-');
@@ -114,7 +111,8 @@ export default class InvoicesComponent implements OnInit{
           ProductName: producto.Nombre,
           Quantity: producto.Cantidad,
           UnitPrice: producto.ValorUnitario
-        }))
+        })),
+        sendEmail: false
       }).subscribe((blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -152,11 +150,9 @@ export default class InvoicesComponent implements OnInit{
   }
   
   toggleSelection(invoice: any) {
-    console.log('invoice ' + JSON.stringify(invoice));
     
     const current = this.selectedInvoices() ?? [];
     const index = current.findIndex(i => i.idFactura == invoice.idFactura);
-      console.log('index ' + index);
       
     if (index > -1) {
       // Ya estaba, se elimina
@@ -168,9 +164,6 @@ export default class InvoicesComponent implements OnInit{
 
     const allSelected = this.selectedInvoices().length == this.filteredInvoices().length;
     this.selectAllChecked.set(allSelected);
-
-    console.log('this.selectedInvoices ' + JSON.stringify(this.selectedInvoices()));
-    
   }
 
   isSelected(invoice: any): boolean {

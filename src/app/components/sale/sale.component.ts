@@ -45,6 +45,7 @@ export default class SaleComponent implements OnInit{
   message: string = '';
   proccess: string = '';
   messageError: string = '';
+  finalCustomerDocument: string = '';
 
   constructor(private sidebarService: SidebarService, 
     private productsService: ProductsService,
@@ -76,8 +77,20 @@ export default class SaleComponent implements OnInit{
     });
   }
 
-  ngOnInit(): void{
+  async ngOnInit(){
     this.setTitle('Facturación de Productos');
+
+    await this.GetParameters();
+
+    setTimeout(() => {
+      this.searchUser(this.finalCustomerDocument);
+    }, 200);
+  }
+
+  async GetParameters(){
+    await this.getInfoService.getParameter('DOCUMENT_NUMBER_FINAL_CUSTOMER').subscribe((res) => {
+      this.finalCustomerDocument = res;
+    })
   }
 
   @HostListener('document:click', ['$event'])
@@ -144,9 +157,6 @@ export default class SaleComponent implements OnInit{
   // Aplicar el descuento al valor original
   const discountAmount = this.originalValue * discountFactor;
   const finalValue = this.originalValue - discountAmount;
-
-  console.log('Monto del descuento: ', discountAmount);
-  console.log('Valor final con descuento: ', finalValue);
 
   this.totalValue = finalValue;
   }
@@ -221,18 +231,14 @@ export default class SaleComponent implements OnInit{
     this.message = '¿Estas seguro de confirmar esta venta?';
       this.setMessage(this.message);
       this.setProccess('openSuccesSaleDialog'); 
-      
-      
       this.dialog.open(SuccessEditModalComponent, {
         data: {
           userEmail: this.userEmail,
-          // clientName: this.user.nombre + ' ' + this.user.apellidos,
-          // clientEmail: this.user.correo,
-          // clientPhone: this.user.celular,
-          // ClientTypeDocument: this.user.tipoDocumento,
           idClient: this.user.id,
+          clientDocument: this.user.numDocumento,
           PaymentMethod: this.metodoSeleccionado,
           items: this.addedProducts().map(product => ({
+            Id: product.id,
             ProductName: product.nombreProducto,
             Quantity: this.quantities[product.id] || 1,
             UnitPrice: product.precio,
