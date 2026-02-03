@@ -25,18 +25,9 @@ export class HeaderComponent {
 
   // Método para cerrar sesión
   logout() {
-    const refreshToken = localStorage.getItem('refreshToken');
-    
-    if (!refreshToken) return;
-    this.authService.logout(refreshToken).subscribe(
-      (response) => {
-      localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('userInfo');
-        window.location.href = '/login';
-    },
-    (error) => {
-      
-    });
-  }
+   this.authService.logout().subscribe({
+    next: () => window.location.href = '/login',
+    error: () => window.location.href = '/login'
+  });
+}
 }

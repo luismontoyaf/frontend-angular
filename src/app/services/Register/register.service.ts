@@ -39,13 +39,13 @@ export class RegisterService {
 
     getUsers(): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/getUsers`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
     });
   }
 
   changeStatusUser(userId: number): Observable<any> {
       return this.http.put(`${this.apiUrl}/users/changeStatusUser/${userId}`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
       });
   }
 }

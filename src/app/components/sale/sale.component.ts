@@ -84,7 +84,7 @@ export default class SaleComponent implements OnInit{
 
     setTimeout(() => {
       this.searchUser(this.finalCustomerDocument);
-    }, 200);
+    }, 300);
   }
 
   async GetParameters(){

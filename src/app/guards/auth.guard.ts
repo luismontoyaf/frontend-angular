@@ -7,8 +7,8 @@ const checkAuth = (): boolean => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const token = localStorage.getItem('token');
-  const refreshToken = localStorage.getItem('refreshToken');
+  const token = sessionStorage.getItem('token');
+  const refreshToken = sessionStorage.getItem('refreshToken');
 
   // Si no hay token, redirige al login
   if (!token) {
@@ -24,14 +24,14 @@ const checkAuth = (): boolean => {
 
     // Si el token ha expirado, redirige al login
     if (decoded.exp < now) {
-      authService.logout(refreshToken); // Limpia tokens y redirige
+      authService.logout().subscribe(); // Limpia tokens y redirige
       return false;
     }
 
     return true;
   } catch (e) {
     // Token inválido o corrupto
-    authService.logout(refreshToken);
+    authService.logout().subscribe();
     return false;
   }
 };

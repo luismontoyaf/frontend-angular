@@ -1,45 +1,39 @@
 import {
   HttpInterceptorFn,
-  HttpRequest,
-  HttpHandlerFn,
-  HttpEvent,
-  HttpErrorResponse
+  HttpErrorResponse,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import {
+  catchError,
+  switchMap,
+  throwError,
+} from 'rxjs';
 import { AuthService } from '../services/Auth/auth.service';
 
-export const AuthInterceptor: HttpInterceptorFn = (
-  req: HttpRequest<any>,
-  next: HttpHandlerFn
-): Observable<HttpEvent<any>> => {
+export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const token = localStorage.getItem('token');
+  const token = authService.getToken();
 
-  const clonedReq = token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+  const authReq = token
+    ? req.clone({
+        setHeaders: { Authorization: `Bearer ${token}` },
+      })
     : req;
 
-  return next(clonedReq).pipe(
+  return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && token) {
-        // Intentar refrescar el token
+      if (error.status === 401) {
         return authService.refreshToken().pipe(
-          switchMap((newToken: string) => {
-            localStorage.setItem('token', newToken);
-            const newReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${newToken}` }
-            });
-            return next(newReq);
-          }),
-          catchError((refreshError) => {
-            var refreshToken = localStorage.getItem('refreshToken');
-            if (!refreshToken) refreshToken = '';
-            authService.logout(refreshToken);
-            return throwError(() => refreshError);
-          })
+          switchMap((newToken) =>
+            next(
+              req.clone({
+                setHeaders: { Authorization: `Bearer ${newToken}` },
+              })
+            )
+          )
         );
       }
+
       return throwError(() => error);
     })
   );

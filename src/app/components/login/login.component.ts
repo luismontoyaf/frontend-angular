@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule, AbstractControl, ValidationErrors  } from '@angular/forms';
 import { AuthService } from '../../services/Auth/auth.service';
 import { RegisterService } from '../../services/Register/register.service';
 import { Router } from '@angular/router';
 import { MaterialModule } from '../../../material.module'; 
+import { GetInfoService } from '../../services/GetInfo/get-info.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import { MaterialModule } from '../../../material.module';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
   registerForm: FormGroup;
   loginForm: FormGroup;
 
@@ -25,13 +26,22 @@ export class LoginComponent {
 
   selectedForm: string = 'form1';
 
+  imageLogin = "";
+
 
    // Opciones de la lista desplegable
    tiposDocumento: string[] = ['Cédula de Ciudadanía', 'Pasaporte', 'Tarjeta de Identidad', 'Cédula de Extranjería'];
 
    tiposGenero: string[] = ['Masculino', 'Femenino', 'Otro'];
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private registerService: RegisterService, private router: Router) {
+  constructor(private fb: FormBuilder, 
+    private authService: AuthService, 
+    private registerService: RegisterService, 
+    private router: Router,
+    private getInfoService: GetInfoService) {
+      
+    this.GetParameters();
+    
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -52,6 +62,10 @@ export class LoginComponent {
     }, {
       validators: this.passwordMatchValidator
     });
+  }
+
+  async ngOnInit() {
+    
   }
 
   // Validador personalizado para confirmar contraseñas
@@ -106,10 +120,11 @@ export class LoginComponent {
     this.authService.login(formLoginData.username, formLoginData.password).subscribe(
       (response) => {
         this.message = 'Inicio de sesión exitoso';
-        localStorage.setItem('token', response.token); // Almacenar el token
-        localStorage.setItem('refreshToken', response.refreshToken);
+        sessionStorage.setItem('token', response.token); // Almacenar el token
+        sessionStorage.setItem('refreshToken', response.refreshToken);
 
         this.authService.startTokenMonitor();
+        this.authService.initInactivityMonitor();
 
         // Redirigir al componente Home
         this.router.navigate(['/dashboard/home']);
@@ -153,5 +168,11 @@ export class LoginComponent {
     this.registerForm.reset();
 
     this.selectedForm = 'form1';
+  }
+
+  GetParameters(){
+    this.getInfoService.getParameter("LogoEmpresa").subscribe((data: string) => {
+      this.imageLogin = data;
+    });
   }
 }

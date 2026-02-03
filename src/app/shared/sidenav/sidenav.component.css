@@ -1,25 +1,7 @@
-/* .sidebar {
-    position: sticky;
-    left: 10px;
-    height: 95vh;
-    width: 230px;
-    border-radius: 20px;
-    /* background-color: #3f51b5; 
-    /* color: white; 
-    overflow: hidden;
-    transition: width 0.3s, padding 0.3s;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  } */
 
   .sidebar.open {
     width: 60px;
   }
-
-  /* .sidebar ul {
-    list-style: none;
-    margin-top: 50px;
-    width: 100%;
-  } */
   
   .sidebar ul li {
     display: block;
@@ -122,13 +104,6 @@
   .sidebar ul li a:hover mat-icon {
       color: #38bdf8; /* Cambiar color del ícono al hacer hover */
   }
-
-  /* @media (max-width: 480px) {
-    .sidebar {
-      height: 100%;
-      width: 100vw;
-    } 
-  }*/
 
   @media (min-width: 768px) {
   .sidebar {

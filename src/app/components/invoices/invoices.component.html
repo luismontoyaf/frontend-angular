@@ -2,90 +2,150 @@
   <div class="main-content h-full" [class.menu-open]="isMenuOpen">
     <!-- Mensaje cuando no hay productos -->
     <div class="emptyContent text-center" *ngIf="content == true">
-      <h1 class="text-2xl font-bold mb-2">Aún no tienes productos para facturar</h1>
+      <h1 class="text-2xl font-bold mb-2">
+        Aún no tienes productos para facturar
+      </h1>
     </div>
 
     <!-- Contenedor de productos -->
-    <div class="products-container  h-full" *ngIf="content == false">
+    <div class="products-container h-full" *ngIf="content == false">
       <!-- Barra de búsqueda -->
-      <div class="relative  mb-4 search-container">
-        <input 
-          type="text" 
-          placeholder="Buscar facturas..." 
+      <div class="relative mb-4 search-container">
+        <input
+          type="text"
+          placeholder="Buscar facturas..."
           [(ngModel)]="searchTerm"
           (input)="filterProducts()"
           (click)="showOptions = true"
           class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
         />
 
-      <mat-divider></mat-divider>
+        <mat-divider></mat-divider>
         <div class="w-full grid grid-row mt-4 sm:justify-end items-end">
-          <button 
-            class="w-full sm:w-[15vw] bg-sky-900 text-white px-4 py-2 rounded mb-4 disabled:opacity-50" 
-            [disabled]="selectedInvoices().length === 0" 
+          <button
+            class="w-full sm:w-[15vw] bg-sky-900 text-white px-4 py-2 rounded mb-4 disabled:opacity-50"
+            [disabled]="selectedInvoices().length === 0"
             (click)="downloadSelectedPDFs()"
-            >
+          >
             Descargar seleccionadas
           </button>
         </div>
 
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr class="bg-gray-200 text-center">
-          <th class="px-4 py-2 ">
-            <input id="vue-checkbox" 
-            type="checkbox"
-            [checked]="selectAllChecked()"
-            (change)="selectAll($event)" 
-            value="" 
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-          </th>
-          <th class="px-4 py-2 ">Número Factura</th>
-          <th class="px-4 py-2 ">Nombre Cliente</th>
-          <th class="px-4 py-2 ">Total Factura</th>
-          <th class="px-4 py-2 ">Forma Pago</th>
-          <th class="px-4 py-2 ">Fecha Factura</th>
-          <th class="px-4 py-2 ">
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (invoice of filteredInvoices(); track $index) {
-        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 text-center">
-          <td class="px-4 py-2">
-            <input
-              type="checkbox"
-              #checkInvoice
-              id="check-invoice"
-              [checked]="isSelected(invoice)"
-              (change)="toggleSelection(invoice)"
-              [value]="invoice.idFactura"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm"
-            />
-          </td>
-          <td class="px-4 py-2 text-black">{{ invoice.numeroFactura }}</td>
-          <td class="px-4 py-2 font-bold text-black">{{ invoice.nombreCliente }}</td>
-          <td class="px-4 py-2 text-black font-bold">$ {{ invoice.parsedFactura?.Total | number: '1.0-0' }}</td>
-          <td class="px-4 py-2 text-black">{{ invoice.formaPago }}</td>
-          <td class="px-4 py-2 text-black">{{ invoice.fechaCreacion | date: 'dd-MM-yyyy' }}</td>
-          <th class="px-4 py-2 items-center">
-            <p
-              class="text-blue-600 font-medium"
-              [class.cursor-not-allowed]="selectedInvoices().length > 0"
-              [class.text-gray-400]="selectedInvoices().length > 0"
-              [class.text-blue-600]="selectedInvoices().length === 0"
-              [class.hover:cursor-pointer]="selectedInvoices().length === 0"
-              (click)="selectedInvoices().length === 0 && downloadPDF(invoice)"
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          >
+            <thead
+              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
             >
-              Descargar
-            </p>
-          </th>
-        </tr>
-        }
-      </tbody>
-      </table>
+              <tr class="bg-gray-200 text-center">
+                <th class="px-4 py-2">
+                  <input
+                    id="vue-checkbox"
+                    type="checkbox"
+                    [checked]="selectAllChecked()"
+                    (change)="selectAll($event)"
+                    value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                  />
+                </th>
+                <th class="px-4 py-2">Número Factura</th>
+                <th class="px-4 py-2">Nombre Cliente</th>
+                <th class="px-4 py-2">Total Factura</th>
+                <th class="px-4 py-2">Forma Pago</th>
+                <th class="px-4 py-2">Fecha Factura</th>
+                <th class="px-4 py-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (invoice of paginatedInvoices(); track $index) {
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 text-center"
+              >
+                <td class="px-4 py-2">
+                  <input
+                    type="checkbox"
+                    #checkInvoice
+                    id="check-invoice"
+                    [checked]="isSelected(invoice)"
+                    (change)="toggleSelection(invoice)"
+                    [value]="invoice.idFactura"
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm"
+                  />
+                </td>
+                <td class="px-4 py-2 text-black">
+                  {{ invoice.numeroFactura }}
+                </td>
+                <td class="px-4 py-2 font-bold text-black">
+                  {{ invoice.nombreCliente }}
+                </td>
+                <td class="px-4 py-2 text-black font-bold">
+                  $ {{ invoice.parsedFactura?.Total | number : "1.0-0" }}
+                </td>
+                <td class="px-4 py-2 text-black">{{ invoice.formaPago }}</td>
+                <td class="px-4 py-2 text-black">
+                  {{ invoice.fechaCreacion | date : "dd-MM-yyyy" }}
+                </td>
+                <th class="px-4 py-2 items-center">
+                  <p
+                    class="text-blue-600 font-medium"
+                    [class.cursor-not-allowed]="selectedInvoices().length > 0"
+                    [class.text-gray-400]="selectedInvoices().length > 0"
+                    [class.text-blue-600]="selectedInvoices().length === 0"
+                    [class.hover:cursor-pointer]="
+                      selectedInvoices().length === 0
+                    "
+                    (click)="
+                      selectedInvoices().length === 0 && downloadPDF(invoice)
+                    "
+                  >
+                    Descargar
+                  </p>
+                </th>
+              </tr>
+              }
+            </tbody>
+          </table>
+          <div
+            class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4"
+          >
+            <!-- Info -->
+            <span class="text-sm text-gray-600">
+              Página {{ currentPage }} de {{ totalPages }}
+            </span>
+
+            <!-- Controles -->
+            <div class="flex items-center gap-2 mb-2">
+              <button
+                class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                (click)="goToPage(currentPage - 1)"
+                [disabled]="currentPage === 1"
+              >
+                Anterior
+              </button>
+
+              <button
+                class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                (click)="goToPage(currentPage + 1)"
+                [disabled]="currentPage === totalPages"
+              >
+                Siguiente
+              </button>
+            </div>
+
+            <!-- Items por página -->
+            <select
+              class="border rounded px-2 py-1 text-sm"
+              [(ngModel)]="itemsPerPage"
+              (change)="currentPage = 1"
+            >
+              <option *ngFor="let size of pageSizeOptions" [value]="size">
+                {{ size }} / página
+              </option>
+            </select>
+          </div>
         </div>
+      </div>
+    </div>
   </div>
-</div>
 </div>
