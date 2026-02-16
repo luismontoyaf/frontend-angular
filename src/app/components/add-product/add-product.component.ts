@@ -178,17 +178,17 @@ export default class AddProductComponent implements OnInit {
     const formValues = this.productForm.value;
   
     // Comparar con los valores originales y agregar solo los que cambiaron
-    if (formValues.name !== data.nombreProducto) {
+    if (formValues.name !== this.productSelected.nombreProducto) {
       cambios.nombreProducto = formValues.name;
     }
-    if (formValues.description !== data.descripcion) {
+    if (formValues.description !== this.productSelected.descripcion) {
       cambios.descripcion = formValues.description;
     }
-    if (formValues.price !== data.precio) {
-      cambios.precio = formValues.price;
+    if (formValues.price !== this.productSelected.precio) {
+      cambios.precio = Number(formValues.price.replace(/\./g, ''));
     }
-    if (formValues.quantity !== data.stock) {
-      cambios.stock = formValues.quantity;
+    if (formValues.stock !== this.productSelected.stock) {
+      cambios.stock = formValues.stock;
     }
   
     // Si no hay cambios, no hacemos la petición

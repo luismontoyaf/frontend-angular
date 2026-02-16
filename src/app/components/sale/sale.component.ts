@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MessageService } from '../../dialogs/services/message-service.service';
 import { TitleService } from '../../shared/services/title.service';
 import { AlertService } from '../../services/Alert/alert.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-sale',
@@ -82,15 +83,19 @@ export default class SaleComponent implements OnInit{
 
     await this.GetParameters();
 
-    setTimeout(() => {
-      this.searchUser(this.finalCustomerDocument);
-    }, 300);
+    if (this.finalCustomerDocument) {
+     this.searchUser(this.finalCustomerDocument); 
+    }
   }
 
   async GetParameters(){
-    await this.getInfoService.getParameter('DOCUMENT_NUMBER_FINAL_CUSTOMER').subscribe((res) => {
-      this.finalCustomerDocument = res;
-    })
+    try {
+      this.finalCustomerDocument = await firstValueFrom(
+        this.getInfoService.getParameter('DOCUMENT_NUMBER_FINAL_CUSTOMER')
+      );
+    } catch (error) {
+      console.error('Error obteniendo parámetro:', error);
+    }
   }
 
   @HostListener('document:click', ['$event'])

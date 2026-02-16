@@ -33,6 +33,12 @@ export class SuccessModalComponent implements OnInit {
       case 'closeModalFromEditProduct':
         this.closeModal();
         break;
+      case 'goToLogin':
+        this.goToLogin();
+        break;
+      case 'goToAdminVariants':
+        this.goToAdminVariants();
+        break;
       default:
         this.closeModalSuccess();
     }
@@ -52,6 +58,22 @@ export class SuccessModalComponent implements OnInit {
     
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/dashboard/products']); // Recarga la vista actual
+    });
+  }
+
+  goToLogin() {
+    this.dialogRef.close();
+
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/login']); 
+    });
+  }
+
+  goToAdminVariants(){
+    this.dialogRef.close();
+
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/dashboard/variants']); 
     });
   }
 }

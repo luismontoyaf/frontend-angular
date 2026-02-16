@@ -25,7 +25,6 @@ export default class InvoicesComponent implements OnInit {
   valueWithoutIva: number = 0; // Valor total sin IVA
 
   isMenuOpen = false;
-  content: boolean = false;
   showOptions: boolean = false;
 
   invoices = signal<Invoice[]>([]);
@@ -75,7 +74,6 @@ export default class InvoicesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al obtener productos:', err);
-        this.content = true; // Mostrar mensaje de "No hay productos"
       },
     });
 

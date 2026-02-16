@@ -9,6 +9,7 @@ import { VariantsService } from '../../services/Variants/variants.service';
 import { Variants } from '../../interfaces/variants';
 import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DeleteModalComponent } from '../../dialogs/shared/delete-modal/delete-modal.component';
 
 @Component({
   selector: 'app-variants',
@@ -21,7 +22,6 @@ export default class VariantsComponent {
   user: any; // Property to store user information
 
   isMenuOpen = false;
-  content: boolean = false;
   showOptions: boolean = false;
 
   variants = signal<Variants[]>([]);
@@ -39,7 +39,7 @@ export default class VariantsComponent {
     private messageService: MessageService,
     private variantService: VariantsService,
     private titleService: TitleService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +52,6 @@ export default class VariantsComponent {
       },
       error: (err) => {
         console.error('Error al obtener variantes:', err);
-        this.content = true; 
       },
     });
 
@@ -73,59 +72,64 @@ export default class VariantsComponent {
   filterVariants() {
     const term = this.searchTerm.toLowerCase();
     this.filteredVariants.set(
-      this.variants().filter(
-        (variant) =>
-          variant.name.toLowerCase().includes(term)
-      )
+      this.variants().filter((variant) =>
+        variant.name.toLowerCase().includes(term),
+      ),
     );
   }
 
   getAtributesText(atributes: { value: string }[]): string {
     if (!atributes) return '';
 
-    const parsed = typeof atributes === 'string' ? JSON.parse(atributes) : atributes;
-    
-    return parsed.map((a: any) => a.Value ).join(', ');
+    const parsed =
+      typeof atributes === 'string' ? JSON.parse(atributes) : atributes;
+
+    return parsed.map((a: any) => a.Value).join(', ');
   }
 
-  editVariant(id: number){
-    
-  }
+  editVariant(id: number) {}
 
-  changeStatusVariant(id : number){
+  changeStatusVariant(id: number) {
     this.variantService.changeStatusVariant(id).subscribe({
-      next: (response: any )=>{
-        this.handleSuccess("update");
-      },error(err){
+      next: (response: any) => {
+        this.handleSuccess('update');
+      },
+      error(err) {
         throw console.error('no se pudo cambiar estado de la variante');
-        
-      }
+      },
     });
   }
 
-  deleteVariant(id : number){
-    this.variantService.deleteVariant(id).subscribe({
-      next: (response: any )=>{
-        this.handleSuccess("delete");
-      },error(err){
-        throw console.error('no se pudo cambiar estado de la variante');
-        
-      }
+  deleteVariant(id: number) {
+    this.messageService.setDeleteMessage('¿Está seguro de que desea eliminar la variante?');
+    this.messageService.setProcess('deleteVariant');
+    this.dialog.open(DeleteModalComponent, {
+      data: { id },
     });
   }
 
   handleSuccess(flag: string) {
-    this.message = flag=="update" 
-      ? 'El estado de la variante ha sido modificado exitosamente'
-      : 'La variante se ha eliminado correctamente.';
+    this.message =
+      flag == 'update'
+        ? 'El estado de la variante ha sido modificado exitosamente'
+        : 'La variante se ha eliminado correctamente.';
     this.setMessage(this.message);
-    this.setProccess(''); 
+    this.setProccess('');
     this.openSuccessDialog();
   }
 
   openSuccessDialog(): void {
-      this.dialog.open(SuccessModalComponent, {});
-    }
+    this.dialog.open(SuccessModalComponent, {});
+  }
+
+  openDeleteProductDialog(product: any) {
+    this.messageService.setDeleteMessage(
+      '¿Está seguro de que desea eliminar el producto?',
+    );
+    this.dialog.open(DeleteModalComponent, {
+      data: { product },
+    });
+  }
 
   setMessage(message: string): void {
     this.messageService.setMessageSuccess(message);

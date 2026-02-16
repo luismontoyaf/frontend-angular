@@ -6,6 +6,9 @@ import { RegisterService } from '../../services/Register/register.service';
 import { Router } from '@angular/router';
 import { MaterialModule } from '../../../material.module'; 
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
+import { MessageService } from '../../dialogs/services/message-service.service';
+import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
@@ -28,17 +31,22 @@ export class LoginComponent implements OnInit{
 
   imageLogin = "";
 
+  loading = false;
+
 
    // Opciones de la lista desplegable
    tiposDocumento: string[] = ['Cédula de Ciudadanía', 'Pasaporte', 'Tarjeta de Identidad', 'Cédula de Extranjería'];
 
    tiposGenero: string[] = ['Masculino', 'Femenino', 'Otro'];
+   tiposUsuario: string[] = ['Colaborador', 'Administrador'];
 
   constructor(private fb: FormBuilder, 
     private authService: AuthService, 
     private registerService: RegisterService, 
     private router: Router,
-    private getInfoService: GetInfoService) {
+    private getInfoService: GetInfoService,
+    private messageService: MessageService,
+    private dialog: MatDialog) {
       
     this.GetParameters();
     
@@ -53,11 +61,13 @@ export class LoginComponent implements OnInit{
       tipoDocumento: ['', Validators.required],
       numDocumento: ['', [Validators.required, Validators.pattern(/^\d{5,10}$/)]],
       correo: ['', [Validators.required, Validators.email]],
-      fechaNacimiento: ['', [Validators.required, this.mayorDeEdadValidator]],
+      fechaNacimiento: ['',  this.mayorDeEdadValidator],
+      fechaIngreso: ['', Validators.required],
+      tipoUsuario: ['', Validators.required],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
       confirmContrasena: ['', Validators.required],
       cell: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      direccion: ['', Validators.required],
+      direccion: [''],
       genero: [''],
     }, {
       validators: this.passwordMatchValidator
@@ -143,18 +153,21 @@ export class LoginComponent implements OnInit{
       return;
     }
 
+    this.loading = true;
+
     const formData = this.registerForm.value;
 
-    this.registerService.register(formData.name, formData.lastname, formData.tipoDocumento, formData.numDocumento, formData.correo, formData.fechaNacimiento, formData.contrasena, formData.cell, formData.direccion, formData.genero).subscribe(
+    this.registerService.registerUser(formData.name, formData.lastname, formData.tipoDocumento, formData.numDocumento, formData.correo, formData.fechaNacimiento, formData.fechaIngreso, formData.rol, formData.contrasena, formData.cell, formData.direccion, formData.genero).subscribe(
       (response) => {
-        this.message = 'Registro exitoso';
-
-        // Redirigir al componente login
-        this.router.navigate(['/login']);
+        this.message = 'El usuario ha sido creado existosamente';
+        this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
+        this.setProccess('goToLogin'); 
+        this.openSuccessDialog();
       },
       (error) => {
         console.error('Error:', error);
         this.message = 'No se pudo crear el usuario';
+        this.loading = false;
       }
     );
   }
@@ -175,4 +188,16 @@ export class LoginComponent implements OnInit{
       this.imageLogin = data;
     });
   }
+
+  setMessage(message: string): void {
+      this.messageService.setMessageSuccess(message);
+    }
+            
+    setProccess(proccess: string): void {
+      this.messageService.setProcess(proccess);
+    }
+    openSuccessDialog(): void {
+              this.dialog.open(SuccessModalComponent, {
+      });
+    };
 }

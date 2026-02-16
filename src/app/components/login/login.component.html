@@ -1,5 +1,5 @@
 <div class="container w-full h-full flex flex-col justify-center items-center">
-  <div class="grid grid-cols-1 md:grid-cols-2 h-screen w-screen">
+  <div class="grid grid-cols-1 md:grid-cols-2 h-screen w-screen" *ngIf="selectedForm == 'form1'">
   <!-- Columna izquierda con imagen -->
   <div class=" h-screen">
     <img
@@ -54,9 +54,9 @@
           Iniciar Sesión
         </button>
 
-        <!-- <button type="button" class="w-full mt-4 bg-sky-600 text-white py-2 rounded-md hover:bg-sky-500 transition duration-300" (click)="goToRegister()">
+        <button type="button" class="w-full mt-4 bg-sky-600 text-white py-2 rounded-md hover:bg-sky-500 transition duration-300" (click)="goToRegister()">
           Registrarse
-        </button> -->
+        </button>
 
         <p *ngIf="message" class="text-red-600 mt-4 text-center">{{ message }}</p>
       </form>
@@ -64,151 +64,233 @@
   </div>
 </div>
 
-  <div class="register-container shadow-xl shadow-cyan-500/50 w-[800px]" *ngIf="selectedForm == 'form2'">
+  <div class="register-container" *ngIf="selectedForm == 'form2'">
     <label for="return" class="regresar" (click)="backToLogin()">
       <mat-icon>arrow_back</mat-icon> Regresar
     </label>
     <h2>Registrar Usuario</h2>
-    <form [formGroup]="registerForm" class="form-register" (ngSubmit)="register()">
-      <div class="form-group-reg">
-        <label for="name">Nombres</label>
-        <input
-          type="text"
-          id="name"
-          formControlName="name"
-          placeholder="Ingresa tu nombre"
-        />
-        <p *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid">
-          El nombre es requerido y debe tener al menos 3 caracteres.
-        </p>
-      </div>
+    <form
+    [formGroup]="registerForm"
+    class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-6"
+    (ngSubmit)="register()"
+  >
+    <!-- Nombres -->
+    <div class="flex flex-col">
+      <label for="name">Nombres *</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        placeholder="Ingresa tu nombre"
+        class="border rounded p-2"
+      />
+      <p
+        *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid"
+        class="text-red-500 text-sm"
+      >
+        El nombre es requerido y debe tener al menos 3 caracteres.
+      </p>
+    </div>
 
-      <div class="form-group-reg">
-      <label for="lastname">Apellidos</label>
-        <input
-          type="text"
-          id="lastname"
-          formControlName="lastname"
-          placeholder="Ingresa tus apellidos"
-        />
-        <p *ngIf="registerForm.get('lastname')?.touched && registerForm.get('lastname')?.invalid">
-          El apellido es requerido y debe tener al menos 3 caracteres.
-        </p>
-      </div>
-  
-      <div class="form-group-reg">
-        <label for="tipoDocumento">Tipo de Documento</label>
-        <select id="tipoDocumento" formControlName="tipoDocumento">
-          <!-- Placeholder -->
-          <option value="" disabled selected>Selecciona un tipo de documento</option>
-          <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{ tipo }}</option>
-        </select>
-        <p *ngIf="registerForm.get('tipoDocumento')?.touched && registerForm.get('tipoDocumento')?.invalid">
-          El tipo de documento es obligatorio.
-        </p>
-      </div>
-  
-      <div class="form-group-reg">
-        <label for="numDocumento">Número de Documento</label>
-        <input
-          type="text"
-          id="numDocumento"
-          formControlName="numDocumento"
-          placeholder="Ingresa tu número de documento"
-        />
-        <p *ngIf="registerForm.get('numDocumento')?.touched && registerForm.get('numDocumento')?.invalid">
-          La cédula debe contener entre 5 y 10 dígitos.
-        </p>
-      </div>
-  
-      <div class="form-group-reg">
-        <label for="correo">Email</label>
-        <input
-          type="email"
-          id="correo"
-          formControlName="correo"
-          placeholder="Ingresa tu correo electrónico"
-        />
-        <p *ngIf="registerForm.get('correo')?.touched && registerForm.get('correo')?.invalid">
-          Debes ingresar un correo electrónico válido.
-        </p>
-      </div>
+    <!-- Apellidos -->
+    <div class="flex flex-col">
+      <label for="lastname">Apellidos *</label>
+      <input
+        type="text"
+        id="lastname"
+        formControlName="lastname"
+        placeholder="Ingresa tus apellidos"
+        class="border rounded p-2"
+      />
+      <p
+        *ngIf="registerForm.get('lastname')?.touched && registerForm.get('lastname')?.invalid"
+        class="text-red-500 text-sm"
+      >
+        El apellido es requerido y debe tener al menos 3 caracteres.
+      </p>
+    </div>
 
-      <div class="form-group-reg">
-        <label for="fechaNacimiento">Fecha de Nacimiento</label>
-        <input
-          type="date"
-          id="fechaNacimiento"
-          formControlName="fechaNacimiento"
-          placeholder="Ingresa tu fecha de nacimiento"
-        />
-        <p *ngIf="registerForm.get('fechaNacimiento')?.touched && registerForm.get('fechaNacimiento')?.invalid">
-          Debes ingresar una fecha de nacimiento válida.
-        </p>
-      </div>
-  
-      <div class="form-group-reg">
-        <label for="contrasena">Contraseña</label>
-        <input
-          type="password"
-          id="contrasena"
-          formControlName="contrasena"
-          placeholder="Ingresa tu contraseña"
-        />
-        <p *ngIf="registerForm.get('contrasena')?.touched && registerForm.get('contrasena')?.invalid">
-          La contraseña debe tener al menos 6 caracteres.
-        </p>
-      </div>
-  
-      <div class="form-group-reg">
-        <label for="confirm-contrasena">Confirmar Contraseña</label>
-        <input
-          type="password"
-          id="confirm-contrasena"
-          formControlName="confirmContrasena"
-          placeholder="Confirma tu contraseña"
-        />
-        <p *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmContrasena')?.touched">
-          Las contraseñas no coinciden.
-        </p>
-      </div>
-  
-      <div class="form-group-reg">
-        <label for="cell">Celular</label>
-        <input
-          type="text"
-          id="cell"
-          formControlName="cell"
-          placeholder="Ingresa tu celular"
-        />
-        <p *ngIf="registerForm.get('cell')?.touched && registerForm.get('cell')?.invalid">
-          El celular debe tener exactamente 10 dígitos.
-        </p>
-      </div>
-  
-      <div class="form-group-reg">
-        <label for="direccion">Dirección</label>
-        <input
-          type="text"
-          id="direccion"
-          formControlName="direccion"
-          placeholder="Ingresa tu dirección"
-        />
-      </div>
+    <!-- Tipo Documento -->
+    <div class="flex flex-col">
+      <label for="tipoDocumento">Tipo de Documento *</label>
+      <select
+        id="tipoDocumento"
+        formControlName="tipoDocumento"
+        class="border rounded p-2"
+      >
+        <option value="" disabled selected>
+          Selecciona un tipo de documento
+        </option>
+        <option *ngFor="let tipo of tiposDocumento" [value]="tipo">
+          {{ tipo }}
+        </option>
+      </select>
+      <p
+        *ngIf="registerForm.get('tipoDocumento')?.touched && registerForm.get('tipoDocumento')?.invalid"
+        class="text-red-500 text-sm"
+      >
+        El tipo de documento es obligatorio.
+      </p>
+    </div>
 
-      <div class="form-group-reg">
-        <label for="genero">Genero</label>
-        <select id="genero" formControlName="genero">
-          <!-- Placeholder -->
-          <option value="" disabled selected>Selecciona tipo de usuario</option>
-          <option *ngFor="let genero of tiposGenero" [value]="genero">{{ genero }}</option>
-        </select>
-        <p *ngIf="registerForm.get('genero')?.touched && registerForm.get('genero')?.invalid">
-          La seleccion es obligatoria.
-        </p>
-      </div>
+    <!-- Número Documento -->
+    <div class="flex flex-col">
+      <label for="numDocumento">Número de Documento *</label>
+      <input
+        type="text"
+        id="numDocumento"
+        formControlName="numDocumento"
+        placeholder="Ingresa tu número de documento"
+        class="border rounded p-2"
+      />
+      <p
+        *ngIf="registerForm.get('numDocumento')?.touched && registerForm.get('numDocumento')?.invalid"
+        class="text-red-500 text-sm"
+      >
+        La cédula debe contener entre 5 y 10 dígitos.
+      </p>
+    </div>
+
+    <!-- Correo -->
+    <div class="flex flex-col">
+      <label for="correo">Email *</label>
+      <input
+        type="email"
+        id="correo"
+        formControlName="correo"
+        placeholder="Ingresa tu correo electrónico"
+        class="border rounded p-2"
+      />
+      <p
+        *ngIf="registerForm.get('correo')?.touched && registerForm.get('correo')?.invalid"
+        class="text-red-500 text-sm"
+      >
+        Debes ingresar un correo electrónico válido.
+      </p>
+    </div>
+
+    <!-- Fecha de nacimiento -->
+    <div class="flex flex-col">
+      <label for="fechaNacimiento">Fecha de Nacimiento</label>
+      <input
+        type="date"
+        id="fechaNacimiento"
+        formControlName="fechaNacimiento"
+        class="border rounded p-2"
+      />
+    </div>
+
+    <!-- Fecha de ingreso -->
+    <div class="flex flex-col">
+      <label for="fechaIngreso">Fecha de Ingreso *</label>
+      <input
+        type="date"
+        id="fechaIngreso"
+        formControlName="fechaIngreso"
+        class="border rounded p-2"
+      />
+    </div>
+
+    <!-- Tipo Usuario -->
+    <div class="flex flex-col">
+      <label for="tipoUsuario">Asignar tipo de usuario *</label>
+      <select
+        id="tipoUsuario"
+        formControlName="tipoUsuario"
+        class="border rounded p-2"
+      >
+        <option value="" disabled selected>Selecciona tipo de usuario</option>
+        <option *ngFor="let tipoUsuario of tiposUsuario" [value]="tipoUsuario">
+          {{ tipoUsuario }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Contraseña -->
+    <div class="flex flex-col">
+      <label for="contrasena">Contraseña *</label>
+      <input
+        type="password"
+        id="contrasena"
+        formControlName="contrasena"
+        placeholder="Ingresa tu contraseña"
+        class="border rounded p-2"
+      />
+      <p
+        *ngIf="registerForm.get('contrasena')?.touched && registerForm.get('contrasena')?.invalid"
+        class="text-red-500 text-sm"
+      >
+        La contraseña debe tener al menos 6 digitos.
+      </p>
+    </div>
+
+    <!-- Confirmar contraseña -->
+    <div class="flex flex-col">
+      <label for="confirm-contrasena">Confirmar Contraseña *</label>
+      <input
+        type="password"
+        id="confirm-contrasena"
+        formControlName="confirmContrasena"
+        placeholder="Confirma tu contraseña"
+        class="border rounded p-2"
+      />
+      <p
+        *ngIf="registerForm.get('confirmContrasena')?.touched && registerForm.hasError('mismatch')"
+        class="text-red-500 text-sm"
+      >
+        Las contraseñas no coinciden.
+      </p>
+    </div>
+
+    <!-- Celular -->
+    <div class="flex flex-col">
+      <label for="cell">Celular *</label>
+      <input
+        type="text"
+        id="cell"
+        formControlName="cell"
+        placeholder="Ingresa tu celular"
+        class="border rounded p-2"
+      />
+    </div>
+
+    <!-- Dirección -->
+    <div class="flex flex-col">
+      <label for="direccion">Dirección *</label>
+      <input
+        type="text"
+        id="direccion"
+        formControlName="direccion"
+        placeholder="Ingresa tu dirección"
+        class="border rounded p-2"
+      />
+    </div>
+
+    <!-- Género -->
+    <div class="flex flex-col">
+      <label for="genero">Género</label>
+      <select id="genero" formControlName="genero" class="border rounded p-2">
+        <option value="" disabled selected>Selecciona género</option>
+        <option *ngFor="let genero of tiposGenero" [value]="genero">
+          {{ genero }}
+        </option>
+      </select>
+    </div>
   
-      <button type="submit" class="btn bg-sky-900" [disabled]="registerForm.invalid">Registrar Usuario</button>
+      <button
+        type="submit"
+        class="btn bg-sky-900 flex items-center justify-center gap-2"
+        [disabled]="registerForm.invalid || loading"
+      >
+        <mat-spinner
+          *ngIf="loading"
+          diameter="20"
+          color="white"
+        ></mat-spinner>
+
+        <span *ngIf="!loading">Registrar Usuario</span>
+        <span *ngIf="loading">Registrando...</span>
+      </button>
     </form>
     <p *ngIf="messageSuccess" class="messageSuccess">{{ messageSuccess }}</p>
     <p *ngIf="messageError" class="messageError">{{ messageError }}</p>

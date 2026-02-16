@@ -136,7 +136,6 @@ export default class AdmVariantsComponent implements OnInit {
   updateVariant(formData: any): void {
   this.variantsService.updateVariant(this.variantId, formData).subscribe({
     next: () => {
-      this.message = 'La variante fue actualizada correctamente';
       this.handleSuccess();
     },
     error: () => {
@@ -146,10 +145,10 @@ export default class AdmVariantsComponent implements OnInit {
 }
 
   handleSuccess() {
-    this.message =
-      'La variante ha sido agregada exitosamente';
+    this.message = this.isEditMode ? this.message = 'La variante fue actualizada correctamente'
+      : 'La variante ha sido agregada exitosamente';
     this.setMessage(this.message);
-    this.setProccess(''); 
+    this.setProccess('goToAdminVariants'); 
     this.openSuccessDialog();
   }
 

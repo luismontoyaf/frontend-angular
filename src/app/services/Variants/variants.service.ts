@@ -18,7 +18,7 @@ export class VariantsService {
   }
 
   updateVariant(id: number, data: Variants): Observable<any> {
-    return this.http.patch(`${this.apiUrl}variants/${id}`, data);
+    return this.http.patch(`${this.apiUrl}/variant/${id}`, data);
   }
 
   getVariants(): Observable<any>{

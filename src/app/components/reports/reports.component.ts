@@ -75,22 +75,31 @@ perPage = 10;
       
       const result = response;
 
-      const claves = Object.keys(result[0]);
-
-      if (response && response.length > 0) {
-        this.tableColumns = claves;
-        this.reportResults = [...response]; // copia segura
-        this.tableRows = [...response];     // copia para la tabla
-        this.reportResult = true;
+      if (!result || result.length === 0) {
+        this.tableMessage.emptyMessage = "No hay registros para este reporte";
+        this.tableColumns = [];
+        this.tableRows = [];
+        this.reportResults = [];
+        this.reportResult = false;
+        this.tableLoadingIndicator = false;
+        return;
       }
 
+      const claves = Object.keys(result[0]);
+
+      this.tableColumns = claves;
+      this.reportResults = [...response];
+      this.tableRows = [...response];
+      this.reportResult = true;
       this.tableLoadingIndicator = false;
     }
     , error => {
+      this.tableMessage.emptyMessage = "Error al consultar el reporte";
       this.tableColumns = [];
-        this.tableRows = [];
-        this.reportResult = false;
-        this.reportResults = [];
+      this.tableRows = [];
+      this.reportResult = false;
+      this.reportResults = [];
+      this.tableLoadingIndicator = false;
     });
     
   }

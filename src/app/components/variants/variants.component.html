@@ -4,18 +4,8 @@
     [class.ml-16]="isMenuOpen"
   >
 
-    <!-- Empty state -->
-    <div
-      *ngIf="content == true"
-      class="flex items-center justify-center h-full text-center px-4"
-    >
-      <h1 class="text-lg sm:text-2xl font-bold">
-        Aún no tienes productos para facturar
-      </h1>
-    </div>
-
     <!-- Contenido -->
-    <div *ngIf="content == false" class="h-full">
+    <div class="h-full">
 
       <!-- Buscador -->
       <div class="mb-4">
