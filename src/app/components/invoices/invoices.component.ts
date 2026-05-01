@@ -53,12 +53,14 @@ export default class InvoicesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.invoiceService.getAllInvoicess().subscribe({
+    this.invoiceService.getAllInvoices().subscribe({
       next: (response: any) => {
         const invoicesParsed = response
-          .map((inv: { jsonFactura: string }) => ({
+          .map((inv: { jsonFactura: any }) => ({
             ...inv,
-            parsedFactura: JSON.parse(inv.jsonFactura),
+            parsedFactura: typeof inv.jsonFactura === 'string'
+              ? JSON.parse(inv.jsonFactura)
+              : inv.jsonFactura
           }))
           .sort(
             (

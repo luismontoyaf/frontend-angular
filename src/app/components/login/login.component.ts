@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule, AbstractControl, ValidationErrors  } from '@angular/forms';
 import { AuthService } from '../../services/Auth/auth.service';
 import { RegisterService } from '../../services/Register/register.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MaterialModule } from '../../../material.module'; 
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
 import { MessageService } from '../../dialogs/services/message-service.service';
 import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { TenantService } from '../../services/Tenant/tenant.service';
 
 @Component({
   selector: 'app-login',
@@ -44,11 +45,11 @@ export class LoginComponent implements OnInit{
     private authService: AuthService, 
     private registerService: RegisterService, 
     private router: Router,
+    private route: ActivatedRoute,
     private getInfoService: GetInfoService,
     private messageService: MessageService,
+    private tenantService: TenantService,
     private dialog: MatDialog) {
-      
-    this.GetParameters();
     
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -74,9 +75,25 @@ export class LoginComponent implements OnInit{
     });
   }
 
-  async ngOnInit() {
-    
+  ngOnInit() {
+  const tenantId = this.route.snapshot.paramMap.get('tenantId');
+  
+  if (!tenantId) {
+    this.router.navigate(['/invalid-tenant']);
+    return;
   }
+
+  this.getInfoService.validateTenant(tenantId).subscribe({
+    next: () => {
+      this.tenantService.setTenant(tenantId);
+
+      // this.GetParameters();
+    },
+    error: () => {
+      this.router.navigate(['/invalid-tenant']);
+    }
+  });
+}
 
   // Validador personalizado para confirmar contraseñas
   passwordMatchValidator(form: FormGroup) {
@@ -117,6 +134,12 @@ export class LoginComponent implements OnInit{
   login() {
 
     const formLoginData = this.loginForm.value;
+    const tenant = this.tenantService.getTenant();
+
+    if (!tenant) {
+      this.router.navigate(['/invalid-tenant']);
+      return;
+    }
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
@@ -127,7 +150,7 @@ export class LoginComponent implements OnInit{
     }
   
 
-    this.authService.login(formLoginData.username, formLoginData.password).subscribe(
+    this.authService.login(formLoginData.username, formLoginData.password, tenant).subscribe(
       (response) => {
         this.message = 'Inicio de sesión exitoso';
         sessionStorage.setItem('token', response.token); // Almacenar el token
@@ -137,7 +160,7 @@ export class LoginComponent implements OnInit{
         this.authService.initInactivityMonitor();
 
         // Redirigir al componente Home
-        this.router.navigate(['/dashboard/home']);
+        this.router.navigate([`/${tenant}/dashboard/home`]);
       },
       (error) => {
         console.error('Error:', error);

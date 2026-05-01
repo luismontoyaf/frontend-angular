@@ -12,6 +12,7 @@ import { DeleteModalComponent } from '../../dialogs/shared/delete-modal/delete-m
 import { Product} from '../../interfaces/product';
 import { TitleService } from '../../shared/services/title.service';
 import { Router } from '@angular/router';
+import { TenantService } from '../../services/Tenant/tenant.service';
 
 @Component({
   selector: 'app-products',
@@ -33,6 +34,7 @@ constructor(private sidebarService: SidebarService,
   private messageService: MessageService,
   private dialog: MatDialog,
   private titleService: TitleService,
+  private tenantService: TenantService,
 private router: Router) {
     // this.sidebarService.isOpen$.subscribe(open => {
     //   this.isMenuOpen = open;
@@ -66,12 +68,14 @@ openAddProductDialog(): void {
 };
 
 openAddProductComponent(): void{
-  this.router.navigate(['/dashboard/add-products'])
+  const tenant = this.tenantService.getTenantOrThrow();
+  this.router.navigate([`/${tenant}/dashboard/add-products`]);
 }
 
 openEditProductComponent(product: Product): void {
   
-  this.router.navigate(['/dashboard/add-products', product.id]);
+  const tenant = this.tenantService.getTenantOrThrow();
+  this.router.navigate([`/${tenant}/dashboard/add-products`, product.id]);
 
   // this.dialog.open(EditProductDialogComponent, {
   //   width: '400px',

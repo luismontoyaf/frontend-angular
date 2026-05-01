@@ -7,6 +7,7 @@ import { User } from '../../interfaces/user';
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
 import { SuccessModalComponent } from '../shared/success-modal/success-modal.component';
 import { MessageService } from '../services/message-service.service';
+import { TenantService } from '../../services/Tenant/tenant.service';
 
 @Component({
   selector: 'app-edit-user-dialog',
@@ -40,6 +41,7 @@ export class EditUserDialogComponent implements OnInit {
     private messageService: MessageService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<EditUserDialogComponent>,
+    private tenantService: TenantService,
     @Inject(MAT_DIALOG_DATA) public data: { user: User })
     {
     const formatDate = (date: string | Date): string => {
@@ -80,14 +82,19 @@ export class EditUserDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getInfoService.getUserInfo().subscribe(user => {
-      this.userInfo = user; 
-    });
+  this.getInfoService.getUserInfo().subscribe({
+    next: (user) => {
+      this.userInfo = user;
 
-    if (this.userInfo.role == "2") {
-      this.registerForm.get('fechaIngreso')?.disable();
+      if (this.userInfo.role == "2") {
+        this.registerForm.get('fechaIngreso')?.disable();
+      }
+    },
+    error: (err) => {
+      console.error('Error obteniendo usuario:', err);
     }
-  }
+  });
+}
   
 
   get changePassword(): string {
@@ -109,6 +116,7 @@ export class EditUserDialogComponent implements OnInit {
 
     if (this.userInfo.role != "1" && this.registerForm.get('contrasena')?.value != '') {
       this.messageError = 'No puedes modificar la contraseña de un administrador.'
+      return;
     }
     
     const formValue = this.registerForm.value;
@@ -117,6 +125,8 @@ export class EditUserDialogComponent implements OnInit {
       delete formValue.contrasena;
       delete formValue.confirmContrasena;
     } 
+
+    const tenantId = this.tenantService.getTenantOrThrow();
 
     const formData = formValue;
 

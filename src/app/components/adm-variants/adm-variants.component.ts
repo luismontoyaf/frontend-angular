@@ -9,6 +9,7 @@ import { TitleService } from '../../shared/services/title.service';
 import { VariantsService } from '../../services/Variants/variants.service';
 import { MessageService } from '../../dialogs/services/message-service.service';
 import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
+import { TenantService } from '../../services/Tenant/tenant.service';
 
 @Component({
   selector: 'app-adm-variants',
@@ -37,6 +38,7 @@ export default class AdmVariantsComponent implements OnInit {
     private titleService: TitleService,
     private variantsService: VariantsService,
     private messageService: MessageService,
+    private tenantService: TenantService,
     private fb: FormBuilder,
     private router: Router,
     private dialog: MatDialog,
@@ -184,8 +186,8 @@ export default class AdmVariantsComponent implements OnInit {
 
   // Método para cerrar el popup
   closeDialog(): void {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/dashboard/products']); // Recarga la vista actual
-    });
+    const tenantId = this.tenantService.getTenantOrThrow();
+
+    this.router.navigate(['/', tenantId, 'dashboard', 'products']);
   }
 }

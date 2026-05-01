@@ -18,28 +18,35 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<any> {
+  login(username: string, password: string, tenantId: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const body = { username, password };
+    const body = { username, password, tenantIdentifier: tenantId };
     return this.http.post(`${this.apiUrl}/auth/login`, body, { headers });
   }
 
   logout(): Observable<any> {
-  const refreshToken = sessionStorage.getItem('refreshToken');
-  return this.http.post(`${this.apiUrl}/auth/logout`, { refreshToken }).pipe(
+    const refreshToken = sessionStorage.getItem('refreshToken');
+    const tenantId = sessionStorage.getItem('tenantId');
+
+    return this.http.post(`${this.apiUrl}/auth/logout`, {
+      refreshToken,
+      tenantId
+    }).pipe(
     tap(() => {
-      sessionStorage.clear();
-      if (this.monitorTimeout) {
-        clearTimeout(this.monitorTimeout);
-        this.monitorTimeout = null;
-      }
-      if (this.inactivityTimeout) {
-        clearTimeout(this.inactivityTimeout);
-        this.inactivityTimeout = null;
-      }
-    })
-  );
-}
+        sessionStorage.clear();
+
+        if (this.monitorTimeout) {
+          clearTimeout(this.monitorTimeout);
+          this.monitorTimeout = null;
+        }
+
+        if (this.inactivityTimeout) {
+          clearTimeout(this.inactivityTimeout);
+          this.inactivityTimeout = null;
+        }
+      })
+    );
+  }
 
 
   isLoggedIn(): boolean {
@@ -68,6 +75,7 @@ export class AuthService {
     this.refreshTokenSubject.next(null);
 
     const refreshToken = sessionStorage.getItem('refreshToken');
+
     if (!refreshToken) {
       this.logout().subscribe();
       return throwError(() => new Error('No refresh token'));
@@ -77,12 +85,17 @@ export class AuthService {
       tap(response => {
         sessionStorage.setItem('token', response.token);
         sessionStorage.setItem('refreshToken', response.refreshToken);
+
         this.isRefreshing = false;
         this.refreshTokenSubject.next(response.token);
       }),
       map(res => res.token),
       catchError(err => {
         this.isRefreshing = false;
+        this.refreshTokenSubject.next(null);
+
+        sessionStorage.removeItem('tenantId');
+
         this.logout().subscribe();
         return throwError(() => err);
       })

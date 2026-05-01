@@ -209,12 +209,9 @@ export default class AddProductComponent implements OnInit {
     }
 
     updateProductImage() {
-      const formData = new FormData();
-      formData.append('imagen', this.selectedFile!);
-
-      this.productsService.updateProductImage(this.idEditProduct!, formData)
+      this.productsService.updateProductImage(this.idEditProduct!, this.selectedFile!)
         .subscribe({
-          next: () =>{ this.handleSuccess()},
+          next: () => this.handleSuccess(),
           error: err => console.error(err)
         });
     }
@@ -422,10 +419,16 @@ export default class AddProductComponent implements OnInit {
     this.dialog.open(SuccessModalComponent, {});
   }
 
-  // Método para cerrar el popup
   closeDialog(): void {
+    const tenant = sessionStorage.getItem('tenantId');
+
+    if (!tenant) {
+      window.location.href = '/invalid-tenant';
+      return;
+    }
+
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/dashboard/products']); // Recarga la vista actual
+      this.router.navigate([`/${tenant}/dashboard/products`]);
     });
   }
 }

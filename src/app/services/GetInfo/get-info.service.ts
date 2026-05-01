@@ -9,26 +9,28 @@ import { environment } from '../../../environments/environment.development';
 export class GetInfoService {
 
   private apiUrl = environment.apiUrl;
-  
+
   constructor(private http: HttpClient) {}
 
   getParameter(nombreParametro: string): Observable<string> {
-    return this.http.post(`${this.apiUrl}/info/getParameter`, 
-      { NombreParametro: nombreParametro }, 
-      { headers: { 'Content-Type': 'application/json' }, responseType: 'text' }
+    return this.http.post(
+      `${this.apiUrl}/info/getParameter`,
+      { NombreParametro: nombreParametro },
+      { responseType: 'text' }
     );
   }
 
   getUserInfo(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/info/getUserInfo`, {
-      headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
-    });
+    return this.http.get(`${this.apiUrl}/info/getUserInfo`);
   }
 
   getUserInfoByDocument(cedula: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/info/getUserInfoByDocument`, {
-      headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       params: { document: cedula }
     });
+  }
+
+  validateTenant(tenantId: string) {
+    return this.http.get(`${this.apiUrl}/info/validate/${tenantId}`);
   }
 }

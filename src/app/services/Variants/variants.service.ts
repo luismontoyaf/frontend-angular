@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { VariantDTO, Variants } from '../../interfaces/variants';
+import { TenantService } from '../Tenant/tenant.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class VariantsService {
 
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tenantService: TenantService) { }
 
   createVariant(variantData: VariantDTO): Observable<any> {
     return this.http.post(`${this.apiUrl}/variant/createVariant`, variantData);
@@ -30,15 +31,11 @@ export class VariantsService {
   }
 
   changeStatusVariant(id: number): Observable<any>{
-    return this.http.patch<Variants>(`${this.apiUrl}/variant/changeStatusVariant/${id}`,{
-        headers: new HttpHeaders({ 'Content-Type': 'application/json-patch+json' })
-      });
+    return this.http.patch<Variants>(`${this.apiUrl}/variant/changeStatusVariant/${id}`,{});
   }
 
   deleteVariant(id: number): Observable<any>{
-    return this.http.delete<Variants>(`${this.apiUrl}/variant/${id}`,{
-        headers: new HttpHeaders({ 'Content-Type': 'application/json-patch+json' })
-      });
+    return this.http.delete<Variants>(`${this.apiUrl}/variant/${id}`,{ });
   }
 
 }

@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MessageService } from '../services/message-service.service';
 import { SuccessEditModalComponent } from '../shared/success-edit-modal/success-edit-modal.component';
 import { Router } from '@angular/router';
+import { TenantService } from '../../services/Tenant/tenant.service';
 
 @Component({
   selector: 'app-add-product-dialog',
@@ -28,8 +29,9 @@ export class AddProductDialogComponent {
   constructor(private dialogRef: MatDialogRef<AddProductDialogComponent>, 
     private fb: FormBuilder, 
     private productsService: ProductsService,
-  private messageService: MessageService,
-  private router: Router,
+    private messageService: MessageService,
+    private router: Router,
+    private tenantService: TenantService,
     private dialog: MatDialog) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -122,11 +124,11 @@ removeVariant(index: number) {
       });
     };
 
-  // Método para cerrar el popup
   closeDialog(): void {
+    const tenantId = this.tenantService.getTenantOrThrow();
+
     this.dialogRef.close();
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/dashboard/products']); // Recarga la vista actual
-    });
+
+    this.router.navigate(['/', tenantId, 'dashboard', 'products']);
   }
 }

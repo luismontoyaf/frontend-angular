@@ -54,11 +54,11 @@ export class SuccessSaleModalComponent implements OnInit {
     const formattedDate = new Date().toLocaleString('sv-SE').replace(' ', '_').replace(/:/g, '-');
     
     this.invoiceService.generateInvoice({
-        idCLient: this.idClient,
-        PaymentMethod: this.PaymentMethod,
-        numInvoice: this.numeroFactura,
-        Items: this.items,
-        sendEmail: false
+      idClient: this.idClient,
+      PaymentMethod: this.PaymentMethod,
+      numInvoice: this.numeroFactura,
+      items: this.items,
+      sendEmail: false
       }).subscribe((blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -69,10 +69,12 @@ export class SuccessSaleModalComponent implements OnInit {
   }
 
   closeModal() {
+    const tenant = sessionStorage.getItem('tenantId');
+
     this.dialogRef.close();
-    
+
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/dashboard/sale']); // Recarga la vista actual
+      this.router.navigate([`/${tenant}/dashboard/sale`]);
     });
   }
 }

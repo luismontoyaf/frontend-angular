@@ -63,15 +63,12 @@ perPage = 10;
   consultarReporte(){
     let Id = parseInt(this.reportParamsForm.get('tipoReporte')?.value);
     
-    let startDate = (this.reportParamsForm.get('fechaInicio')?.value ==null || this.reportParamsForm.get('fechaInicio')?.value =="")?
-                    "" : this.reportParamsForm.get('fechaInicio')?.value;
-
-    let endDate = (this.reportParamsForm.get('fechaFinal')?.value ==null || this.reportParamsForm.get('fechaFinal')?.value =="")?
-                    "" : this.reportParamsForm.get('fechaFinal')?.value;
+    const startDate = this.reportParamsForm.get('fechaInicio')?.value || undefined;
+    const endDate = this.reportParamsForm.get('fechaFinal')?.value || undefined;
 
     this.tableLoadingIndicator = true;
 
-    this.reportsService.getReport(Id, startDate, endDate, true).subscribe (response => {
+    this.reportsService.getReport(Id, startDate, endDate).subscribe (response => {
       
       const result = response;
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 
 @Injectable({
@@ -12,8 +12,12 @@ export class ReportsService {
 
   constructor(private http: HttpClient) { }
 
-  getReport(Id: number, startDate: any, endDate: any, spinner = false): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/reports/getReport?id=${Id}&startDate=${startDate}&endDate=${endDate}`, {
-    });
+  getReport(Id: number, startDate?: string, endDate?: string): Observable<any> {
+    let params = new HttpParams().set('id', Id);
+
+    if (startDate) params = params.set('startDate', startDate);
+    if (endDate) params = params.set('endDate', endDate);
+
+    return this.http.get<any>(`${this.apiUrl}/reports/getReport`, { params });
   }
 }

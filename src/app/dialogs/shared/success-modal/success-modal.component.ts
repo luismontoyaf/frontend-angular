@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../../services/message-service.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { TenantService } from '../../../services/Tenant/tenant.service';
 
 @Component({
   selector: 'app-success-modal',
@@ -11,11 +12,16 @@ import { Router } from '@angular/router';
 })
 export class SuccessModalComponent implements OnInit {
   
-  constructor(private messageService: MessageService, private router: Router, private dialogRef: MatDialogRef<SuccessModalComponent>) {}
+  constructor(private messageService: MessageService, 
+    private router: Router, 
+    private tenantService: TenantService,
+    private dialogRef: MatDialogRef<SuccessModalComponent>) {}
   messageModal: string = '';
   proccessKey: string = '';
 
   ngOnInit() {
+    const tenantId = this.tenantService.getTenant();
+
     this.messageService.message$.subscribe((message) => {
       this.messageModal = message;
     });
@@ -54,26 +60,26 @@ export class SuccessModalComponent implements OnInit {
   }
 
   closeModal() {
+    const tenantId = this.tenantService.getTenantOrThrow();
+
     this.dialogRef.close();
     
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/dashboard/products']); // Recarga la vista actual
-    });
+    this.router.navigate(['/', tenantId, 'dashboard', 'products']);
   }
 
   goToLogin() {
+    const tenantId = this.tenantService.getTenantOrThrow();
+
     this.dialogRef.close();
 
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/login']); 
-    });
+    this.router.navigate(['/', tenantId]);
   }
 
   goToAdminVariants(){
+    const tenantId = this.tenantService.getTenantOrThrow();
+
     this.dialogRef.close();
 
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/dashboard/variants']); 
-    });
+    this.router.navigate(['/', tenantId, 'dashboard', 'variants']);
   }
 }

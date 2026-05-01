@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
 import { TitleService } from '../services/title.service';
+import { forkJoin } from 'rxjs';
+import { TenantService } from '../../services/Tenant/tenant.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -19,18 +21,47 @@ export class SidenavComponent implements OnInit {
   isUsersMenuOpen = false;
   imageLogo: any;
   opcionesMenu: any[] = [];
+  tenantId: string = '';
+  isAdmin: boolean = false;
 
-  constructor(public sidebarService: SidebarService, private _getInfoService: GetInfoService, private titleService: TitleService) {}
+  constructor(public sidebarService: SidebarService, 
+    private _getInfoService: GetInfoService, 
+    private tenantService: TenantService,
+    private titleService: TitleService) {}
 
   ngOnInit() {
-    this._getInfoService.getParameter("LogoEmpresa").subscribe((data: string) => {
-      this.imageLogo = data; // Asignar directamente el string a la variable
+  this.tenantId = this.tenantService.getTenant() ?? '';
+
+  this._getInfoService.getUserInfo().subscribe(response => {
+      this.isAdmin = response.role !== '0';
     });
-    this._getInfoService.getParameter("OPCIONES_MENU").subscribe((data: string) => {
-      this.opcionesMenu = JSON.parse(data).Opciones; // Asignar directamente el string a la variable
-      
-    });
-  }
+  
+  console.log('this.isAdmin ', this.isAdmin);
+  
+
+  forkJoin({
+    logo: this._getInfoService.getParameter("LogoEmpresa"),
+    menu: this._getInfoService.getParameter("OPCIONES_MENU")
+  }).subscribe({
+    next: ({ logo, menu }) => {
+      this.imageLogo = logo;
+
+      try {
+        this.opcionesMenu = JSON.parse(menu).Opciones;
+      } catch {
+        console.error('Error parseando OPCIONES_MENU');
+        this.opcionesMenu = [];
+      }
+    },
+    error: (err) => {
+      console.error('Error cargando configuración:', err);
+
+      // fallback seguro
+      this.imageLogo = '';
+      this.opcionesMenu = [];
+    }
+  });
+}
   
   toggleMenu() {
     this.sidebarService.toggleMenu();

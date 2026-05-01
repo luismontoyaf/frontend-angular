@@ -10,6 +10,7 @@ import { Variants } from '../../interfaces/variants';
 import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteModalComponent } from '../../dialogs/shared/delete-modal/delete-modal.component';
+import { TenantService } from '../../services/Tenant/tenant.service';
 
 @Component({
   selector: 'app-variants',
@@ -34,17 +35,22 @@ export default class VariantsComponent {
   message: string = '';
   proccess: string = '';
   messageError: string = '';
+  tenantId: string = '';
 
   constructor(
     private messageService: MessageService,
     private variantService: VariantsService,
     private titleService: TitleService,
+    private tenantService: TenantService,
     private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
+    this.tenantId = this.tenantService.getTenant() ?? '';
+
     this.variantService.getVariants().subscribe({
       next: (response: Variants) => {
+        
         const variantsParsed = Array.isArray(response) ? response : [response];
 
         this.variants.set(variantsParsed);

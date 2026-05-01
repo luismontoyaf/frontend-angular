@@ -1,3 +1,4 @@
+
 .container{
   align-content: center;
   justify-content: center;
@@ -45,10 +46,10 @@
     flex-direction: column;
   }
   
-  h2 {
+  /* h2 {
     text-align: center;
-    color: #333;
-  }
+    color: #20ba53;
+  } */
 
   p{
     font-size: 12px;

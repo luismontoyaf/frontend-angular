@@ -7,7 +7,8 @@
   [class.-translate-x-full]="isMobile() && !(sidebarService.isOpen$ | async)"
 >
     <div class="sidebar-header">
-      <img src="assets/images/{{imageLogo}}" class="w-28 mt-5 h-auto mx-auto" alt="Logo">
+      <!-- <img src="assets/images/{{imageLogo}}" class="w-28 mt-5 h-auto mx-auto" alt="Logo"> -->
+      <p class="text-white text-2xl text-center mt-6 font-bold">LUMO co</p>
       <br>
       <hr> <!-- Línea divisoria -->
       <!-- <button class="close" (click)="toggleMenu()">
@@ -29,7 +30,7 @@
           </a>
         </li> -->
         <li>
-          <a routerLink="/dashboard/sale" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+          <a [routerLink]="['/', tenantId, 'dashboard', 'sale']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">point_of_sale</mat-icon>
             <span class="ml-2" routerLinkActive="text-sky-500">Realizar Venta</span>
           </a>
@@ -53,7 +54,7 @@
           >
             <li>
               <a
-                routerLink="/dashboard/products"
+                [routerLink]="['/', tenantId, 'dashboard', 'products']"
                 routerLinkActive="text-sky-500"
                 (click)="closeMenuOnMobile()"
                 class="flex items-center"
@@ -65,7 +66,7 @@
 
             <li>
               <a
-                routerLink="/dashboard/variants/"
+                [routerLink]="['/', tenantId, 'dashboard', 'variants']"
                 routerLinkActive="text-sky-500"
                 (click)="closeMenuOnMobile()"
                 class="flex items-center"
@@ -95,7 +96,7 @@
           >
             <li>
               <a
-                routerLink="/dashboard/register/registerClient"
+                [routerLink]="['/', tenantId, 'dashboard', 'register', 'registerClient']"
                 routerLinkActive="text-sky-500"
                 (click)="closeMenuOnMobile()"
                 class="flex items-center"
@@ -105,9 +106,9 @@
               </a>
             </li>
 
-            <li>
+            <li *ngIf="isAdmin">
               <a
-                routerLink="/dashboard/register/registerEmployee"
+                [routerLink]="['/', tenantId, 'dashboard', 'register', 'registerEmployee']"
                 routerLinkActive="text-sky-500"
                 (click)="closeMenuOnMobile()"
                 class="flex items-center"
@@ -125,19 +126,19 @@
           </a>
         </li> -->
         <li>
-          <a routerLink="/dashboard/manageUsers" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+          <a [routerLink]="['/', tenantId, 'dashboard', 'manageUsers']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">manage_accounts</mat-icon>
             <span class="ml-2" routerLinkActive="text-sky-500">Administrar Usuarios</span>
           </a>
         </li>
         <li>
-          <a routerLink="/dashboard/invoices" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+          <a [routerLink]="['/', tenantId, 'dashboard', 'invoices']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">receipt_long</mat-icon>
             <span class="ml-2" routerLinkActive="text-sky-500">Historico Facturas</span>
           </a>
         </li>
-        <li>
-          <a routerLink="/dashboard/reports" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+        <li *ngIf="isAdmin">
+          <a [routerLink]="['/', tenantId, 'dashboard', 'reports']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">view_kanban</mat-icon>
             <span class="ml-2" routerLinkActive="text-sky-500">Reportes</span>
           </a>

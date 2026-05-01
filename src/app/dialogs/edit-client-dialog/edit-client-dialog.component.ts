@@ -64,7 +64,7 @@ export class EditClientDialogComponent {
           tipoDocumento: [data.client.tipoDocumento, Validators.required],
           numDocumento: [data.client.numDocumento, [Validators.required, Validators.pattern(/^\d{5,10}$/)]],
           correo: [data.client.correo, [Validators.required, Validators.email]],
-          fechaNacimiento: [data.client.fechaNacimiento, [Validators.required, this.mayorDeEdadValidator]],
+          fechaNacimiento: [fechaNacimientoFormateada, [Validators.required, this.mayorDeEdadValidator]],
           // contrasena: [data.user.contrasena, [Validators.minLength(6)]],
           // confirmContrasena: [data.user.confirmContrasena],
           cell: [data.client.celular, [Validators.required, Validators.pattern(/^\d{10}$/)]],
@@ -120,7 +120,7 @@ export class EditClientDialogComponent {
     
         const formData = this.registerForm.value;
     
-        this.registerService.updateClient(formData).subscribe(
+        this.registerService.updateClient(formData as Client).subscribe(
           (response) => {
             this.message = 'El cliente ha sido editado exitosamente';
             this.setMessage(this.message);

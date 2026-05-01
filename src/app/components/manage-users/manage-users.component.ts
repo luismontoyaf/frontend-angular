@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MaterialModule } from '../../../material.module'; 
+import { MaterialModule } from '../../../material.module';
 import { RegisterService } from '../../services/Register/register.service';
 import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
 import { MessageService } from '../../dialogs/services/message-service.service';
@@ -11,54 +11,69 @@ import { TitleService } from '../../shared/services/title.service';
 import { EditClientDialogComponent } from '../../dialogs/edit-client-dialog/edit-client-dialog.component';
 import { User } from '../../interfaces/user';
 import { Client } from '../../interfaces/client';
+import { GetInfoService } from '../../services/GetInfo/get-info.service';
 
 @Component({
   selector: 'app-manage-users',
   imports: [CommonModule, FormsModule, MaterialModule],
   templateUrl: './manage-users.component.html',
-  styleUrl: './manage-users.component.css'
+  styleUrl: './manage-users.component.css',
 })
 export default class ManageUsersComponent implements OnInit {
-
   content: boolean = false;
 
   activeTab: string = 'clients';
   message: string = '';
   process: string = '';
-  
-    filteredUsers: any[] = []; 
-    filteredClients: any[] = []; 
-  
-    searchTerm: string = '';
-    users: any[] = []; // Cambiado a any[] para evitar errores de tipo
-    clients: any[] = []; // Cambiado a any[] para evitar errores de tipo
 
-    constructor(private registerServices: RegisterService,
-      private messageService: MessageService,
-      private dialog: MatDialog,
-      private titleService: TitleService
-    ) {
+  filteredUsers: any[] = [];
+  filteredClients: any[] = [];
 
-    }
+  searchTerm: string = '';
+  users: any[] = []; // Cambiado a any[] para evitar errores de tipo
+  clients: any[] = []; // Cambiado a any[] para evitar errores de tipo
+
+  isAdmin: any;
+
+  constructor(
+    private registerServices: RegisterService,
+    private messageService: MessageService,
+    private getInfoService: GetInfoService,
+    private dialog: MatDialog,
+    private titleService: TitleService,
+  ) {}
 
   ngOnInit(): void {
+    this.getInfoService.getUserInfo().subscribe(response => {
+      this.isAdmin = response.role !== '0';
+    });
+
     this.registerServices.getUsers().subscribe({
       next: (response: any[]) => {
         if (response) {
-          this.users = response.filter(user => user.rol != "2");
-          this.filteredUsers = response.filter(user => user.rol != "2");
-            this.users.forEach(user => {
-              user.rol = user.rol == 1 ? "Administrador" : "Colaborador";
-              user.estado = user.estado == 1 ? "Activo" : "Inactivo";
-            });
-          this.clients = response.filter(client => client.rol == "2");
-          this.filteredClients = response.filter(client => client.rol == "2");
-            this.clients.forEach(client => {
-              client.rol =  "Cliente";
-              client.estado = client.estado == 1 ? "Activo" : "Bloqueado";
-            });
+          this.users = response.filter((user) => user.rol != '2');
+          this.filteredUsers = response.filter((user) => user.rol != '2');
+          this.users.forEach((user) => {
+            user.rol = user.rol == 1 ? 'Administrador' : 'Colaborador';
+            user.estado = user.estado == 1 ? 'Activo' : 'Inactivo';
+          });
         }
-      }
+      },
+    });
+
+    this.registerServices.getClients().subscribe({
+      next: (response: any[]) => {
+        if (response) {
+          this.clients = response.map((client) => ({
+            ...client,
+            rol: 'Cliente',
+            estado: client.estado == 1 ? 'Activo' : 'Bloqueado',
+          }));
+
+          this.filteredClients = this.clients;
+          
+        }
+      },
     });
 
     this.setTitle('Administrar Usuarios');
@@ -66,61 +81,69 @@ export default class ManageUsersComponent implements OnInit {
 
   openEditUserDialog(user: User) {
     this.dialog.open(EditUserDialogComponent, {
-        data: { user }
-      });
+      data: { user },
+    });
   }
 
   openEditClientDialog(client: Client) {
     this.dialog.open(EditClientDialogComponent, {
-        data: { client }
-      });
+      data: { client },
+    });
   }
 
   filterUsers() {
     const term = this.searchTerm.toLowerCase();
-    this.filteredUsers = this.users.filter(user => 
-      user.nombre.toLowerCase().includes(term) || user.apellidos.toLowerCase().includes(term)
+    this.filteredUsers = this.users.filter(
+      (user) =>
+        user.nombre.toLowerCase().includes(term) ||
+        user.apellidos.toLowerCase().includes(term),
+    );
+    this.filteredClients = this.clients.filter(
+      (user) =>
+        user.nombre.toLowerCase().includes(term) ||
+        user.apellidos.toLowerCase().includes(term),
     );
   }
 
   filterClients() {
     const term = this.searchTerm.toLowerCase();
-    this.filteredClients = this.clients.filter(client => 
-      client.nombre.toLowerCase().includes(term) || client.apellidos.toLowerCase().includes(term)
+    this.filteredClients = this.clients.filter(
+      (client) =>
+        client.nombre.toLowerCase().includes(term) ||
+        client.apellidos.toLowerCase().includes(term),
     );
   }
 
-  changeStatusUser(userId: number) {
-    this.registerServices.changeStatusUser(userId).subscribe({
+  changeStatusUser(userId: number, typeUser: string) {
+    
+    this.registerServices.changeStatusUser(userId, typeUser).subscribe({
       next: (response) => {
         this.message = 'El estado del usuario fue modificado correctamente';
-        this.process = 'closeModalSuccess'
+        this.process = 'closeModalSuccess';
         this.setMessage(this.message);
         this.setProcess(this.process);
         this.openSuccessDialog();
       },
       error: (error) => {
-        console.error("Error al modificar el usuario:", error);
-        alert("Error al modificar el usuario");
-      }
+        console.error('Error al modificar el usuario:', error);
+        alert('Error al modificar el usuario');
+      },
     });
   }
 
   openSuccessDialog(): void {
-      this.dialog.open(SuccessModalComponent, {
-      });
-    };
+    this.dialog.open(SuccessModalComponent, {});
+  }
 
-    setMessage(message: string): void {
-      this.messageService.setMessageSuccess(message);
-    }
+  setMessage(message: string): void {
+    this.messageService.setMessageSuccess(message);
+  }
 
-    setProcess(process: string): void {
-      this.messageService.setProcess(process);
-    }
+  setProcess(process: string): void {
+    this.messageService.setProcess(process);
+  }
 
   setTitle(title: string): void {
     this.titleService.setTitle(title);
   }
-
 }

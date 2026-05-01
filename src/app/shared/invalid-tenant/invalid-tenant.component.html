@@ -1,0 +1,36 @@
+<div class="w-screen h-screen flex flex-col items-center justify-center bg-white dark:bg-gray-950 relative overflow-hidden">
+
+  <!-- dots decorativos -->
+  <div class="absolute top-10 left-10 grid grid-cols-3 gap-4">
+    <span *ngFor="let i of [1,2,3,4,5,6,7,8,9]" class="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 block"></span>
+  </div>
+  <div class="absolute bottom-10 right-10 grid grid-cols-3 gap-4">
+    <span *ngFor="let i of [1,2,3,4,5,6,7,8,9]" class="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 block"></span>
+  </div>
+
+  <!-- número 404 -->
+  <h1 class="text-[140px] font-medium leading-none tracking-tight text-transparent"
+      style="-webkit-text-stroke: 1.5px #d1d5db;">
+    404
+  </h1>
+
+  <!-- divider -->
+  <div class="w-60 border-t border-gray-200 dark:border-gray-800 my-4"></div>
+
+  <!-- textos -->
+  <h2 class="text-2xl font-medium text-gray-900 dark:text-white mb-2">
+    Empresa no encontrada
+  </h2>
+  <p class="text-sm text-gray-500 text-center leading-relaxed">
+    La dirección que ingresaste no corresponde<br>
+    a ninguna empresa registrada.
+  </p>
+
+  <!-- botón -->
+  <button
+    (click)="goHome()"
+    class="mt-8 px-8 py-2.5 text-sm font-medium border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+    ← Volver
+  </button>
+
+</div>

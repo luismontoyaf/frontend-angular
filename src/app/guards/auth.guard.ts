@@ -9,29 +9,41 @@ const checkAuth = (): boolean => {
 
   const token = sessionStorage.getItem('token');
   const refreshToken = sessionStorage.getItem('refreshToken');
+  const tenant = sessionStorage.getItem('tenantId');
 
-  // Si no hay token, redirige al login
-  if (!token) {
-    router.navigate(['/login']);
+  if (!tenant) {
+    router.navigate(['/invalid-tenant']);
     return false;
   }
 
-  if(!refreshToken) return false;
+  if (!token) {
+    router.navigate([`/${tenant}`]);
+    return false;
+  }
+
+  if (!refreshToken) {
+    authService.logout().subscribe({
+      complete: () => router.navigate([`/${tenant}`])
+    });
+    return false;
+  }
 
   try {
     const decoded: any = jwtDecode(token);
     const now = Math.floor(Date.now() / 1000);
 
-    // Si el token ha expirado, redirige al login
     if (decoded.exp < now) {
-      authService.logout().subscribe(); // Limpia tokens y redirige
+      authService.logout().subscribe({
+        complete: () => router.navigate([`/${tenant}`])
+      });
       return false;
     }
 
     return true;
   } catch (e) {
-    // Token inválido o corrupto
-    authService.logout().subscribe();
+    authService.logout().subscribe({
+      complete: () => router.navigate([`/${tenant}`])
+    });
     return false;
   }
 };

@@ -8,6 +8,7 @@ import { AddClientDialogComponent } from '../../add-client-dialog/add-client-dia
 import { SaleService } from '../../../services/Sale/sale.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { CommonModule } from '@angular/common';
+import { TenantService } from '../../../services/Tenant/tenant.service';
 
 @Component({
   selector: 'app-success-saved-product',
@@ -21,10 +22,10 @@ export class SuccessSavedProductComponent implements OnInit{
   isLoading: boolean = false; // Estado de carga
   
   constructor(private messageService: MessageService, 
+    private tenantService: TenantService,
     private router: Router, 
-    private saleService: SaleService,
     private dialog: MatDialog,
-    private dialogRef: MatDialogRef<DeleteModalComponent>) {
+    private dialogRef: MatDialogRef<SuccessSavedProductComponent>) {
     }
     messageModal: string = '';
     proccessKey: string = ''; 
@@ -58,11 +59,10 @@ export class SuccessSavedProductComponent implements OnInit{
       };
   
     closeModal() {
-      const currentUrl = this.router.url;
+      const tenantId = this.tenantService.getTenantOrThrow();
   
       this.dialogRef.close();
-      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-        this.router.navigate(['/dashboard/products']);
-      });
+      
+      this.router.navigate(['/', tenantId, 'dashboard', 'products']);
     }
 }

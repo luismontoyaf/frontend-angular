@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { MessageService } from '../../services/message-service.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ProductsService } from '../../../services/Products/products.service';
-import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { AddProductDialogComponent } from '../../add-product-dialog/add-product-dialog.component';
 import { AddClientDialogComponent } from '../../add-client-dialog/add-client-dialog.component';
 import { SuccessSaleModalComponent } from '../success-sale-modal/success-sale-modal.component';
@@ -33,10 +31,9 @@ isLoading: boolean = false; // Estado de carga
 
 constructor(private messageService: MessageService, 
   private router: Router, 
-  private productsService: ProductsService,
   private saleService: SaleService,
   private dialog: MatDialog,
-  private dialogRef: MatDialogRef<DeleteModalComponent>,
+  private dialogRef: MatDialogRef<SuccessEditModalComponent>,
   @Inject(MAT_DIALOG_DATA) public data: any,  ) {
     this.userEmail = data?.userEmail;
     this.idClient = data?.idClient;
@@ -126,8 +123,8 @@ constructor(private messageService: MessageService,
     const currentUrl = this.router.url;
 
     this.dialogRef.close();
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([currentUrl]); // Recarga la vista actual
-    });
+    // this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+    //   this.router.navigate([currentUrl]); // Recarga la vista actual
+    // });
   }
 }
