@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-invalid-tenant',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './invalid-tenant.component.html',
   styleUrl: './invalid-tenant.component.css'
 })

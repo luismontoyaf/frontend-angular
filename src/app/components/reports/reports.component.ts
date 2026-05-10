@@ -21,6 +21,8 @@ export default class ReportsComponent implements OnInit{
   reportResult: boolean = false;
   reportResults: any;
 
+  reportsAvailable: any[] = [];
+
   pageNumber = 0;
 perPage = 10;
   tableCount = 0;       // total registros
@@ -46,6 +48,8 @@ perPage = 10;
     this.setTitle('Descargar Reportes');
 
     this.buildForm();
+
+    this.getListReports();
   }
 
   buildForm() {
@@ -58,6 +62,16 @@ perPage = 10;
 
   setTitle(title: string): void {
     this.titleService.setTitle(title);
+  }
+
+  getListReports(){
+    this.reportsService.getListReports().subscribe ((response) => {
+      
+      this.reportsAvailable = response.map((report: any) => ({
+        ...report,
+        name: report.name.replace(/_/g, ' ')
+      }));
+    });
   }
 
   consultarReporte(){

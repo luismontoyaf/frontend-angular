@@ -36,9 +36,6 @@ export class SidenavComponent implements OnInit {
       this.isAdmin = response.role !== '0';
     });
   
-  console.log('this.isAdmin ', this.isAdmin);
-  
-
   forkJoin({
     logo: this._getInfoService.getParameter("LogoEmpresa"),
     menu: this._getInfoService.getParameter("OPCIONES_MENU")

@@ -19,10 +19,14 @@ export class ProductsService {
     stock: number,
     imagen: File
   ): Observable<any> {
+    const precioLimpio = Number(
+      precio.toString().replace(/\./g, '')
+    );
+
     const formData = new FormData();
     formData.append('nombreProducto', nombreProducto);
     formData.append('descripcion', descripcion);
-    formData.append('precio', precio.toString());
+    formData.append('precio', precioLimpio.toString());
     formData.append('stock', stock.toString());
     formData.append('ImagenFile', imagen);
 

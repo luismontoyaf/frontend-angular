@@ -13,12 +13,10 @@
         class="h-10 w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg hover:cursor-pointer mt-3"
       >
         <option value="00" selected disabled>Seleccionar Reporte</option>
-        <option value="1">Todos los Productos</option>
-        <option value="2">Ventas Dia Actual</option>
-        <option value="3">Ventas Rango de Fechas</option>
-        <option value="4">Productos Agotados</option>
-        <option value="5">Productos Proximos a Agotarse</option>
-        <option value="6">Devoluciones</option>
+        <option *ngFor="let report of reportsAvailable" 
+          [value]="report.id">
+          {{ report.name }}
+        </option>
       </select>
     </div>
 

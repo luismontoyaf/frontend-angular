@@ -12,6 +12,10 @@ export class ReportsService {
 
   constructor(private http: HttpClient) { }
 
+  getListReports(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/reports/getListReports`);
+  }
+
   getReport(Id: number, startDate?: string, endDate?: string): Observable<any> {
     let params = new HttpParams().set('id', Id);
 

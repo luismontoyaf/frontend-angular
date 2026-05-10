@@ -45,6 +45,9 @@ export class SuccessModalComponent implements OnInit {
       case 'goToAdminVariants':
         this.goToAdminVariants();
         break;
+      case 'closeModalFromAddClientDialog':
+        this.closeModalFromAddClientDialog();
+        break;
       default:
         this.closeModalSuccess();
     }
@@ -65,6 +68,10 @@ export class SuccessModalComponent implements OnInit {
     this.dialogRef.close();
     
     this.router.navigate(['/', tenantId, 'dashboard', 'products']);
+  }
+
+  closeModalFromAddClientDialog(){
+    this.dialogRef.close();
   }
 
   goToLogin() {

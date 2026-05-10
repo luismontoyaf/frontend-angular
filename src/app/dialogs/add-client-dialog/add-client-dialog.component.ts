@@ -106,7 +106,7 @@ export class AddClientDialogComponent {
         (response) => {
           this.message = 'El cliente ha sido registrado exitosamente';
           this.setMessage(this.message); // Llamar al servicio para mostrar el mensaje
-          this.setProccess('closeModalSuccess'); 
+          this.setProccess('closeModalFromAddClientDialog'); 
           this.dialogRef.close(true); // Cerrar diálogo y recargar datos en la vista principal
           this.openSuccessDialog(); // Abrir el diálogo de éxito
         },
