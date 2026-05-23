@@ -12,6 +12,7 @@ import { MessageService } from '../../dialogs/services/message-service.service';
 import { TitleService } from '../../shared/services/title.service';
 import { AlertService } from '../../services/Alert/alert.service';
 import { firstValueFrom } from 'rxjs';
+import { DisableRowDirective } from "@siemens/ngx-datatable";
 
 @Component({
   selector: 'app-sale',
@@ -247,7 +248,8 @@ export default class SaleComponent implements OnInit{
             ProductName: product.nombreProducto,
             Quantity: this.quantities[product.id] || 1,
             UnitPrice: product.precio,
-          }))
+          })),
+          discountPercentage: this.discount || 0
         }
     }); 
   }

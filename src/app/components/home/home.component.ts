@@ -7,6 +7,10 @@ import { ProductsService } from '../../services/Products/products.service';
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
 import { Product } from '../../interfaces/product'; // Asegúrate de que la ruta sea correcta
 import { TitleService } from '../../shared/services/title.service';
+import { DashboardService } from '../../services/Dashboard/dashboard.service';
+import { DashboardResponse, VentaSemana } from '../../interfaces/dashboard';
+import { TenantService } from '../../services/Tenant/tenant.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -25,11 +29,24 @@ export default class HomeComponent implements OnInit{
   filteredProducts: Product[] = [];
 
   searchTerm: string = '';
-  user: any = null; // Variable para almacenar la información del usuario
+  user: any = null;
+
+  tenantId: string = '0';
+
+  //----------------------------------------------------------------------------
+  totalVentasHoy = 0;
+  totalPedidos = 0;
+  totalClientes = 0;
+  stockBajo = 0;
+  
+  ventasSemana: VentaSemana[] = [];  
 
   constructor(private sidebarService: SidebarService, 
     private productsService: ProductsService, 
     private getInfoService: GetInfoService,
+    private dashboardService: DashboardService,
+    private tenantService: TenantService,
+    private router: Router,
     private titleService: TitleService) {
     this.sidebarService.isOpen$.subscribe(open => {
       this.isMenuOpen = open;
@@ -53,10 +70,14 @@ export default class HomeComponent implements OnInit{
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.tenantId = this.tenantService.getTenant() ?? '';
+
     this.setTitle('Página Principal');
 
-    this.getNonStockProducts();
+    await this.getDashboardInfo();
+
+    // this.getNonStockProducts();
   }
   
   // Método para filtrar productos por nombre
@@ -72,10 +93,35 @@ export default class HomeComponent implements OnInit{
     alert(`Has comprado: ${product.nombreProducto}`);
   }
 
+  async getDashboardInfo(){
+    this.dashboardService.getDashboardInfo()
+    .subscribe({
+      next: (response: DashboardResponse) => {
+
+        const max = Math.max(
+          ...response.ventasSemana.map(x => x.total),
+          1
+        );
+
+        this.ventasSemana = response.ventasSemana.map(x => ({
+          ...x,
+          valor: (x.total / max) * 220
+        }));
+
+        this.totalVentasHoy = response.ventasHoy;
+        this.totalPedidos = response.totalVentas;
+        this.totalClientes = response.totalClientes;
+        this.stockBajo = response.stockBajo;
+      }
+
+      
+    });
+  }
+
   getNonStockProducts() {
     this.productsService.getProducts().subscribe({
       next: (response) => {
-        const noStock = response//.filter((f: Product) => f.stock === 0);
+        const noStock = response.filter((f: Product) => f.stock === 0);
         this.noStockProducts.set(noStock);
       },
       error(err) {
@@ -84,6 +130,18 @@ export default class HomeComponent implements OnInit{
     })
   }
 
+  goToReports(){
+    const tenant = sessionStorage.getItem('tenantId');
+
+    if (!tenant) {
+      window.location.href = '/invalid-tenant';
+      return;
+    }
+
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([`/${tenant}/dashboard/reports`]);
+    });
+  }
   setTitle(title: string): void {
     this.titleService.setTitle(title);
   }

@@ -23,12 +23,12 @@
       <mat-icon>close</mat-icon>
     </button>
     <ul class="mt-8 space-y-3">
-      <!-- <li>
-          <a routerLink="/dashboard/home" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+        <li>
+          <a [routerLink]="['/', tenantId, 'dashboard', 'home']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">dashboard</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">Inicio</span>
+            <span class="ml-2" routerLinkActive="text-sky-500">Dashboard</span>
           </a>
-        </li> -->
+        </li>
         <li>
           <a [routerLink]="['/', tenantId, 'dashboard', 'sale']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">point_of_sale</mat-icon>
@@ -135,6 +135,12 @@
           <a [routerLink]="['/', tenantId, 'dashboard', 'invoices']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
             <mat-icon class="icon" routerLinkActive="text-sky-500">receipt_long</mat-icon>
             <span class="ml-2" routerLinkActive="text-sky-500">Historico Facturas</span>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/', tenantId, 'dashboard', 'expenses']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
+            <mat-icon class="icon" routerLinkActive="text-sky-500">wallet</mat-icon>
+            <span class="ml-2" routerLinkActive="text-sky-500">Egresos</span>
           </a>
         </li>
         <li *ngIf="isAdmin">

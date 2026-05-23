@@ -26,6 +26,7 @@ clientDocument: string = ''; // Número de documento del cliente
 idClient: string = ''; // id del cliente
 PaymentMethod: string = ''; // Método de pago
 items: any[] = []; // Productos añadidos a la venta
+discountPercentage: number = 0;
 
 isLoading: boolean = false; // Estado de carga
 
@@ -40,6 +41,7 @@ constructor(private messageService: MessageService,
     this.clientDocument = data?.clientDocument;
     this.PaymentMethod = data?.PaymentMethod;
     this.items = data?.items;
+    this.discountPercentage = data?.discountPercentage;
   }
   messageModal: string = '';
   proccessKey: string = ''; 
@@ -69,7 +71,8 @@ constructor(private messageService: MessageService,
         ClientDocument: this.clientDocument,
         PaymentMethod: this.PaymentMethod,
         items: this.items,
-        sendEmail: true
+        sendEmail: true,
+        discountPercentage: this.discountPercentage
       }).subscribe((response: any) => {
         this.isLoading = false;
         this.dialogRef.close();
@@ -87,6 +90,7 @@ constructor(private messageService: MessageService,
             , PaymentMethod: this.PaymentMethod
             , items: this.items
             , numeroFactura: response.invoiceNumber
+            , discountPercentage: this.discountPercentage
           }
         });
       }, (error) => {

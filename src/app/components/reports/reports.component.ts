@@ -98,7 +98,10 @@ perPage = 10;
 
       const claves = Object.keys(result[0]);
 
-      this.tableColumns = claves;
+      this.tableColumns = claves.map(key => ({
+        prop: key,
+        name: key
+      }));
       this.reportResults = [...response];
       this.tableRows = [...response];
       this.reportResult = true;

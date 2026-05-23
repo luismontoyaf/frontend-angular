@@ -26,6 +26,8 @@ export class SuccessSaleModalComponent implements OnInit {
   products: any;
   quantities: any;
   numeroFactura: any;
+  discountPercentage: number = 0;
+
   constructor(private messageService: MessageService, 
     private router: Router, 
     private dialogRef: MatDialogRef<SuccessSaleModalComponent>,
@@ -36,6 +38,7 @@ export class SuccessSaleModalComponent implements OnInit {
       this.PaymentMethod = data.PaymentMethod;
       this.items = data.items;
       this.numeroFactura = data.numeroFactura;
+      this.discountPercentage = data.discountPercentage;
     }
   messageModal: string = '';
   proccessKey: string = '';
@@ -58,7 +61,8 @@ export class SuccessSaleModalComponent implements OnInit {
       PaymentMethod: this.PaymentMethod,
       numInvoice: this.numeroFactura,
       items: this.items,
-      sendEmail: false
+      sendEmail: false,
+      discountPercentage: this.discountPercentage 
       }).subscribe((blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');

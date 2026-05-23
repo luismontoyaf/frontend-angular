@@ -30,9 +30,13 @@
         >
           <li
             *ngFor="let product of filteredProducts"
-            (click)="addToCart(product)"
+            (click)="product.stock > 0 && addToCart(product)"
             (blur)="showOptions = false"
-            class="p-2 hover:bg-blue-200 cursor-pointer"
+            class="p-2 transition"
+            [ngClass]="{
+              'hover:bg-blue-200 cursor-pointer': product.stock > 0,
+              'opacity-40 cursor-not-allowed': product.stock === 0
+            }"
           >
             <span class="text-gray-900 font-semibold"
               >{{ product.nombreProducto }} -

@@ -1,90 +1,323 @@
-<div
-  class="w-full grid grid-cols-1 md: grid-cols-2 lg: grid-cols-3 justify-between gap-4"
->
-  <div class="rounded-lg shadow-lg shadow-black justify-between gap-4">
-    <span class="text-xl mt-4">Total vendido en el dia</span>
-    <p class="text-2xl mt-4 text-sky-900">
-      $ <span class="text-2xl">255.369</span>
-    </p>
-    <p class="text-xl mt-4">
-      <span class="text-xl italic">{{
-        fechaDiaActual() | date : "dd-MM-yyyy"
-      }}</span>
-    </p>
-  </div>
-  <div class="rounded-lg shadow-lg shadow-black">
-    <span class="text-xl">Productos sin stock</span>
-    <p class="text-2xl">Todos los proudctos tienen stock</p>
-    <p class="text-2xl">¡Tienes productos sin stock!</p>
-    <div class="grid grid-cols-2 gap-4 p-4">
-      <button class="h-10 rounded-lg bg-sky-900 text-white">
-        Ir a productos
+<!-- dashboard.component.html -->
+<div class="min-h-screen bg-white p-6 md:p-8">
+  <!-- HEADER -->
+  <!-- <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+    <div class="flex flex-wrap gap-3">
+      <button
+        class="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">
+        Exportar
       </button>
-      <button class="h-10 rounded-lg bg-sky-900 text-white">
+
+      <button
+        class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-200 transition hover:scale-[1.02]">
         Ir a reportes
       </button>
     </div>
-  </div>
-  <div class="rounded-lg shadow-lg shadow-black">
-    <span class="text-xl">Productos sin stock</span>
-    <p class="text-2xl">Todos los proudctos tienen stock</p>
-    <p class="text-2xl">¡Tienes productos sin stock!</p>
-    <div class="grid grid-cols-2 gap-4 p-4">
-      <button class="h-10 rounded-lg bg-sky-900 text-white">
-        Ir a productos
-      </button>
-      <button class="h-10 rounded-lg bg-sky-900 text-white">
-        Ir a reportes
-      </button>
+  </div> -->
+
+  <!-- TOP CARDS -->
+  <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+    <!-- CARD -->
+    <div
+      class="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+    >
+      <div class="mb-5 flex items-start justify-between">
+        <div>
+          <p
+            class="text-sm font-semibold uppercase tracking-wider text-slate-400"
+          >
+            Total Vendido
+          </p>
+
+          <h2 class="mt-4 text-4xl font-black text-slate-900">
+            {{ totalVentasHoy | currency: "USD" : "symbol" : "1.0-0" }}
+          </h2>
+        </div>
+
+        <div
+          class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600"
+        >
+          <!-- icon -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8c-1.657 0-3 1.12-3 2.5S10.343 13 12 13s3 1.12 3 2.5S13.657 18 12 18m0-10v10m0-10c1.11 0 2.08.402 2.599 1M12 8c-1.11 0-2.08.402-2.599 1"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span
+          class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700"
+        >
+          Hoy
+        </span>
+
+        <!-- <p class="text-sm text-slate-500">
+          vs ayer
+        </p> -->
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <div
+      class="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+    >
+      <div class="mb-5 flex items-start justify-between">
+        <div>
+          <p
+            class="text-sm font-semibold uppercase tracking-wider text-slate-400"
+          >
+            Ventas Realizadas
+          </p>
+
+          <h2 class="mt-4 text-4xl font-black text-slate-900">
+            {{ totalPedidos }}
+          </h2>
+        </div>
+
+        <div
+          class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-600"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span
+          class="rounded-full bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700"
+        >
+          Hoy
+        </span>
+
+        <!-- <p class="text-sm text-slate-500">
+          nuevos pedidos
+        </p> -->
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <div
+      class="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+    >
+      <div class="mb-5 flex items-start justify-between">
+        <div>
+          <p
+            class="text-sm font-semibold uppercase tracking-wider text-slate-400"
+          >
+            Clientes
+          </p>
+
+          <h2 class="mt-4 text-4xl font-black text-slate-900">
+            {{ totalClientes }}
+          </h2>
+        </div>
+
+        <div
+          class="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-100 text-violet-600"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5V4H2v16h5m10 0v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2m12 0H7m10-10a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span
+          class="rounded-full bg-violet-100 px-2 py-1 text-xs font-bold text-violet-700"
+        >
+          Registrados
+        </span>
+
+        <!-- <p class="text-sm text-slate-500">
+          registrados hoy
+        </p> -->
+      </div>
+    </div>
+
+    <!-- CARD -->
+    <div
+      class="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+    >
+      <div class="mb-5 flex items-start justify-between">
+        <div>
+          <p
+            class="text-sm font-semibold uppercase tracking-wider text-slate-400"
+          >
+            Stock bajo
+          </p>
+
+          <h2 class="mt-4 text-4xl font-black text-slate-900">
+            {{ stockBajo }}
+          </h2>
+        </div>
+
+        <div
+          class="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-amber-600"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span
+          class="rounded-full bg-amber-100 px-2 py-1 text-xs font-bold text-amber-700"
+        >
+          Atención
+        </span>
+        <!-- 
+        <p class="text-sm text-slate-500">
+          requiere revisión
+        </p> -->
+      </div>
     </div>
   </div>
 
-  <!-- Segundo bloque -->
-    <div class="h-[60vh] rounded-lg shadow-lg shadow-black mt-4">
-      <span class="text-xl">Productos sin stock</span>
-      <p class="text-2xl">Todos los proudctos tienen stock</p>
-      <p class="text-2xl">¡Tienes productos sin stock!</p>
-      <div class="grid grid-cols-2 gap-4 p-4">
-        <button class="h-10 rounded-lg bg-sky-900 text-white">
-          Ir a productos
-        </button>
-        <button class="h-10 rounded-lg bg-sky-900 text-white">
+  <!-- SECOND SECTION -->
+  <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
+    <!-- CHART -->
+    <div
+      class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm xl:col-span-3"
+    >
+      <div class="mb-8 flex items-center justify-between">
+        <div>
+          <h3 class="text-xl font-bold text-slate-900">
+            Ventas últimos 7 días
+          </h3>
+
+          <p class="mt-1 text-sm text-slate-500">
+            Comparativa de ingresos semanales
+          </p>
+        </div>
+
+        <button
+          class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+          (click)="goToReports()"
+        >
           Ir a reportes
         </button>
       </div>
-    </div>
-    <div class="h-[60vh] rounded-lg shadow-lg shadow-black mt-4 flex flex-col">
-      <span class="text-xl">Productos sin stock</span>
-      <div class="flex-1 overflow-y-auto p-2">
-        @for(product of noStockProducts(); track product){
-      <ul>
-        <li class="m-4">- {{ product.nombreProducto }}</li>
-      </ul>
-      }
-      <p class="text-2xl" *ngIf="noStockProducts().length == 0">
-        Todos los proudctos tienen stock
-      </p>
-      </div>
-      <div class="grid grid-cols-2 gap-4 p-4">
-        <button class="h-10 rounded-lg bg-sky-900 text-white">
-          Ir a productos
-        </button>
-        <button class="h-10 rounded-lg bg-sky-900 text-white">
-          Ir a reportes
-        </button>
-      </div>
-    </div>
-    <div class="h-[60vh] rounded-lg shadow-lg shadow-black mt-4">
-      <span class="text-xl">Productos sin stock</span>
-      <p class="text-2xl">Todos los proudctos tienen stock</p>
-      <p class="text-2xl">¡Tienes productos sin stock!</p>
-      <div class="grid grid-cols-2 gap-4 p-4">
-        <button class="h-10 rounded-lg bg-sky-900 text-white">
-          Ir a productos
-        </button>
-        <button class="h-10 rounded-lg bg-sky-900 text-white">
-          Ir a reportes
-        </button>
+
+      <!-- SIMPLE BARS -->
+      <div class="overflow-x-auto pb-2">
+        <div class="flex h-72 min-w-[700px] items-end gap-4">
+          <div
+            *ngFor="let item of ventasSemana"
+            class="flex min-w-[80px] flex-1 shrink-0 flex-col items-center gap-2"
+          >
+            <!-- BAR -->
+            <div
+              class="relative flex w-full items-end overflow-hidden rounded-t-2xl bg-blue-500 transition-all duration-500 hover:opacity-80"
+              [style.height.px]="item.valor"
+            >
+              <!-- subtle shine -->
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-blue-600/20 to-white/10"
+              ></div>
+            </div>
+
+            <!-- VALUE -->
+            <span class="text-sm font-bold text-slate-700 whitespace-nowrap">
+              {{ item.total | currency: "USD" : "symbol" : "1.0-0" }}
+            </span>
+
+            <!-- DAY -->
+            <span class="text-sm font-medium text-slate-500">
+              {{ item.dia }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- ACTIVITY -->
+    <!-- <div
+      class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+
+      <div class="mb-6">
+        <h3 class="text-xl font-bold text-slate-900">
+          Actividad reciente
+        </h3>
+
+        <p class="mt-1 text-sm text-slate-500">
+          Últimos movimientos del sistema
+        </p>
+      </div>
+
+      <div class="space-y-5">
+
+        <div
+          *ngFor="let actividad of actividades"
+          class="flex gap-4">
+
+          <div
+            class="mt-1 h-3 w-3 rounded-full"
+            [ngClass]="actividad.color">
+          </div>
+
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-slate-800">
+              {{ actividad.titulo }}
+            </p>
+
+            <p class="mt-1 text-sm text-slate-500">
+              {{ actividad.descripcion }}
+            </p>
+
+            <span class="mt-2 block text-xs text-slate-400">
+              {{ actividad.hora }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div> -->
+  </div>
 </div>

@@ -73,7 +73,8 @@
     >
       <ngx-datatable-column
         *ngFor="let col of tableColumns"
-        [prop]="col"
+        [prop]="col.prop"
+        [name]="col.name"
         [flexGrow]="1.0"
         [resizeable]="true"
       >

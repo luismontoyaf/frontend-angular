@@ -25,6 +25,11 @@ export const routes: Routes = [
         canMatch: [authGuardCanMatch],
         children: [
           {
+            path: 'home',
+            canActivate: [authGuardCanActivate],
+            loadComponent: () => import('./components/home/home.component'),
+          },
+          {
             path: 'register/registerEmployee',
             canActivate: [authGuardCanActivate],
             loadComponent: () => import('./components/register/register.component'),
@@ -83,6 +88,11 @@ export const routes: Routes = [
             path: 'variants/adm-variants/:id',
             canActivate: [authGuardCanActivate],
             loadComponent: () => import('./components/adm-variants/adm-variants.component'),
+          },
+          {
+            path: 'expenses',
+            canActivate: [authGuardCanActivate],
+            loadComponent: () => import('./components/expenses/expenses.component'),
           },
           {
             path: '**',

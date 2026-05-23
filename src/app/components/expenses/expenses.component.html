@@ -1,0 +1,334 @@
+<div class="min-h-screen bg-white">
+
+  <!-- ── VISTA: LISTADO ─────────────────────────────────────────────── -->
+  <ng-container *ngIf="vista === 'lista'">
+
+
+    <!-- Error -->
+    <!-- <div *ngIf="errorMessage"
+      class="mx-6 mt-4 flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+      <svg class="w-4 h-4 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+      </svg>
+      <span>{{ errorMessage }}</span>
+      <button (click)="errorMessage = ''" class="ml-auto text-red-400 hover:text-red-600 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div> -->
+
+    <div class="mx-6 mt-4 flex items-end justify-end p-3 px-4 py-3 text-sm">
+  <button
+    (click)="vista = 'formulario'"
+    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700
+           text-white text-sm font-semibold px-4 py-2.5 rounded-lg shadow transition-colors duration-150"
+  >
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+    </svg>
+    Registrar egreso
+  </button>
+</div>
+
+    <!-- Tarjeta resumen total -->
+    <div class="px-6 pt-6 pb-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+      <div class="bg-white border border-gray-200 rounded-xl px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-lg bg-sky-900 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Total registros</p>
+          <p class="text-xl font-bold text-sky-900">{{ expenses.length }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-lg bg-red-600 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 13l-5 5m0 0l-5-5m5 5V6"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Total egresos</p>
+          <p class="text-xl font-bold text-red-600">- ${{ getTotalExpenses() | number:'1.2-2' }}</p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl px-5 py-4 shadow-sm flex items-center gap-4">
+        <div class="w-10 h-10 rounded-lg bg-green-600 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 7h.01M7 3h5l4.586 4.586a2 2 0 010 2.828L9 18H5a2 2 0 01-2-2v-4l4-4z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500 font-medium uppercase tracking-wide">Tipos activos</p>
+          <p class="text-xl font-bold text-sky-900">{{ expensesTypes.length }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tabla principal -->
+    <div class="px-6 py-4">
+      <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+
+        <!-- Cabecera tabla -->
+        <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between bg-gray-50/70">
+          <span class="text-sm font-semibold text-sky-900">Historial de egresos</span>
+          <button (click)="getExpenses()" [disabled]="loading"
+            class="inline-flex items-center gap-1.5 text-xs text-sky-700 hover:text-sky-900
+                   bg-white border border-gray-200 hover:border-sky-300 px-3 py-1.5 rounded-lg
+                   transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg class="w-3.5 h-3.5" [class.animate-spin]="loading" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582M20 20v-5h-.581M4.582 9A8 8 0 0120 15M19.419 15A8 8 0 014 9"/>
+            </svg>
+            Actualizar
+          </button>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loading && expenses.length === 0" class="flex flex-col items-center justify-center py-14 gap-3">
+          <svg class="w-7 h-7 animate-spin text-sky-300" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <span class="text-sm text-gray-400">Cargando registros...</span>
+        </div>
+
+        <!-- Empty state -->
+        <div *ngIf="!loading && expenses.length === 0"
+          class="flex flex-col items-center justify-center py-16 gap-2 text-center">
+          <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-1">
+            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+            </svg>
+          </div>
+          <p class="text-gray-600 text-sm font-medium">Sin egresos registrados</p>
+          <p class="text-gray-400 text-xs max-w-xs">Usa el botón <strong class="text-sky-700">"Registrar egreso"</strong> para agregar el primero.</p>
+        </div>
+
+        <!-- Tabla de datos -->
+        <div *ngIf="expenses.length > 0" class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-gray-100">
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tipo</th>
+                <th class="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Valor</th>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Descripción</th>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Referencia</th>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Fecha</th>
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Usuario</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+              <tr *ngFor="let expense of expenses; let i = index"
+                class="hover:bg-sky-50/40 transition-colors">
+                <td class="px-5 py-3.5 text-gray-400 text-xs">{{ i + 1 }}</td>
+                <td class="px-5 py-3.5">
+                  <span class="inline-flex items-center gap-1.5 bg-sky-50 text-sky-800 border border-sky-200
+                               text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap">
+                    {{ expense.tipoEgreso || expense.tipo || '—' }}
+                  </span>
+                </td>
+                <td class="px-5 py-3.5 text-right">
+                  <span class="text-red-600 font-semibold tabular-nums">
+                    - ${{ expense.valor | number:'1.2-2' }}
+                  </span>
+                </td>
+                <td class="px-5 py-3.5 text-gray-500 max-w-[200px] truncate hidden md:table-cell">
+                  {{ expense.descripcion || '—' }}
+                </td>
+                <td class="px-5 py-3.5 hidden lg:table-cell">
+                  <span *ngIf="expense.referencia"
+                    class="text-xs font-mono bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded">
+                    {{ expense.referencia }}
+                  </span>
+                  <span *ngIf="!expense.referencia" class="text-gray-300 text-xs">—</span>
+                </td>
+                <td class="px-5 py-3.5 hidden lg:table-cell">
+                  <span *ngIf="expense.fecha"
+                    class="text-xs font-mono bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded">
+                    {{ expense.fecha | date: 'dd-MM-yyy' }}
+                  </span>
+                  <span *ngIf="!expense.fecha" class="text-gray-300 text-xs">—</span>
+                </td>
+                <td class="px-5 py-3.5 hidden lg:table-cell">
+                  <span *ngIf="expense.usuarioRadicaNombre"
+                    class="text-xs font-mono bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded">
+                    {{ expense.usuarioRadicaNombre }}
+                  </span>
+                  <span *ngIf="!expense.usuarioRadicaNombre" class="text-gray-300 text-xs">—</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Footer tabla -->
+          <div class="px-5 py-3 border-t border-gray-100 bg-gray-50/60 flex items-center justify-between">
+            <span class="text-xs text-gray-400">{{ expenses.length }} registros encontrados</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-500 font-medium">Total:</span>
+              <span class="text-sm font-bold text-red-600 tabular-nums">
+                - ${{ getTotalExpenses() | number:'1.2-2' }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+
+  <!-- ── VISTA: FORMULARIO ──────────────────────────────────────────── -->
+  <ng-container *ngIf="vista === 'formulario'">
+
+    <!-- Header con back -->
+    <div class="px-6 py-5 flex items-center gap-4">
+      <button (click)="vista = 'lista'"
+        class="w-8 h-8 rounded-lg bg-sky-800 hover:bg-sky-700 flex items-center justify-center
+               text-sky-200 hover:text-white transition-colors shrink-0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <p class="text-sky-900 text-xs font-semibold uppercase tracking-widest mb-0.5">Regresar</p> 
+      <div>
+        <!-- <p class="text-sky-300 text-xs font-semibold uppercase tracking-widest mb-0.5">Egresos</p> -->
+        <h1 class="text-white text-2xl font-bold tracking-tight">Nuevo Egreso</h1>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <!-- <div *ngIf="errorMessage"
+      class="mx-6 mt-4 flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+      <svg class="w-4 h-4 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+      </svg>
+      <span>{{ errorMessage }}</span>
+      <button (click)="errorMessage = ''" class="ml-auto text-red-400 hover:text-red-600 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div> -->
+
+    <!-- Formulario -->
+    <div class="w-full flex items-center justify-center px-6 py-6">
+
+    <div class="w-full max-w-xl">
+      <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+
+        <div class="px-5 py-4 bg-gray-50/70 border-b border-gray-100">
+          <p class="text-sm font-semibold text-sky-900">Completa los campos del egreso</p>
+          <p class="text-xs text-gray-500 mt-0.5">Los campos marcados con <span class="text-red-500 font-bold">*</span> son obligatorios</p>
+        </div>
+
+        <div class="p-5 space-y-5">
+
+          <!-- Tipo de egreso -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Tipo de egreso <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <select [(ngModel)]="form.tipoEgresoId"
+                class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800
+                       appearance-none cursor-pointer
+                       focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500
+                       hover:border-gray-400 transition-colors">
+                <option [value]="0" disabled>Seleccionar tipo...</option>
+                <option *ngFor="let type of expensesTypes" [value]="type.id">
+                  {{ type.nombre }}
+                </option>
+              </select>
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Valor -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Valor <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-semibold select-none">$</span>
+              <input type="number" [(ngModel)]="form.valor" placeholder="0.00" min="0"
+                class="w-full bg-white border border-gray-300 rounded-lg pl-7 pr-3 py-2.5 text-sm text-gray-800
+                       focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500
+                       hover:border-gray-400 transition-colors placeholder-gray-400"/>
+            </div>
+          </div>
+
+          <!-- Descripción -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider">Descripción</label>
+            <textarea [(ngModel)]="form.descripcion" rows="3"
+              placeholder="Describe brevemente el concepto del egreso..."
+              class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800 resize-none
+                     focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500
+                     hover:border-gray-400 transition-colors placeholder-gray-400"></textarea>
+          </div>
+
+          <!-- Referencia -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider">Referencia</label>
+            <input type="text" [(ngModel)]="form.referencia" placeholder="Ej: FACT-001, REC-2024..."
+              class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800
+                     focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500
+                     hover:border-gray-400 transition-colors placeholder-gray-400"/>
+          </div>
+
+          <!-- Acciones -->
+          <div class="flex items-center gap-3 pt-1">
+            <button (click)="vista = 'lista'" [disabled]="loading"
+              class="flex-1 border border-gray-300 hover:border-gray-400 text-gray-600 hover:text-gray-800
+                     font-semibold rounded-lg px-4 py-2.5 text-sm transition-colors
+                     disabled:opacity-50 disabled:cursor-not-allowed">
+              Cancelar
+            </button>
+            <button (click)="saveExpense()" [disabled]="loading"
+              class="flex-1 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 disabled:bg-gray-200
+                     disabled:text-gray-400 disabled:cursor-not-allowed text-white font-semibold
+                     rounded-lg px-4 py-2.5 text-sm transition-colors flex items-center justify-center gap-2">
+              <ng-container *ngIf="!loading">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Guardar egreso
+              </ng-container>
+              <ng-container *ngIf="loading">
+                <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                Guardando...
+              </ng-container>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    </div>
+
+  </ng-container>
+
+</div>
