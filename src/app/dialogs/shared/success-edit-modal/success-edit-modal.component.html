@@ -2,7 +2,7 @@
   <div class="relative p-4 w-full max-w-md max-h-full flex flex-col">
     
     <!-- Modal box -->
-    <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700 flex flex-col items-center justify-center min-h-[200px]">
+    <div class="relative bg-white rounded-lg shadow-sm flex flex-col items-center justify-center min-h-[200px]">
 
       <!-- Contenedor del loader centrado solo dentro del modal -->
       <div *ngIf="isLoading" class="absolute inset-0 flex flex-col items-center justify-center gap-4">
@@ -13,19 +13,19 @@
 
       <!-- Contenido normal del modal -->
       <div *ngIf="!isLoading" class="w-full text-center">
-        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
         </svg>
-        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">{{messageModal}}</h3>
+        <h3 class="mb-5 text-lg font-normal text-gray-500">{{messageModal}}</h3>
         <div class="flex justify-center gap-4 mt-4">
           <button (click)="runProccess()" data-modal-hide="popup-modal" type="button"
-            class="w-20 flex justify-center items-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+            class="w-20 flex justify-center items-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">
             Aceptar
           </button>
 
           <button (click)="closeModal()" data-modal-hide="popup-modal" type="button"
-            class="w-20 flex justify-center items-center py-2.5 px-5 text-sm font-medium text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 rounded-lg">
+            class="w-20 flex justify-center items-center py-2.5 px-5 text-sm font-medium text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300">
             Salir
           </button>
         </div>

@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
+html {
+  color-scheme: light; /* fuerza modo claro en elementos nativos */
+}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .ngx-datatable.material.custom-datatable .datatable-header .datatable-header-cell{

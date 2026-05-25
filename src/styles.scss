@@ -15,6 +15,10 @@
   ));
 }
 
+html {
+  color-scheme: light; /* fuerza modo claro en elementos nativos */
+}
+
 @layer components {
   .label {
     @apply text-sm font-semibold text-gray-700;
