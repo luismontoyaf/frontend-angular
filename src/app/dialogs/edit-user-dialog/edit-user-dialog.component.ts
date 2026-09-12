@@ -57,6 +57,9 @@ export class EditUserDialogComponent implements OnInit {
       return '';
     };
 
+    console.log('data ', data);
+    
+
     const fechaNacimientoFormateada = formatDate(data.user.fechaNacimiento);
     const fechaIngresoFormateada = formatDate(data.user.fechaIngreso);
       
@@ -64,7 +67,7 @@ export class EditUserDialogComponent implements OnInit {
             id: [data.user.id],
             nombre: [data.user.nombre || '', [Validators.required, Validators.minLength(3)]],
             apellidos: [data.user.apellidos || '', [Validators.required, Validators.minLength(3)]],
-            tipoDocumento: [{value: data.user.tipoDocumento || '', disabled: true}, Validators.required],
+            tipoDocumento: [{value: data.user.tipoDocumento || '', disabled: false}, Validators.required],
             numDocumento: [{value:data.user.numDocumento || '', disabled: true}, [Validators.required, Validators.pattern(/^\d{5,10}$/)]],
             correo: [{value: data.user.correo || '', disabled: true}, [Validators.required, Validators.email]],
             fechaNacimiento: [fechaNacimientoFormateada || '',  this.mayorDeEdadValidator],

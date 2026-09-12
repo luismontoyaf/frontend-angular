@@ -8,14 +8,19 @@
         </button>
         <p [matMenuTriggerFor]="profileMenu" class="cursor-pointer">{{user.username}}</p>
         <mat-menu #profileMenu="matMenu">
-          <button mat-menu-item>
+          <!-- <button mat-menu-item>
             <mat-icon>manage_accounts</mat-icon>
             <span>Actualizar Datos</span>
+          </button> -->
+          <button mat-menu-item
+          [routerLink]="['/', tenantId, 'dashboard', 'support']">
+            <mat-icon>contact_support</mat-icon>
+            <span>Soporte</span>
           </button>
-          <button mat-menu-item>
+          <!-- <button mat-menu-item>
             <mat-icon>settings</mat-icon>
             <span>Configuración</span>
-          </button>
+          </button> -->
           <button mat-menu-item (click)="logout()">
             <mat-icon>logout</mat-icon>
             <span>Cerrar Sesión</span>

@@ -42,6 +42,9 @@ export class EditClientDialogComponent {
         private dialogRef: MatDialogRef<EditClientDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: { client: Client }
       ) {
+
+        console.log('data client', data);
+        
         const formatDate = (date: string | Date): string => {
       if (typeof date === 'string') {
         return date.split('T')[0];

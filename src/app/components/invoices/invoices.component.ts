@@ -132,6 +132,7 @@ export default class InvoicesComponent implements OnInit {
           UnitPrice: producto.ValorUnitario,
         })),
         sendEmail: false,
+        discountPercentage: parsedFactura.DescuentoPorcentaje
       })
       .subscribe((blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
@@ -157,6 +158,7 @@ export default class InvoicesComponent implements OnInit {
           Quantity: producto.Cantidad,
           UnitPrice: producto.ValorUnitario,
         })),
+        discountPercentage: parsedFactura.DescuentoPorcentaje
       };
     });
 
