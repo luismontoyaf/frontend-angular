@@ -95,6 +95,11 @@ export const routes: Routes = [
             loadComponent: () => import('./components/expenses/expenses.component'),
           },
           {
+            path: 'support',
+            canActivate: [authGuardCanActivate],
+            loadComponent: () => import('./components/support/support.component'),
+          },
+          {
             path: '**',
             redirectTo: 'sale'
           }
