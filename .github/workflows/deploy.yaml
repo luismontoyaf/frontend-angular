@@ -1,0 +1,52 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build and Deploy Angular
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular
+        run: npm run build -- --configuration production
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/github-actions
+          chmod 600 ~/.ssh/github-actions
+          ssh-keyscan -H "${{ secrets.AWS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Prepare deployment directory
+        run: |
+          ssh -i ~/.ssh/github-actions \
+            ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }} \
+            "rm -rf /tmp/lumo-frontend && mkdir -p /tmp/lumo-frontend"
+
+      - name: Upload Angular build
+        run: |
+          scp -i ~/.ssh/github-actions -r \
+            dist/frontend-angular/browser/* \
+            ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }}:/tmp/lumo-frontend/
+
+      - name: Deploy to production
+        run: |
+          ssh -i ~/.ssh/github-actions \
+            ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }} \
+            "sudo rm -rf /var/www/html/* && sudo cp -r /tmp/lumo-frontend/* /var/www/html/ && sudo chown -R ubuntu:ubuntu /var/www/html && sudo chown -R www-data:www-data /var/www/html/assets && sudo chmod -R 755 /var/www/html/assets && rm -rf /tmp/lumo-frontend"
