@@ -29,9 +29,17 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/github-actions
+          printf '%s\n' "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/github-actions
           chmod 600 ~/.ssh/github-actions
-          ssh-keyscan -H "${{ secrets.AWS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Test SSH connection
+        run: |
+          ssh \
+            -i ~/.ssh/github-actions \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=10 \
+            ${{ secrets.AWS_USERNAME }}@${{ secrets.AWS_HOST }} \
+            "echo SSH connection successful"
 
       - name: Prepare deployment directory
         run: |
