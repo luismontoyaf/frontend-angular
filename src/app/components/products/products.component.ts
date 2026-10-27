@@ -13,6 +13,7 @@ import { Product} from '../../interfaces/product';
 import { TitleService } from '../../shared/services/title.service';
 import { Router } from '@angular/router';
 import { TenantService } from '../../services/Tenant/tenant.service';
+import { AddStockDialogComponent } from '../../dialogs/add-stock-dialog/add-stock-dialog.component';
 
 @Component({
   selector: 'app-products',
@@ -82,6 +83,18 @@ openEditProductComponent(product: Product): void {
   //   data: { product }
   // });
 };
+
+openAddStockDialog(product: Product): void {
+  this.dialog.open(AddStockDialogComponent, {
+    width: '440px',
+    maxWidth: '95vw',
+    data: product
+  }).afterClosed().subscribe((quantity?: number) => {
+    if (quantity) {
+      product.stock += quantity;
+    }
+  });
+}
 
   filterProducts() {
     const term = this.searchTerm.toLowerCase();

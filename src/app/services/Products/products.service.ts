@@ -55,6 +55,10 @@ export class ProductsService {
     );
   }
 
+  updateStock(id: number, amountStock: number) {
+    return this.http.put(`${this.apiUrl}/products/updateStock/${id}`, amountStock);
+  }
+
   removeProduct(id: number) {
     return this.http.delete(`${this.apiUrl}/products/${id}`);
   }

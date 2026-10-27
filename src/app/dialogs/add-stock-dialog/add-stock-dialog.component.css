@@ -1,0 +1,142 @@
+.stock-dialog {
+  color: #172b3a;
+}
+
+.stock-dialog__header {
+  padding: 24px 24px 8px;
+}
+
+.stock-dialog__header h2 {
+  margin: 0 0 8px;
+  color: #123b52;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.stock-dialog__header p {
+  margin: 0;
+  color: #647482;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.stock-dialog mat-dialog-content {
+  padding: 12px 24px 20px;
+}
+
+.stock-dialog__product {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding: 12px;
+  border: 1px solid #e3e9ed;
+  border-radius: 8px;
+}
+
+.stock-dialog__image {
+  display: flex;
+  flex: 0 0 64px;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #f1f5f7;
+}
+
+.stock-dialog__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.stock-dialog__placeholder {
+  color: #78909c;
+  font-size: 28px;
+}
+
+.stock-dialog__details {
+  min-width: 0;
+}
+
+.stock-dialog__details h3 {
+  overflow-wrap: anywhere;
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.stock-dialog__details span {
+  color: #647482;
+  font-size: 13px;
+}
+
+.stock-dialog__label {
+  display: block;
+  margin-bottom: 7px;
+  color: #344b5a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.stock-dialog__input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #cbd6dc;
+  border-radius: 6px;
+  color: #172b3a;
+  font: inherit;
+}
+
+.stock-dialog__input:focus {
+  border-color: #0284c7;
+  outline: 2px solid rgb(2 132 199 / 15%);
+}
+
+.stock-dialog__error {
+  margin: 8px 0 0;
+  color: #b42318;
+  font-size: 13px;
+}
+
+.stock-dialog mat-dialog-actions {
+  gap: 8px;
+  padding: 4px 24px 20px;
+}
+
+.stock-dialog__cancel,
+.stock-dialog__save {
+  min-width: 96px;
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.stock-dialog__cancel {
+  background: #eef2f4;
+  color: #344b5a;
+}
+
+.stock-dialog__save {
+  background: #123b52;
+  color: #fff;
+}
+
+.stock-dialog__save:hover:not(:disabled) {
+  background: #0c506d;
+}
+
+.stock-dialog__cancel:disabled,
+.stock-dialog__save:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

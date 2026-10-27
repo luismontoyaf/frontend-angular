@@ -1,0 +1,53 @@
+<div class="stock-dialog">
+  <header class="stock-dialog__header">
+    <h2 mat-dialog-title>Agregar Unidades a Stock</h2>
+    <p>¿Cuantas unidades de stock deseas agregar a este producto?</p>
+  </header>
+
+  <mat-dialog-content>
+    <div class="stock-dialog__product">
+      <div class="stock-dialog__image">
+        <img
+          *ngIf="product.imagenBase64; else noImage"
+          [src]="'data:image/jpeg;base64,' + product.imagenBase64"
+          [alt]="product.nombreProducto"
+        />
+        <ng-template #noImage>
+          <span class="stock-dialog__placeholder" aria-hidden="true">+</span>
+        </ng-template>
+      </div>
+      <div class="stock-dialog__details">
+        <h3>{{ product.nombreProducto }}</h3>
+        <span>Stock actual: {{ product.stock }} uds.</span>
+      </div>
+    </div>
+
+    <label class="stock-dialog__label" for="stock-quantity">Cantidad a agregar</label>
+    <input
+      id="stock-quantity"
+      class="stock-dialog__input"
+      type="number"
+      name="quantity"
+      [(ngModel)]="quantity"
+      min="1"
+      step="1"
+      required
+      [disabled]="isSaving"
+    />
+    <p *ngIf="errorMessage" class="stock-dialog__error" role="alert">{{ errorMessage }}</p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button type="button" class="stock-dialog__cancel" mat-dialog-close [disabled]="isSaving">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="stock-dialog__save"
+      [disabled]="!quantity || quantity < 1 || quantity % 1 !== 0 || isSaving"
+      (click)="save()"
+    >
+      {{ isSaving ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </mat-dialog-actions>
+</div>

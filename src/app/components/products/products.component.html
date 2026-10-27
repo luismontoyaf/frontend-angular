@@ -81,6 +81,19 @@
               <!-- Acciones -->
               <div class="flex gap-4 mt-3">
                 <button
+                  type="button"
+                  aria-label="Agregar unidades a stock"
+                  title="Agregar unidades a stock"
+                  (click)="openAddStockDialog(product)"
+                  class="w-10 h-10 flex items-center justify-center bg-emerald-700 text-white rounded-md hover:bg-emerald-600 transition"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+
+                <button
+                  type="button"
+                  aria-label="Editar producto"
+                  title="Editar producto"
                   (click)="openEditProductComponent(product)"
                   class="w-10 h-10 flex items-center justify-center bg-sky-900 text-white rounded-md hover:bg-blue-700 transition"
                 >
@@ -88,6 +101,9 @@
                 </button>
 
                 <button
+                  type="button"
+                  aria-label="Eliminar producto"
+                  title="Eliminar producto"
                   (click)="openDeleteProductDialog(product)"
                   class="w-10 h-10 flex items-center justify-center bg-red-800 text-white rounded-md hover:bg-red-700 transition"
                 >
