@@ -20,6 +20,10 @@ export const routes: Routes = [
         component: LoginComponent
       },
       {
+        path: 'reset-password',
+        loadComponent: () => import('./components/reset-password/reset-password.component'),
+      },
+      {
         path: 'dashboard',
         loadComponent: () => import("./shared/layout/layout.component"),
         canMatch: [authGuardCanMatch],
@@ -98,6 +102,12 @@ export const routes: Routes = [
             path: 'support',
             canActivate: [authGuardCanActivate],
             loadComponent: () => import('./components/support/support.component'),
+          },
+          {
+            path: 'about-lumo',
+            canActivate: [authGuardCanActivate],
+            data: { title: 'Acerca de Lumo' },
+            loadComponent: () => import('./components/about-lumo/about-lumo.component'),
           },
           {
             path: '**',

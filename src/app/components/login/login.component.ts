@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit{
   message = '';
 
   selectedForm: string = 'form1';
+  tenantId = '';
 
   imageLogin = "";
 
@@ -83,6 +84,7 @@ export class LoginComponent implements OnInit{
     return;
   }
 
+  this.tenantId = tenantId;
   this.getInfoService.validateTenant(tenantId).subscribe({
     next: () => {
       this.tenantService.setTenant(tenantId);
@@ -94,6 +96,10 @@ export class LoginComponent implements OnInit{
     }
   });
 }
+
+  goToPasswordReset(): void {
+    this.router.navigate([`/${this.tenantId}/reset-password`]);
+  }
 
   // Validador personalizado para confirmar contraseñas
   passwordMatchValidator(form: FormGroup) {

@@ -24,6 +24,21 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/auth/login`, body, { headers });
   }
 
+  requestPasswordReset(email: string, tenantIdentifier: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/auth/password-reset/request`, {
+      email,
+      tenantIdentifier
+    });
+  }
+
+  resetPassword(token: string, newPassword: string, tenantIdentifier: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/auth/password-reset/confirm`, {
+      token,
+      newPassword,
+      tenantIdentifier
+    });
+  }
+
   logout(): Observable<any> {
     const refreshToken = sessionStorage.getItem('refreshToken');
     const tenantId = sessionStorage.getItem('tenantId');
