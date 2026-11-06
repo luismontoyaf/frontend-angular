@@ -1,36 +1,45 @@
-<header class="header-container bg-sky-950">
-    <nav>
-      <ul>
-        <a class="text-white text-base ml-5">Bienvenido</a>
-        <!-- <li><a routerLink="/register"><mat-icon>account_circle</mat-icon> Registrarse</a></li> -->
-        <button mat-icon-button [matMenuTriggerFor]="profileMenu" aria-label="Example icon-button with a menu" class="btnMenu">
-          <mat-icon>account_circle</mat-icon>
-        </button>
-        <p [matMenuTriggerFor]="profileMenu" class="cursor-pointer">{{user.username}}</p>
-        <mat-menu #profileMenu="matMenu">
-          <!-- <button mat-menu-item>
-            <mat-icon>manage_accounts</mat-icon>
-            <span>Actualizar Datos</span>
-          </button> -->
-          <button mat-menu-item
-          [routerLink]="['/', tenantId, 'dashboard', 'support']">
-            <mat-icon>contact_support</mat-icon>
-            <span>Soporte</span>
-          </button>
-          <button mat-menu-item
-          [routerLink]="['/', tenantId, 'dashboard', 'about-lumo']">
-            <mat-icon>info</mat-icon>
-            <span>Acerca de Lumo</span>
-          </button>
-          <!-- <button mat-menu-item>
-            <mat-icon>settings</mat-icon>
-            <span>Configuración</span>
-          </button> -->
-          <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            <span>Cerrar Sesión</span>
-          </button>
-        </mat-menu>
-      </ul>
+<header class="header-container">
+<nav class="header-nav" aria-label="Menú de usuario">
+  <span class="header-welcome">
+    <span class="header-status-dot" aria-hidden="true"></span>
+    Bienvenido
+  </span>
+
+  <div class="profile-menu-container">
+    <button
+      #profileTrigger
+      type="button"
+      aria-label="Abrir menú de usuario"
+      aria-haspopup="true"
+      [attr.aria-expanded]="isProfileMenuOpen"
+      aria-controls="profile-menu"
+      class="profile-trigger"
+      (click)="toggleProfileMenu()">
+      <span class="profile-avatar" aria-hidden="true">
+        <mat-icon>person</mat-icon>
+      </span>
+      <span class="profile-details">
+        <span class="profile-label">Sesión iniciada</span>
+        <span class="profile-name">{{ user.username || 'Usuario' }}</span>
+      </span>
+      <mat-icon class="profile-chevron" [class.profile-chevron-open]="isProfileMenuOpen">expand_more</mat-icon>
+    </button>
+
+    <nav id="profile-menu" class="profile-menu" aria-label="Opciones de usuario" [hidden]="!isProfileMenuOpen">
+      <a class="profile-menu-item" [routerLink]="['/', tenantId, 'dashboard', 'support']" (click)="closeProfileMenu()">
+        <mat-icon>contact_support</mat-icon>
+        <span>Soporte</span>
+      </a>
+      <a class="profile-menu-item" [routerLink]="['/', tenantId, 'dashboard', 'about-lumo']" (click)="closeProfileMenu()">
+        <mat-icon>info</mat-icon>
+        <span>Acerca de Lumo</span>
+      </a>
+      <div class="profile-menu-separator" role="separator"></div>
+      <button type="button" class="profile-menu-item profile-menu-danger" (click)="closeProfileMenu(); logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesión</span>
+      </button>
     </nav>
-  </header>
+  </div>
+</nav>
+</header>

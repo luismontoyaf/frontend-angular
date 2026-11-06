@@ -1,161 +1,111 @@
-<!-- <div class="sidebar bg-sky-950 my-5" [class.open]="(sidebarService.isOpen$ | async)"> -->
-
-<!-- Sidebar -->
-<div
-  class=" bg-sky-950 transform transition-transform duration-300 ease-in-out
-         w-full md:w-[250px] md:translate-x-0 md:my-5 sidebar z-50"
+<aside
+  class="sidebar transform transition-transform duration-300 ease-in-out
+         w-full md:w-[250px] md:translate-x-0 md:my-5 z-50"
   [class.-translate-x-full]="isMobile() && !(sidebarService.isOpen$ | async)"
 >
-    <div class="sidebar-header">
-      <!-- <img src="assets/images/{{imageLogo}}" class="w-28 mt-5 h-auto mx-auto" alt="Logo"> -->
-      <p class="text-white text-2xl text-center mt-6 font-bold">LUMO</p>
-      <br>
-      <hr> <!-- Línea divisoria -->
-      <!-- <button class="close" (click)="toggleMenu()">
-        <mat-icon>close</mat-icon>
-      </button>
-    <button class="menu-toggle" (click)="toggleMenu()">
-      <mat-icon>menu</mat-icon>
-    </button> -->
-     <button 
-      class="md:hidden absolute top-4 right-4 text-white"
+  <header class="sidebar-header">
+    <div class="sidebar-brand">
+      <span class="sidebar-brand-mark" aria-hidden="true">L</span>
+      <div>
+        <p class="sidebar-brand-name">LUMO<span>co</span></p>
+        <!-- <p class="sidebar-brand-caption">Gestiona. Vende. Crece.</p> -->
+      </div>
+    </div>
+    <button
+      type="button"
+      class="sidebar-close"
+      aria-label="Cerrar menú"
       (click)="sidebarService.toggleMenu()">
       <mat-icon>close</mat-icon>
     </button>
-    <ul class="mt-8 space-y-3">
-        <li>
-          <a [routerLink]="['/', tenantId, 'dashboard', 'home']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
-            <mat-icon class="icon" routerLinkActive="text-sky-500">dashboard</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">Dashboard</span>
-          </a>
-        </li>
-        <li>
-          <a [routerLink]="['/', tenantId, 'dashboard', 'sale']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
-            <mat-icon class="icon" routerLinkActive="text-sky-500">point_of_sale</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">Realizar Venta</span>
-          </a>
-        </li>
-        <li>
-          <!-- Botón principal -->
-            <button
-            (click)="toggleProductsMenu()"
-            class="flex items-center w-full text-left"
-          >
-            <mat-icon class="icon text-white ">inventory_2</mat-icon>
-            <span class="text-white">Productos</span>
-            <mat-icon class="ml-auto transform transition-transform text-white"
-              [class.rotate-180]="isProductsMenuOpen">expand_more</mat-icon>
-          </button>
-          <!-- Submenú -->
-          <ul
-            *ngIf="isProductsMenuOpen"
-            class="ml-1 mt-0 overflow-hidden transition-all duration-300 ease-in-out"
-            [ngClass]="{ 'max-h-40 opacity-100': isProductsMenuOpen, 'max-h-0 opacity-0': !isProductsMenuOpen }"
-          >
-            <li>
-              <a
-                [routerLink]="['/', tenantId, 'dashboard', 'products']"
-                routerLinkActive="text-sky-500"
-                (click)="closeMenuOnMobile()"
-                class="flex items-center"
-              >
-                <mat-icon class="icon" routerLinkActive="text-sky-500">add</mat-icon>
-                <span class="ml-2" routerLinkActive="text-sky-500">Administrar Productos</span>
-              </a>
-            </li>
+  </header>
 
-            <li>
-              <a
-                [routerLink]="['/', tenantId, 'dashboard', 'variants']"
-                routerLinkActive="text-sky-500"
-                (click)="closeMenuOnMobile()"
-                class="flex items-center"
-              >
-                <mat-icon class="icon">list</mat-icon>
-                <span class="ml-2">Administrar Variantes</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <!-- Botón principal -->
-            <button
-            (click)="toggleUsersMenu()"
-            class="flex items-center w-full text-left"
-          >
-            <mat-icon class="icon text-white ">person_add</mat-icon>
-            <span class="text-white">Registrar Usuarios</span>
-            <mat-icon class="ml-auto transform transition-transform text-white"
-              [class.rotate-180]="isUsersMenuOpen">expand_more</mat-icon>
-          </button>
-          <!-- Submenú -->
-          <ul
-            *ngIf="isUsersMenuOpen"
-            class="ml-1 mt-0 overflow-hidden transition-all duration-300 ease-in-out"
-            [ngClass]="{ 'max-h-40 opacity-100': isUsersMenuOpen, 'max-h-0 opacity-0': !isUsersMenuOpen }"
-          >
-            <li>
-              <a
-                [routerLink]="['/', tenantId, 'dashboard', 'register', 'registerClient']"
-                routerLinkActive="text-sky-500"
-                (click)="closeMenuOnMobile()"
-                class="flex items-center"
-              >
-                <mat-icon class="icon" routerLinkActive="text-sky-500">person_book</mat-icon>
-                <span class="ml-2" routerLinkActive="text-sky-500">Clientes</span>
-              </a>
-            </li>
-
-            <li *ngIf="isAdmin">
-              <a
-                [routerLink]="['/', tenantId, 'dashboard', 'register', 'registerEmployee']"
-                routerLinkActive="text-sky-500"
-                (click)="closeMenuOnMobile()"
-                class="flex items-center"
-              >
-                <mat-icon class="icon">engineering</mat-icon>
-                <span class="ml-2">Colaboradores</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- <li>
-          <a routerLink="/dashboard/register"routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
-            <mat-icon class="icon" routerLinkActive="text-sky-500">person_add</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">Registrar Usuarios</span>
-          </a>
-        </li> -->
-        <li>
-          <a [routerLink]="['/', tenantId, 'dashboard', 'manageUsers']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
-            <mat-icon class="icon" routerLinkActive="text-sky-500">manage_accounts</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">Administrar Usuarios</span>
-          </a>
-        </li>
-        <li>
-          <a [routerLink]="['/', tenantId, 'dashboard', 'invoices']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
-            <mat-icon class="icon" routerLinkActive="text-sky-500">receipt_long</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">Historico Facturas</span>
-          </a>
-        </li>
-        <li>
-          <a [routerLink]="['/', tenantId, 'dashboard', 'expenses']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
-            <mat-icon class="icon" routerLinkActive="text-sky-500">wallet</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">Egresos</span>
-          </a>
-        </li>
-        <li *ngIf="isAdmin">
-          <a [routerLink]="['/', tenantId, 'dashboard', 'reports']" routerLinkActive="text-sky-500" (click)="closeMenuOnMobile()" class="flex items-center">
-            <mat-icon class="icon" routerLinkActive="text-sky-500">view_kanban</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">Reportes</span>
-          </a>
-        </li>
-      <!-- @for (item of opcionesMenu; track $index) {
-        <li>
-          <a routerLink={{item.Opcion.Ruta}} routerLinkActive="text-sky-500" class="flex items-center" (click)="setTitle(item.Opcion.TituloPrincipal)">
-            <mat-icon class="icon" routerLinkActive="text-sky-500">{{item.Opcion.NombreIcono}}</mat-icon>
-            <span class="ml-2" routerLinkActive="text-sky-500">{{item.Opcion.NombreEnMenu}}</span>
-          </a>
-        </li>
-      } -->
+  <nav class="sidebar-navigation" aria-label="Navegación principal">
+    <ul class="sidebar-nav">
+      <li>
+        <a [routerLink]="['/', tenantId, 'dashboard', 'home']" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenuOnMobile()" class="sidebar-link">
+          <mat-icon class="icon">dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/', tenantId, 'dashboard', 'sale']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+          <mat-icon class="icon">point_of_sale</mat-icon>
+          <span>Realizar Venta</span>
+        </a>
+      </li>
+      <li>
+        <button type="button" (click)="toggleProductsMenu()" class="sidebar-link sidebar-group-toggle" [attr.aria-expanded]="isProductsMenuOpen">
+          <mat-icon class="icon">inventory_2</mat-icon>
+          <span>Productos</span>
+          <mat-icon class="sidebar-chevron" [class.rotate-180]="isProductsMenuOpen">expand_more</mat-icon>
+        </button>
+        <ul
+          *ngIf="isProductsMenuOpen"
+          class="sidebar-submenu ml-1 mt-0 overflow-hidden transition-all duration-300 ease-in-out"
+          [ngClass]="{ 'max-h-40 opacity-100': isProductsMenuOpen, 'max-h-0 opacity-0': !isProductsMenuOpen }">
+          <li>
+            <a [routerLink]="['/', tenantId, 'dashboard', 'products']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+              <mat-icon class="icon">add</mat-icon>
+              <span>Administrar Productos</span>
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/', tenantId, 'dashboard', 'variants']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+              <mat-icon class="icon">list</mat-icon>
+              <span>Administrar Variantes</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <button type="button" (click)="toggleUsersMenu()" class="sidebar-link sidebar-group-toggle" [attr.aria-expanded]="isUsersMenuOpen">
+          <mat-icon class="icon">person_add</mat-icon>
+          <span>Registrar Usuarios</span>
+          <mat-icon class="sidebar-chevron" [class.rotate-180]="isUsersMenuOpen">expand_more</mat-icon>
+        </button>
+        <ul
+          *ngIf="isUsersMenuOpen"
+          class="sidebar-submenu ml-1 mt-0 overflow-hidden transition-all duration-300 ease-in-out"
+          [ngClass]="{ 'max-h-40 opacity-100': isUsersMenuOpen, 'max-h-0 opacity-0': !isUsersMenuOpen }">
+          <li>
+            <a [routerLink]="['/', tenantId, 'dashboard', 'register', 'registerClient']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+              <mat-icon class="icon">person_book</mat-icon>
+              <span>Clientes</span>
+            </a>
+          </li>
+          <li *ngIf="isAdmin">
+            <a [routerLink]="['/', tenantId, 'dashboard', 'register', 'registerEmployee']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+              <mat-icon class="icon">engineering</mat-icon>
+              <span>Colaboradores</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a [routerLink]="['/', tenantId, 'dashboard', 'manageUsers']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+          <mat-icon class="icon">manage_accounts</mat-icon>
+          <span>Administrar Usuarios</span>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/', tenantId, 'dashboard', 'invoices']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+          <mat-icon class="icon">receipt_long</mat-icon>
+          <span>Historico Facturas</span>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/', tenantId, 'dashboard', 'expenses']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+          <mat-icon class="icon">wallet</mat-icon>
+          <span>Egresos</span>
+        </a>
+      </li>
+      <li *ngIf="isAdmin">
+        <a [routerLink]="['/', tenantId, 'dashboard', 'reports']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+          <mat-icon class="icon">view_kanban</mat-icon>
+          <span>Reportes</span>
+        </a>
+      </li>
     </ul>
-  </div>
+  </nav>
+</aside>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MaterialModule } from '../../../material.module'; 
 import { GetInfoService } from '../../services/GetInfo/get-info.service';
 import { AuthService } from '../../services/Auth/auth.service';
@@ -15,6 +15,9 @@ export class HeaderComponent implements OnInit{
   user: any = {};
 
   tenantId: string = '';
+  isProfileMenuOpen = false;
+
+  @ViewChild('profileTrigger') private profileTrigger?: ElementRef<HTMLButtonElement>;
 
   constructor(
     private getInfoService: GetInfoService,
@@ -34,6 +37,33 @@ export class HeaderComponent implements OnInit{
     }
   });
 }
+
+  toggleProfileMenu(): void {
+    this.isProfileMenuOpen = !this.isProfileMenuOpen;
+  }
+
+  closeProfileMenu(): void {
+    this.isProfileMenuOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeProfileMenuOnOutsideClick(event: MouseEvent): void {
+    if (event.target instanceof Node && !this.elementContains(event.target)) {
+      this.closeProfileMenu();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  closeProfileMenuOnEscape(): void {
+    if (this.isProfileMenuOpen) {
+      this.closeProfileMenu();
+      this.profileTrigger?.nativeElement.focus();
+    }
+  }
+
+  private elementContains(target: Node): boolean {
+    return this.profileTrigger?.nativeElement.parentElement?.contains(target) ?? false;
+  }
 
   logout() {
     const tenant = sessionStorage.getItem('tenantId');
