@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumo co — Inventory & Sales Management</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
-</head>
-<body>
-
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">LUMO <span>co</span></div>
+  <div class="nav-logo">LUMO <span>Gestión de ventas e inventario</span></div>
   <ul class="nav-links">
     <li><a href="#features">Funciones</a></li>
     <li><a href="#how">Cómo funciona</a></li>
@@ -28,23 +17,80 @@
     <div class="hero-orb orb-3"></div>
   </div>
 
-  <div class="hero-badge">
-    <div class="badge-dot"></div>
-    Inventory & Sales Management
+  <div class="hero-copy">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      Gestiona tus ventas e inventario
+    </div>
+
+    <h1>Software de ventas e inventario<br> <em>para tu negocio </em></h1>
+    <p>
+      Gestiona las ventas, controla el inventario y administra productos
+      y clientes desde una sola plataforma. Lumo te ayuda a organizar
+      las operaciones diarias de tu negocio en Colombia.
+    </p>
+
+    <div class="hero-cta">
+      <a href="#pricing" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10.5 6H15L11 9.5L12.5 15L8 11.5L3.5 15L5 9.5L1 6H5.5L8 1Z" fill="currentColor"/></svg>
+        Empieza hoy
+      </a>
+      <a href="#features" class="btn-ghost">
+        Ver funciones
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="hero-proof">
+      <span class="hero-proof-check" aria-hidden="true">✓</span>
+      Fácil de usar
+      <span class="hero-proof-divider" aria-hidden="true"></span>
+      <span class="hero-proof-check" aria-hidden="true">✓</span>
+      Accede desde cualquier lugar
+    </div>
   </div>
 
-  <h1>Gestiona tu negocio<br>con <em>inteligencia</em></h1>
-  <p>Lumo centraliza tus ventas, inventario y clientes en un solo lugar. Simple, rápido, y diseñado para que crezcas sin límites.</p>
-
-  <div class="hero-cta">
-    <a href="#pricing" class="btn-primary">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10.5 6H15L11 9.5L12.5 15L8 11.5L3.5 15L5 9.5L1 6H5.5L8 1Z" fill="currentColor"/></svg>
-      Empieza hoy
-    </a>
-    <a href="#features" class="btn-ghost">
-      Ver funciones
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
+  <div class="hero-visual" aria-label="Vista ilustrativa del panel de Lumo" role="img">
+    <div class="hero-visual-halo"></div>
+    <div class="hero-dashboard">
+      <div class="hero-dashboard-top">
+        <div class="hero-dashboard-brand"><span class="hero-brand-mark">L</span> Lumo <span class="hero-dashboard-tag">Panel principal</span></div>
+        <span class="hero-dashboard-avatar">LM</span>
+      </div>
+      <div class="hero-dashboard-heading">
+        <div><span class="hero-dashboard-eyebrow">RESUMEN DEL NEGOCIO</span><strong>Hola, Luis 👋</strong></div>
+        <span class="hero-date">Esta semana⌄</span>
+      </div>
+      <div class="hero-metrics">
+        <div class="hero-metric hero-metric-sales">
+          <span>Ventas del día</span>
+          <strong>$1.284.500</strong>
+          <small><b>↗ 18,6%</b> vs. semana anterior</small>
+          <div class="hero-sparkline" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+        <div class="hero-metric hero-metric-stock">
+          <span>Productos activos</span>
+          <strong>248</strong>
+          <small><b>12 categorías</b> en inventario</small>
+          <div class="hero-stock-visual" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+      <div class="hero-chart-card">
+        <div class="hero-chart-heading"><span>Rendimiento de ventas</span><small>Últimos 7 días</small></div>
+        <div class="hero-chart" aria-hidden="true">
+          <div class="hero-chart-grid"><i></i><i></i><i></i></div>
+          <svg viewBox="0 0 520 112" preserveAspectRatio="none">
+            <defs><linearGradient id="salesFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#278d65" stop-opacity=".2"/><stop offset="100%" stop-color="#278d65" stop-opacity="0"/></linearGradient></defs>
+            <path class="hero-chart-area-fill" d="M0 91 C38 78 47 83 78 71 S119 82 156 59 S202 66 234 50 S282 65 312 41 S357 53 390 30 S434 47 468 22 S497 28 520 10 V112 H0Z"/>
+            <path class="hero-chart-line" d="M0 91 C38 78 47 83 78 71 S119 82 156 59 S202 66 234 50 S282 65 312 41 S357 53 390 30 S434 47 468 22 S497 28 520 10"/>
+            <circle cx="468" cy="22" r="4"/>
+          </svg>
+        </div>
+        <div class="hero-chart-labels"><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span></div>
+      </div>
+      <div class="hero-dashboard-footer"><span><i></i> Datos actualizados</span><span>Ver reportes <b>→</b></span></div>
+    </div>
+    <div class="hero-float-card hero-float-sale"><span class="hero-float-icon">↗</span><span><small>Venta registrada</small><strong>+$84.900</strong></span></div>
+    <div class="hero-float-card hero-float-inventory"><span class="hero-float-icon hero-float-box">▦</span><span><small>Inventario al día</small><strong>Todo en orden</strong></span><b class="hero-float-check">✓</b></div>
   </div>
 </section>
 
@@ -52,15 +98,15 @@
 <div class="stats-bar">
   <div class="stat-item">
     <div class="stat-number stat-text"> Practico </div>
-    <div class="stat-label">Para registrar una venta</div>
+    <div class="stat-label">Para registrar ventas</div>
   </div>
   <div class="stat-item">
     <div class="stat-number stat-text">Diversas</div>
     <div class="stat-label">Funciones integradas</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number stat-text">99.9%</div>
-    <div class="stat-label">Uptime de la plataforma</div>
+    <div class="stat-number stat-text">Soporte</div>
+    <div class="stat-label">Ligero y oportuno</div>
   </div>
   <div class="stat-item">
     <div class="stat-number stat-text">0</div>
@@ -72,8 +118,14 @@
 <section id="features">
   <div class="container">
     <span class="section-label anim">✦ Funcionalidades</span>
-    <h2 class="section-title anim">Todo lo que tu negocio<br>necesita, sin complicaciones</h2>
-    <p class="section-sub anim">Herramientas pensadas para comercios reales que quieren vender más y perder menos tiempo.</p>
+    <h2 class="section-title anim">
+      Funciones para gestionar ventas e inventario en un solo lugar
+    </h2>
+    <p class="section-sub anim">
+      Administra tus ventas, controla las existencias de tus productos,
+      registra clientes y consulta reportes para tomar mejores decisiones
+      en tu negocio.
+    </p>
 
     <div class="features-grid">
       <div class="feature-card anim" style="--card-accent: #f07b20; transition-delay: 0.05s;">
@@ -181,13 +233,13 @@
     <div class="steps-container">
       <div class="step-item anim" style="transition-delay: 0s;">
         <div class="step-number">01</div>
-        <h3>Crea tu cuenta</h3>
-        <p>Regístrate en menos de 2 minutos. Sin tarjeta de crédito para el plan gratuito.</p>
+        <h3>Solicita tu cuenta</h3>
+        <p>Escribenos y solicita la activación de tu negocio. Sin tarjeta de crédito.</p>
       </div>
       <div class="step-item anim" style="transition-delay: 0.1s;">
         <div class="step-number">02</div>
         <h3>Carga tu inventario</h3>
-        <p>Agrega tus productos con variantes, precios y stock. Importa desde Excel si tienes una lista.</p>
+        <p>Agrega tus productos con variantes, precios y stock.</p>
       </div>
       <div class="step-item anim" style="transition-delay: 0.2s;">
         <div class="step-number">03</div>
@@ -215,7 +267,7 @@
         <div class="beta-badge">Beta tester</div>
         <p class="testimonial-text">"Por fin un sistema que no me toma media hora aprender. Cargué mis productos y registré mi primera venta el mismo día."</p>
         <div class="testimonial-author">
-          <div class="author-avatar">JR</div>
+          <div class="author-avatar">YM</div>
           <div>
             <div class="author-name">Yeison Montoya.</div>
             <div class="author-role">Tienda de electrónica</div>
@@ -227,7 +279,7 @@
         <div class="beta-badge">Beta tester</div>
         <p class="testimonial-text">"Lo que más me gustó fue el manejo de variantes. Tengo productos con tallas y colores y Lumo lo maneja sin complicaciones."</p>
         <div class="testimonial-author">
-          <div class="author-avatar">MP</div>
+          <div class="author-avatar">CV</div>
           <div>
             <div class="author-name">Camilo Velez.</div>
             <div class="author-role">Accesorios para Mascotas</div>
@@ -240,7 +292,7 @@
         <h3 class="early-cta-title">¿Quieres ser beta tester?</h3>
         <p class="early-cta-text">Sé parte del grupo inicial. Obtendrás acceso anticipado, precio especial de lanzamiento y línea directa con el equipo.</p>
         <a href="https://wa.me/573226444646?text=Hola,%20me%20interesa%20ser%20beta%20tester%20de%20Lumo"
-           target="_blank" class="btn-wa">
+           target="_blank" class="btn-wa" rel="noopener noreferrer">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.559 4.14 1.535 5.876L0 24l6.324-1.502A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.932 0-3.742-.516-5.295-1.415l-.379-.225-3.932.934.998-3.838-.248-.396A9.956 9.956 0 012 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/></svg>
           Escríbenos por WhatsApp
         </a>
@@ -277,7 +329,7 @@
         <p class="pricing-wa-hint">¿Cuánto cuesta? Escríbenos y te contamos — también puedes preguntarnos lo que quieras sobre la plataforma.</p>
 
         <a href="https://wa.me/573226444646?text=Hola,%20me%20interesa%20Lumo%20para%20mi%20negocio.%20%C2%BFMe%20puedes%20dar%20m%C3%A1s%20informaci%C3%B3n?"
-           target="_blank" class="btn-wa btn-wa-large">
+           target="_blank" class="btn-wa btn-wa-large" rel="noopener noreferrer">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.559 4.14 1.535 5.876L0 24l6.324-1.502A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.932 0-3.742-.516-5.295-1.415l-.379-.225-3.932.934.998-3.838-.248-.396A9.956 9.956 0 012 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/></svg>
           Consultar por WhatsApp
         </a>
@@ -295,7 +347,7 @@
     <p class="anim">¿Listo para llevar tu negocio al siguiente nivel? Hablemos.</p>
     <div class="cta-btn-wrap anim">
       <a href="https://wa.me/573226444646?text=Hola,%20me%20interesa%20Lumo%20para%20mi%20negocio.%20%C2%BFMe%20puedes%20dar%20m%C3%A1s%20informaci%C3%B3n?"
-         target="_blank" class="btn-primary" style="font-size: 1.05rem; padding: 1rem 2.5rem;">
+         target="_blank" class="btn-primary" style="font-size: 1.05rem; padding: 1rem 2.5rem;" rel="noopener noreferrer">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.559 4.14 1.535 5.876L0 24l6.324-1.502A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.932 0-3.742-.516-5.295-1.415l-.379-.225-3.932.934.998-3.838-.248-.396A9.956 9.956 0 012 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/></svg>
         Contactar por WhatsApp
       </a>
@@ -308,15 +360,15 @@
   <div class="footer-logo">LUMO <span style="color: var(--lumo-green); font-style:normal;">co</span></div>
   <div class="footer-tagline">Gestiona. Vende. Crece.</div>
   <div class="footer-links">
-    <a href="#">Características</a>
-    <a href="#">Precios</a>
-    <a href="#">Blog</a>
-    <a href="#">Soporte</a>
-    <a href="/legal/terminos-y-condiciones.pdf" target="_blank" rel="noopener noreferrer">Términos y condiciones</a>
-    <a href="/legal/politica-tratamiento-datos-personales.pdf" target="_blank" rel="noopener noreferrer">Política de tratamiento de datos</a>
-  </div>
+  <a href="#features">Funcionalidades</a>
+  <a href="#how">Cómo funciona</a>
+  <a href="#pricing">Precios</a>
+  <a href="https://lumocolombia.com/legal/terminos-y-condiciones.pdf"
+     target="_blank"
+     rel="noopener noreferrer">Términos y condiciones</a>
+  <a href="https://lumocolombia.com/legal/politica-tratamiento-datos-personales.pdf"
+     target="_blank"
+     rel="noopener noreferrer">Política de tratamiento de datos</a>
+</div>
   <div class="footer-copy">© 2025 Lumo. Todos los derechos reservados.</div>
 </footer>
-
-</body>
-</html>

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { authGuardCanActivate, authGuardCanMatch } from './guards/auth.guard';
+import { creatorAuthGuard } from './guards/creator-auth.guard';
 
 export const routes: Routes = [
 
@@ -11,6 +12,15 @@ export const routes: Routes = [
   {
     path: 'invalid-tenant',
     loadComponent: () => import('./shared/invalid-tenant/invalid-tenant.component')
+  },
+  {
+    path: 'creator/login',
+    loadComponent: () => import('./components/creator-login/creator-login.component')
+  },
+  {
+    path: 'creator/subscriptions',
+    canActivate: [creatorAuthGuard],
+    loadComponent: () => import('./components/subscriptions/subscriptions.component')
   },
   {
     path: ':tenantId',

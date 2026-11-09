@@ -1,0 +1,31 @@
+<main class="creator-auth-page">
+  <section class="creator-auth-card">
+    <a class="creator-auth-brand" href="/" aria-label="Lumo, página principal">
+      <span class="creator-auth-mark">L</span>
+      <span>LUMO <small>co</small></span>
+    </a>
+    <p class="creator-auth-eyebrow">Acceso privado</p>
+    <h1>Administración de plataforma</h1>
+    <p class="creator-auth-description">Ingresa con la cuenta del creador para gestionar suscripciones y empresas.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <label for="creator-email">Correo del creador</label>
+      <input id="creator-email" type="email" autocomplete="username" formControlName="email">
+      <small class="creator-auth-field-error" *ngIf="form.controls.email.touched && form.controls.email.invalid">
+        Ingresa un correo válido.
+      </small>
+
+      <label for="creator-password">Contraseña</label>
+      <input id="creator-password" type="password" autocomplete="current-password" formControlName="password">
+      <small class="creator-auth-field-error" *ngIf="form.controls.password.touched && form.controls.password.invalid">
+        La contraseña es obligatoria.
+      </small>
+
+      <p class="creator-auth-error" role="alert" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Validando…' : 'Ingresar' }}
+      </button>
+    </form>
+    <a class="creator-auth-back" href="/">Volver a Lumo</a>
+  </section>
+</main>

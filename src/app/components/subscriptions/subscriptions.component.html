@@ -1,0 +1,149 @@
+<main class="subscriptions-page">
+  <header class="subscriptions-header">
+    <div>
+      <p class="subscriptions-eyebrow">Lumo · Administración global</p>
+      <h1>Suscripciones</h1>
+      <p class="subscriptions-intro">Controla los ciclos, registra pagos y da seguimiento a las obligaciones de cada empresa.</p>
+    </div>
+    <div class="subscriptions-header-actions">
+      <span class="creator-account">{{ sessionStorageEmail }}</span>
+      <button type="button" class="button button-outline" (click)="loadTenants()" [disabled]="loading">Actualizar</button>
+      <button type="button" class="button button-quiet" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <div class="subscription-alert alert-error" role="alert" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="subscription-alert alert-success" role="status" *ngIf="successMessage">{{ successMessage }}</div>
+
+  <section class="subscription-stats" aria-label="Resumen de suscripciones">
+    <article class="summary-card">
+      <span>Empresas</span>
+      <strong>{{ tenants.length }}</strong>
+      <small>Tenants registrados</small>
+    </article>
+    <article class="summary-card summary-card-warning">
+      <span>Obligaciones en mora</span>
+      <strong>{{ delinquentPeriodCount }}</strong>
+      <small>Fuera del periodo de gracia</small>
+    </article>
+    <article class="summary-card">
+      <span>Empresas inactivas</span>
+      <strong>{{ inactiveTenantCount }}</strong>
+      <small>Incluye inactivas por mora</small>
+    </article>
+  </section>
+
+  <section class="companies-section">
+    <div class="companies-heading">
+      <div>
+        <h2>Empresas registradas</h2>
+        <p>Expande una empresa para revisar sus 12 meses y gestionar cada pago.</p>
+      </div>
+      <label class="company-search">
+        <span class="sr-only">Buscar empresa</span>
+        <input type="search" [(ngModel)]="search" placeholder="Buscar por nombre, NIT o correo">
+      </label>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">Cargando suscripciones…</div>
+    <div class="empty-state" *ngIf="!loading && filteredTenants.length === 0">
+      No se encontraron empresas para mostrar.
+    </div>
+
+    <article class="company-card" *ngFor="let tenant of filteredTenants">
+      <details>
+        <summary>
+          <span class="company-mark" aria-hidden="true">{{ tenant.name.slice(0, 1).toUpperCase() }}</span>
+          <span class="company-main">
+            <strong>{{ tenant.name }}</strong>
+            <small>{{ tenant.identifier }} · NIT {{ tenant.nit || 'No registrado' }} · {{ tenant.email || 'Sin correo registrado' }}</small>
+          </span>
+          <span class="company-state" [class.company-inactive]="!tenant.isActive">
+            <i></i>{{ tenant.isActive ? 'Activa' : 'Inactiva' }}
+          </span>
+          <span class="company-delinquent" *ngIf="hasOverduePeriod(tenant)">
+            {{ overduePeriodCount(tenant) }} en mora
+          </span>
+          <span class="company-chevron" aria-hidden="true">⌄</span>
+        </summary>
+
+        <div class="company-details">
+          <div class="company-admin-actions" *ngIf="tenant.isActive">
+            <button
+              type="button"
+              class="button button-danger button-small"
+              [disabled]="!!busyAction"
+              (click)="deactivate(tenant)">
+              {{ busyAction === 'deactivate-' + tenant.id ? 'Desactivando…' : 'Desactivar empresa' }}
+            </button>
+          </div>
+
+          <div class="cycle-toolbar" *ngIf="tenant.periods.length">
+            <div>
+              <span class="detail-label">Inicio del servicio</span>
+              <strong>{{ tenant.startDate | date:'dd/MM/yyyy' }}</strong>
+            </div>
+            <div>
+              <span class="detail-label">Ciclos</span>
+              <strong>{{ tenant.periods[tenant.periods.length - 1].cycleNumber }}</strong>
+            </div>
+            <div class="cycle-actions">
+              <button
+                type="button"
+                class="button button-outline button-small"
+                [disabled]="!canRenew(tenant) || !!busyAction"
+                (click)="renew(tenant)">
+                {{ busyAction === 'renew-' + tenant.id ? 'Renovando…' : 'Renovar 12 meses' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="initialize-panel" *ngIf="!tenant.periods.length">
+            <div>
+              <strong>Suscripción sin inicializar</strong>
+              <p>Define la fecha de inicio para generar las 12 obligaciones mensuales.</p>
+            </div>
+            <label>
+              Fecha de inicio
+              <input type="date" [(ngModel)]="startDates[tenant.id]">
+            </label>
+            <button type="button" class="button button-primary button-small" [disabled]="!startDates[tenant.id] || !!busyAction" (click)="initializeSubscription(tenant)">
+              {{ busyAction === 'initialize-' + tenant.id ? 'Creando…' : 'Crear obligaciones' }}
+            </button>
+          </div>
+
+          <div class="period-list" *ngIf="tenant.periods.length">
+            <div class="period-row period-row-heading">
+              <span>Mes / ciclo</span>
+              <span>Vencimiento</span>
+              <span>Estado</span>
+              <span>Recordatorios</span>
+              <span>Acción</span>
+            </div>
+            <div class="period-row" *ngFor="let period of tenant.periods">
+              <strong>Mes {{ period.monthNumber }} <small>· Ciclo {{ period.cycleNumber }}</small></strong>
+              <span>{{ period.dueDate | date:'dd/MM/yyyy' }}</span>
+              <span class="period-status" [ngClass]="{
+                'period-paid': period.status === 'Pagado',
+                'period-overdue': period.status === 'En mora',
+                'period-pending': period.status === 'Pendiente'
+              }">{{ period.status }}</span>
+              <span class="reminder-count">{{ period.reminderCount }} enviados</span>
+              <button
+                type="button"
+                class="button button-primary button-small"
+                *ngIf="period.status !== 'Pagado'"
+                [disabled]="!!busyAction"
+                (click)="registerPayment(period)">
+                {{ busyAction === 'payment-' + period.id ? 'Guardando…' : 'Registrar pago' }}
+              </button>
+              <span class="paid-date" *ngIf="period.status === 'Pagado'">
+                {{ period.paidAt | date:'dd/MM/yyyy' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </article>
+  </section>
+</main>

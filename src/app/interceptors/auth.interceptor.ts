@@ -14,12 +14,16 @@ import { TenantService } from '../services/Tenant/tenant.service';
 export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
 
-  const token = sessionStorage.getItem('token');
+  const isPlatformRequest = req.url.includes('/platform-auth/') || req.url.includes('/subscriptions/');
+  const isCreatorLogin = req.url.endsWith('/platform-auth/login');
+  const token = isPlatformRequest
+    ? (isCreatorLogin ? null : sessionStorage.getItem('creatorToken'))
+    : sessionStorage.getItem('token');
   const tenant = sessionStorage.getItem('tenantId');
 
   const isTenantValidation = req.url.includes('/info/validate');
 
-  if (!tenant && !isTenantValidation) {
+  if (!tenant && !isTenantValidation && !isPlatformRequest) {
     window.location.href = '/invalid-tenant';
     return throwError(() => new Error('Tenant no definido'));
   }
@@ -30,7 +34,7 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  if (tenant) {
+  if (tenant && !isPlatformRequest) {
     headers['X-Tenant-Id'] = tenant;
   }
 
@@ -38,6 +42,14 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
+      if (error.status === 401 && isPlatformRequest) {
+        if (!isCreatorLogin) {
+          sessionStorage.removeItem('creatorToken');
+          window.location.assign('/creator/login');
+        }
+        return throwError(() => error);
+      }
+
       if (error.status === 401 && token) {
         return authService.refreshToken().pipe(
           switchMap((newToken) => {
