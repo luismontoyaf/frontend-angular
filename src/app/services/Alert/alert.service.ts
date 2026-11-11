@@ -11,7 +11,8 @@ export class AlertService {
       icon: 'error',
       title,
       text: message,
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#1769aa'
     });
   }
 

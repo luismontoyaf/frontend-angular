@@ -58,16 +58,116 @@ app-header {
   width: calc(100vw - 60px); /* Ajusta el ancho cuando el menú está abierto */
 }
 
-.spinner-overlay {
+.loading-overlay {
   position: absolute;
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%; 
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  background: rgba(248, 250, 252, 0.78);
+  backdrop-filter: blur(7px);
+}
+
+.loading-card {
   display: flex;
-  justify-content: center;
+  min-width: 220px;
+  flex-direction: column;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
-  z-index: 1;
-  color: #082F49;
+  gap: 1rem;
+  padding: 1.75rem 2rem;
+  border: 1px solid rgba(14, 116, 144, 0.12);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 50px rgba(8, 47, 73, 0.12);
+}
+
+.loading-mark {
+  position: relative;
+  display: grid;
+  width: 76px;
+  height: 76px;
+  place-items: center;
+}
+
+.loading-orbit {
+  position: absolute;
+  inset: 0;
+  border: 3px solid transparent;
+  border-top-color: #0891b2;
+  border-right-color: #38bdf8;
+  border-radius: 50%;
+  animation: loading-spin 1.25s linear infinite;
+}
+
+.loading-orbit-inner {
+  inset: 9px;
+  border-width: 2px;
+  border-top-color: #a3e635;
+  border-right-color: transparent;
+  border-bottom-color: #a3e635;
+  animation-direction: reverse;
+  animation-duration: 1.8s;
+}
+
+.loading-core {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #0e7490, #082f49);
+  box-shadow: 0 5px 14px rgba(8, 47, 73, 0.24);
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  animation: loading-pulse 1.6s ease-in-out infinite;
+}
+
+.loading-spark {
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #a3e635;
+  box-shadow: 0 0 12px rgba(163, 230, 53, 0.8);
+}
+
+.loading-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.loading-title {
+  color: #082f49;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.loading-caption {
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loading-pulse {
+  50% {
+    transform: scale(0.9);
+    box-shadow: 0 2px 8px rgba(8, 47, 73, 0.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-orbit,
+  .loading-core {
+    animation: none;
+  }
 }

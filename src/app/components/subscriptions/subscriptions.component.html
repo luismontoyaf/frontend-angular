@@ -68,13 +68,22 @@
         </summary>
 
         <div class="company-details">
-          <div class="company-admin-actions" *ngIf="tenant.isActive">
+          <div class="company-admin-actions">
             <button
               type="button"
               class="button button-danger button-small"
+              *ngIf="tenant.isActive"
               [disabled]="!!busyAction"
               (click)="deactivate(tenant)">
               {{ busyAction === 'deactivate-' + tenant.id ? 'Desactivando…' : 'Desactivar empresa' }}
+            </button>
+            <button
+              type="button"
+              class="button button-primary button-small"
+              *ngIf="!tenant.isActive"
+              [disabled]="!!busyAction"
+              (click)="activate(tenant)">
+              {{ busyAction === 'activate-' + tenant.id ? 'Activando…' : 'Activar empresa' }}
             </button>
           </div>
 

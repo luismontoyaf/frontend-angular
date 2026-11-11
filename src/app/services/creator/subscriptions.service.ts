@@ -48,6 +48,10 @@ export class SubscriptionsService {
     return this.http.post<{ message: string }>(`${this.apiUrl}/tenants/${tenantId}/deactivate`, {});
   }
 
+  activate(tenantId: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/tenants/${tenantId}/activate`, {});
+  }
+
   renew(tenantId: number): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.apiUrl}/tenants/${tenantId}/renew`, {});
   }

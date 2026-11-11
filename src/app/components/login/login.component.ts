@@ -10,6 +10,7 @@ import { MessageService } from '../../dialogs/services/message-service.service';
 import { SuccessModalComponent } from '../../dialogs/shared/success-modal/success-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TenantService } from '../../services/Tenant/tenant.service';
+import { AlertService } from '../../services/Alert/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -50,6 +51,7 @@ export class LoginComponent implements OnInit{
     private getInfoService: GetInfoService,
     private messageService: MessageService,
     private tenantService: TenantService,
+    private alertService: AlertService,
     private dialog: MatDialog) {
     
     this.loginForm = this.fb.group({
@@ -170,7 +172,11 @@ export class LoginComponent implements OnInit{
       },
       (error) => {
         console.error('Error:', error);
-        this.message = 'Usuario o contraseña incorrectos';
+        this.message = '';
+        const message = typeof error.error?.message === 'string'
+          ? error.error.message
+          : 'No fue posible iniciar sesión. Verifica tu conexión e inténtalo nuevamente.';
+        this.alertService.showError(message, 'No fue posible iniciar sesión');
       }
     );
   }

@@ -92,6 +92,13 @@ export default class SubscriptionsComponent implements OnInit {
     );
   }
 
+  activate(tenant: SubscriptionTenant): void {
+    if (this.busyAction || !window.confirm(`¿Volver a activar la empresa ${tenant.name}?`)) return;
+    this.runAction(`activate-${tenant.id}`, () =>
+      this.subscriptionsService.activate(tenant.id)
+    );
+  }
+
   renew(tenant: SubscriptionTenant): void {
     if (this.busyAction) return;
     this.runAction(`renew-${tenant.id}`, () =>

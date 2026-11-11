@@ -14,9 +14,19 @@
     </div>
     
     <div class="flex-grow p-5 min-w-[300px] w-full relative">
-      <!-- Spinner con clase overlay -->
-      <div *ngIf="loading" class="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-white/80 z-10 text-[#082F49]">
-        <mat-spinner></mat-spinner>
+      <div *ngIf="loading" class="loading-overlay" role="status" aria-live="polite">
+        <div class="loading-card">
+          <div class="loading-mark" aria-hidden="true">
+            <span class="loading-orbit"></span>
+            <span class="loading-orbit loading-orbit-inner"></span>
+            <span class="loading-core">L</span>
+            <span class="loading-spark"></span>
+          </div>
+          <div class="loading-copy">
+            <span class="loading-title">Cargando tu espacio</span>
+            <span class="loading-caption">Estamos preparando todo para ti</span>
+          </div>
+        </div>
       </div>
 
       <!-- Mostrar el contenido solo cuando el spinner no esté visible -->
