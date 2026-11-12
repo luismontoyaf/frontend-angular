@@ -17,7 +17,8 @@ export class ProductsService {
     descripcion: string,
     precio: string,
     stock: number,
-    imagen: File
+    imagen: File,
+    codigoProducto?: string | null
   ): Observable<any> {
     const precioLimpio = Number(
       precio.toString().replace(/\./g, '')
@@ -29,12 +30,48 @@ export class ProductsService {
     formData.append('precio', precioLimpio.toString());
     formData.append('stock', stock.toString());
     formData.append('ImagenFile', imagen);
+    if (codigoProducto?.trim()) {
+      formData.append('codigoProducto', codigoProducto.trim());
+    }
 
     return this.http.post(`${this.apiUrl}/products`, formData);
   }
 
   getProducts(): Observable<any> {
     return this.http.get(`${this.apiUrl}/products`);
+  }
+
+  downloadBulkTemplate(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/products/bulk/template`, {
+      responseType: 'blob'
+    });
+  }
+
+  validateBulkProducts(file: File): Observable<unknown> {
+    const formData = new FormData();
+    formData.append('archivo', file);
+
+    return this.http.post<unknown>(`${this.apiUrl}/products/bulk/validate`, formData);
+  }
+
+  saveBulkProducts(file: File): Observable<{
+    message?: string;
+    total?: number;
+    Message?: string;
+    Total?: number;
+  }> {
+    const formData = new FormData();
+    formData.append('archivo', file);
+
+    return this.http.post<{
+      message?: string;
+      total?: number;
+      Message?: string;
+      Total?: number;
+    }>(
+      `${this.apiUrl}/products/bulk/save`,
+      formData
+    );
   }
 
   getProductById(id: number): Observable<Product> {

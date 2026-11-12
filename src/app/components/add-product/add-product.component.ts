@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   MatDialog,
   MatDialogModule
@@ -45,6 +46,7 @@ export default class AddProductComponent implements OnInit {
   content: boolean = false;
 
   message = '';
+  messageType: 'error' | 'success' | 'info' = 'info';
 
   imagePreview: string | ArrayBuffer = 'assets/images/noProductImage.png';
 
@@ -68,6 +70,7 @@ export default class AddProductComponent implements OnInit {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', Validators.required],
+      codigoProducto: [''],
       price: ['', [Validators.required, Validators.min(1)]],
       image: [null],
       stock: [0],
@@ -95,8 +98,9 @@ export default class AddProductComponent implements OnInit {
   }
 
   addProducts() {
+    this.message = '';
     if (this.productForm.invalid) {
-      this.message = 'Por favor, corrige los errores en el formulario.';
+      this.setStatusMessage('Por favor, corrige los errores en el formulario.', 'error');
       return;
     }
 
@@ -114,32 +118,35 @@ export default class AddProductComponent implements OnInit {
   }
 
   createProduct(){
+    this.message = '';
     this.hasVariants = this.productForm.get('hasVariants')?.value;
     if (this.hasVariants && this.variants.length == 0) {
-      this.message = 'Debes agregar al menos una variante';
+      this.setStatusMessage('Debes agregar al menos una variante', 'error');
       return;
     }
     
     if (!this.hasVariants && this.productForm.get('stock')?.value < 1) {
-      this.message = "La cantidad minima es de 1";
+      this.setStatusMessage('La cantidad mínima es de 1', 'error');
       return;
     }
 
-    const { name, description, price, stock } = this.productForm.value;
+    const { name, description, price, stock, codigoProducto } = this.productForm.value;
 
     var file = this.selectedFile as File;
 
     //  Si NO hay variantes, se envía un solo producto
     if (!this.hasVariants) {
       this.productsService
-        .addProduct(name, description, price, stock, file)
+        .addProduct(name, description, price, stock, file, codigoProducto)
         .subscribe(
           (response) => {
             this.handleSuccess();
           },
           (error) => {
-            console.error('Error:', error);
-            this.message = 'No se pudo agregar el producto';
+            this.setStatusMessage(this.getProductErrorMessage(
+              error,
+              'No se pudo agregar el producto.'
+            ), 'error');
           }
         );
       return;
@@ -154,7 +161,8 @@ export default class AddProductComponent implements OnInit {
         description,
         price,
         variant.stock,
-        file
+        file,
+        variant.codigoProducto
       );
     });
 
@@ -164,13 +172,16 @@ export default class AddProductComponent implements OnInit {
         this.handleSuccess();
       },
       (error) => {
-        console.error('Error al crear variantes:', error);
-        this.message = 'No se pudieron agregar los productos';
+        this.setStatusMessage(this.getProductErrorMessage(
+          error,
+          'No se pudieron agregar los productos.'
+        ), 'error');
       }
     );
   }
 
   updateProduct(data: any){
+    this.message = '';
 
     const cambios: Partial<Product> = {}; // Objeto para almacenar solo los cambios
   
@@ -184,6 +195,10 @@ export default class AddProductComponent implements OnInit {
     if (formValues.description !== this.productSelected.descripcion) {
       cambios.descripcion = formValues.description;
     }
+    const codigoProducto = formValues.codigoProducto.trim();
+    if (codigoProducto !== (this.productSelected.codigoProducto ?? '')) {
+      cambios.codigoProducto = codigoProducto || null;
+    }
     if (formValues.price !== this.productSelected.precio) {
       cambios.precio = Number(formValues.price.replace(/\./g, ''));
     }
@@ -193,7 +208,7 @@ export default class AddProductComponent implements OnInit {
   
     // Si no hay cambios, no hacemos la petición
     if (Object.keys(cambios).length === 0) {
-      this.message = 'No se detectaron cambios.';
+      this.setStatusMessage('No se detectaron cambios.', 'info');
       return;
     }
       this.productsService.editProduct(this.idEditProduct!, cambios).subscribe({
@@ -204,7 +219,12 @@ export default class AddProductComponent implements OnInit {
             this.handleSuccess();
           }
         },
-        error: (err) => console.error(err)
+        error: (error) => {
+          this.setStatusMessage(this.getProductErrorMessage(
+            error,
+            'No se pudo editar el producto.'
+          ), 'error');
+        }
       });
     }
 
@@ -212,8 +232,66 @@ export default class AddProductComponent implements OnInit {
       this.productsService.updateProductImage(this.idEditProduct!, this.selectedFile!)
         .subscribe({
           next: () => this.handleSuccess(),
-          error: err => console.error(err)
+          error: (error) => {
+            this.setStatusMessage(this.getProductErrorMessage(
+              error,
+              'No se pudo actualizar la imagen del producto.'
+            ), 'error');
+          }
         });
+    }
+
+    private getProductErrorMessage(error: unknown, fallback: string): string {
+      if (!(error instanceof HttpErrorResponse)) {
+        return error instanceof Error ? error.message : fallback;
+      }
+
+      const body = error.error;
+      const responseMessage = this.extractResponseMessage(body);
+      const duplicateCodeMessage =
+        'El código ingresado ya está asignado a otro producto. Ingresa un código diferente.';
+      const duplicateCodePattern =
+        /(c[oó]digo|code).*(duplic|existe|unique|asignad|registrad)|(duplic|unique).*(c[oó]digo|code)/i;
+
+      if (error.status === 409 || (responseMessage && duplicateCodePattern.test(responseMessage))) {
+        return responseMessage && duplicateCodePattern.test(responseMessage)
+          ? responseMessage
+          : duplicateCodeMessage;
+      }
+
+      return responseMessage ?? fallback;
+    }
+
+    private extractResponseMessage(body: unknown): string | null {
+      if (typeof body === 'string') {
+        return body;
+      }
+
+      if (!body || typeof body !== 'object') {
+        return null;
+      }
+
+      const response = body as Record<string, unknown>;
+      const directMessage =
+        response['message'] ??
+        response['Message'] ??
+        response['detail'] ??
+        response['title'] ??
+        response['error'];
+
+      if (typeof directMessage === 'string') {
+        return directMessage;
+      }
+
+      const errors = response['errors'];
+      if (errors && typeof errors === 'object') {
+        const messages = Object.values(errors)
+          .flatMap(value => Array.isArray(value) ? value : [value])
+          .filter((value): value is string => typeof value === 'string');
+        return messages.join(' ');
+      }
+
+      return null;
     }
 
   handleSuccess() {
@@ -229,10 +307,15 @@ export default class AddProductComponent implements OnInit {
           action: () => this.openSuccessSavedProductDialog()
         };
 
-    this.message = config.message;
+    this.setStatusMessage(config.message, 'success');
     this.setMessage(config.message);
     this.setProccess(config.process);
     config.action();
+  }
+
+  setStatusMessage(message: string, type: 'error' | 'success' | 'info'): void {
+    this.message = message;
+    this.messageType = type;
   }
   
 
@@ -277,6 +360,7 @@ export default class AddProductComponent implements OnInit {
           name: [variant.name, Validators.required],
           value: [v.Value, Validators.required],
           stock: [0, [Validators.required, Validators.min(0)]],
+          codigoProducto: [''],
         })
       );
     });
@@ -290,6 +374,7 @@ export default class AddProductComponent implements OnInit {
         this.productForm.patchValue({
           name: product.nombreProducto,
           description: product.descripcion,
+          codigoProducto: product.codigoProducto ?? '',
           price: product.precio,
           stock: product.stock,
           hasVariants: false

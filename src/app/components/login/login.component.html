@@ -63,7 +63,15 @@
             Iniciar sesión
           </button>
 
-          <p *ngIf="message" class="login-message" role="alert">{{ message }}</p>
+          <p
+            *ngIf="message"
+            [class.login-message-success]="isLoginMessageSuccess"
+            [class.login-message]="!isLoginMessageSuccess"
+            [attr.role]="isLoginMessageSuccess ? 'status' : 'alert'"
+            [attr.aria-live]="isLoginMessageSuccess ? 'polite' : 'assertive'"
+          >
+            {{ message }}
+          </p>
         </form>
       </div>
     </section>

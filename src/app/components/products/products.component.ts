@@ -73,6 +73,11 @@ openAddProductComponent(): void{
   this.router.navigate([`/${tenant}/dashboard/add-products`]);
 }
 
+openBulkProducts(): void {
+  const tenant = this.tenantService.getTenantOrThrow();
+  this.router.navigate([`/${tenant}/dashboard/products/bulk`]);
+}
+
 openEditProductComponent(product: Product): void {
   
   const tenant = this.tenantService.getTenantOrThrow();
@@ -97,9 +102,10 @@ openAddStockDialog(product: Product): void {
 }
 
   filterProducts() {
-    const term = this.searchTerm.toLowerCase();
+    const term = this.searchTerm.trim().toLowerCase();
     this.filteredProducts = this.products.filter(product => 
-      product.nombreProducto.toLowerCase().includes(term)
+      product.nombreProducto.toLowerCase().includes(term) ||
+      (product.codigoProducto ?? '').toLowerCase().includes(term)
     );
   }
 

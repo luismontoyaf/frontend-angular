@@ -30,6 +30,7 @@ export default class AdmVariantsComponent implements OnInit {
   atributes: FormArray;
 
   message: string = '';
+  messageType: 'error' | 'success' = 'error';
 
   isEditMode = false;
   variantId!: number;
@@ -99,6 +100,7 @@ export default class AdmVariantsComponent implements OnInit {
   addVariantValue() {
     if (!this.validVariantsInputs()) {
       this.message = 'Debe ingresar el valor';
+      this.messageType = 'error';
       return;
     }
     const atributeGroup = this.fb.group({
@@ -149,6 +151,7 @@ export default class AdmVariantsComponent implements OnInit {
   handleSuccess() {
     this.message = this.isEditMode ? this.message = 'La variante fue actualizada correctamente'
       : 'La variante ha sido agregada exitosamente';
+    this.messageType = 'success';
     this.setMessage(this.message);
     this.setProccess('goToAdminVariants'); 
     this.openSuccessDialog();

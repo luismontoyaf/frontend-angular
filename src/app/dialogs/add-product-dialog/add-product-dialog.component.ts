@@ -121,6 +121,7 @@ removeVariant(index: number) {
 
   openSuccessEditDialog(): void {
       this.dialog.open(SuccessEditModalComponent, {
+        data: { isSuccessMessage: true },
       });
     };
 

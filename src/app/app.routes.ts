@@ -59,6 +59,12 @@ export const routes: Routes = [
             loadComponent: () => import('./components/products/products.component'),
           },
           {
+            path: 'products/bulk',
+            canActivate: [authGuardCanActivate],
+            loadComponent: () => import('./components/bulk-products/bulk-products.component'),
+            data: { title: 'Carga masiva de productos' },
+          },
+          {
             path: 'add-products',
             canActivate: [authGuardCanActivate],
             loadComponent: () => import('./components/add-product/add-product.component'),

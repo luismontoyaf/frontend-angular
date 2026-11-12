@@ -80,7 +80,10 @@
     <!-- Mensaje -->
     <p
       *ngIf="message"
-      class="text-center sm:text-left text-red-600 mt-4"
+      class="mt-4 text-center sm:text-left"
+      [ngClass]="messageType === 'success' ? 'text-green-700' : 'text-red-600'"
+      [attr.role]="messageType === 'success' ? 'status' : 'alert'"
+      [attr.aria-live]="messageType === 'success' ? 'polite' : 'assertive'"
     >
       {{ message }}
     </p>

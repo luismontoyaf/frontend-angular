@@ -118,54 +118,59 @@
         </div>
 
         <!-- Tabla de datos -->
-        <div *ngIf="expenses.length > 0" class="overflow-x-auto">
-          <table class="w-full text-sm">
+        <div *ngIf="expenses.length > 0" class="w-full overflow-x-auto overscroll-x-contain">
+          <table
+            class="w-full min-w-[1150px] table-fixed text-sm"
+            tabindex="0"
+            role="region"
+            aria-label="Tabla de historial de egresos; desplázate horizontalmente para ver todas las columnas"
+          >
             <thead>
               <tr class="border-b border-gray-100">
-                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
-                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tipo</th>
-                <th class="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Valor</th>
-                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Descripción</th>
-                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Referencia</th>
-                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Fecha</th>
-                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Usuario</th>
+                <th class="w-16 whitespace-nowrap px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">#</th>
+                <th class="w-44 whitespace-nowrap px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Tipo</th>
+                <th class="w-36 whitespace-nowrap px-5 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-500">Valor</th>
+                <th class="w-56 whitespace-nowrap px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Descripción</th>
+                <th class="w-44 whitespace-nowrap px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Referencia</th>
+                <th class="w-40 whitespace-nowrap px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Fecha</th>
+                <th class="w-48 whitespace-nowrap px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Usuario</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-50">
               <tr *ngFor="let expense of expenses; let i = index"
                 class="hover:bg-sky-50/40 transition-colors">
-                <td class="px-5 py-3.5 text-gray-400 text-xs">{{ i + 1 }}</td>
-                <td class="px-5 py-3.5">
+                <td class="whitespace-nowrap px-5 py-3.5 text-xs text-gray-400">{{ i + 1 }}</td>
+                <td class="whitespace-nowrap px-5 py-3.5">
                   <span class="inline-flex items-center gap-1.5 bg-sky-50 text-sky-800 border border-sky-200
                                text-xs font-medium px-2.5 py-1 rounded-full whitespace-nowrap">
                     {{ expense.tipoEgreso || expense.tipo || '—' }}
                   </span>
                 </td>
-                <td class="px-5 py-3.5 text-right">
+                <td class="whitespace-nowrap px-5 py-3.5 text-right">
                   <span class="text-red-600 font-semibold tabular-nums">
                     - ${{ expense.valor | number:'1.2-2' }}
                   </span>
                 </td>
-                <td class="px-5 py-3.5 text-gray-500 max-w-[200px] truncate hidden md:table-cell">
+                <td class="whitespace-nowrap px-5 py-3.5 text-gray-500">
                   {{ expense.descripcion || '—' }}
                 </td>
-                <td class="px-5 py-3.5 hidden lg:table-cell">
+                <td class="whitespace-nowrap px-5 py-3.5">
                   <span *ngIf="expense.referencia"
-                    class="text-xs font-mono bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded">
+                    class="inline-block max-w-full truncate align-bottom text-xs font-mono bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded">
                     {{ expense.referencia }}
                   </span>
                   <span *ngIf="!expense.referencia" class="text-gray-300 text-xs">—</span>
                 </td>
-                <td class="px-5 py-3.5 hidden lg:table-cell">
+                <td class="whitespace-nowrap px-5 py-3.5">
                   <span *ngIf="expense.fecha"
                     class="text-xs font-mono bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded">
                     {{ expense.fecha | date: 'dd-MM-yyy' }}
                   </span>
                   <span *ngIf="!expense.fecha" class="text-gray-300 text-xs">—</span>
                 </td>
-                <td class="px-5 py-3.5 hidden lg:table-cell">
+                <td class="whitespace-nowrap px-5 py-3.5">
                   <span *ngIf="expense.usuarioRadicaNombre"
-                    class="text-xs font-mono bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded">
+                    class="inline-block max-w-full truncate align-bottom text-xs font-mono bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded">
                     {{ expense.usuarioRadicaNombre }}
                   </span>
                   <span *ngIf="!expense.usuarioRadicaNombre" class="text-gray-300 text-xs">—</span>

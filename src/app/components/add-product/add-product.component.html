@@ -45,6 +45,20 @@
       </span>
     </div>
 
+    <div class="flex flex-col" *ngIf="isEditMode || !hasVariants">
+      <label class="font-semibold mb-1" for="codigoProducto">Código del producto (opcional)</label>
+      <input
+        id="codigoProducto"
+        type="text"
+        formControlName="codigoProducto"
+        class="border rounded p-2 focus:ring focus:ring-blue-300"
+        placeholder="Ej: PROD-001"
+      />
+      <span *ngIf="hasVariants" class="mt-1 text-xs text-gray-500">
+        Asigna un código diferente a cada variante.
+      </span>
+    </div>
+
     <!-- Precio -->
     <div class="flex flex-col">
       <label class="font-semibold mb-1">Precio</label>
@@ -139,25 +153,31 @@
         <div
           *ngFor="let variant of variants.controls; let i = index"
           [formGroupName]="i"
-          class="flex gap-2 items-center"
+          class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4"
         >
           <input
             type="text"
             placeholder="Tipo (Ej: Color, Talla)"
             formControlName="name"
-            class="border rounded p-2 w-1/3"
+            class="border rounded p-2 w-full"
           />
           <input
             type="text"
             placeholder="Valor (Ej: Rojo, M, Algodón)"
             formControlName="value"
-            class="border rounded p-2 w-1/3"
+            class="border rounded p-2 w-full"
           />
           <input
             type="number"
             placeholder="Stock"
             formControlName="stock"
-            class="border rounded p-2 w-1/3"
+            class="border rounded p-2 w-full"
+          />
+          <input
+            type="text"
+            placeholder="Código (opcional)"
+            formControlName="codigoProducto"
+            class="border rounded p-2 w-full"
           />
           <span
             class="text-red-500 text-sm"
@@ -187,7 +207,19 @@
         + Agregar Variante
       </button> -->
     </div>
-    <p *ngIf="message" class="col-span-full text-red-600 mt-4">{{ message }}</p>
+    <p
+      *ngIf="message"
+      class="col-span-full mt-4 rounded-lg border px-4 py-3 text-sm font-medium"
+      [ngClass]="{
+        'border-red-200 bg-red-50 text-red-700': messageType === 'error',
+        'border-green-200 bg-green-50 text-green-700': messageType === 'success',
+        'border-slate-200 bg-slate-50 text-slate-700': messageType === 'info'
+      }"
+      [attr.role]="messageType === 'error' ? 'alert' : 'status'"
+      [attr.aria-live]="messageType === 'error' ? 'assertive' : 'polite'"
+    >
+      {{ message }}
+    </p>
   </div>
 
   <div class="flex flex-col sm:col-span-1 sticky self-start justify-self-center md:justify-self-end">

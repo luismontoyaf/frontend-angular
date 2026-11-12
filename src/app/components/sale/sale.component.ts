@@ -109,11 +109,12 @@ export default class SaleComponent implements OnInit{
     }
   }
 
-  // Método para filtrar productos por nombre
+  // Filtra productos por nombre o código.
   filterProducts() {
-    const term = this.searchTerm.toLowerCase();
+    const term = this.searchTerm.trim().toLowerCase();
     this.filteredProducts = this.products.filter(product => 
-      product.nombreProducto.toLowerCase().includes(term)
+      product.nombreProducto.toLowerCase().includes(term) ||
+      (product.codigoProducto ?? '').toLowerCase().includes(term)
     );
   }
 

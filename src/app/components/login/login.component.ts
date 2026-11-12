@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit{
   messageSuccess = '';
   messageError = '';
   message = '';
+  isLoginMessageSuccess = false;
 
   selectedForm: string = 'form1';
   tenantId = '';
@@ -153,6 +154,7 @@ export class LoginComponent implements OnInit{
     
     // Validar formato de correo
     if (!emailPattern.test(formLoginData.username)) {
+      this.isLoginMessageSuccess = false;
       this.message = 'Por favor, ingresa un correo electrónico válido.';
       return;
     }
@@ -161,6 +163,7 @@ export class LoginComponent implements OnInit{
     this.authService.login(formLoginData.username, formLoginData.password, tenant).subscribe(
       (response) => {
         this.message = 'Inicio de sesión exitoso';
+        this.isLoginMessageSuccess = true;
         sessionStorage.setItem('token', response.token); // Almacenar el token
         sessionStorage.setItem('refreshToken', response.refreshToken);
 
@@ -173,6 +176,7 @@ export class LoginComponent implements OnInit{
       (error) => {
         console.error('Error:', error);
         this.message = '';
+        this.isLoginMessageSuccess = false;
         const message = typeof error.error?.message === 'string'
           ? error.error.message
           : 'No fue posible iniciar sesión. Verifica tu conexión e inténtalo nuevamente.';
