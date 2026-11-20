@@ -1,5 +1,36 @@
 <header class="header-container">
 <nav class="header-nav" aria-label="Menú de usuario">
+  <div class="branch-picker" *ngIf="isCompanyAdmin">
+    <!-- <span class="branch-picker-label" id="branch-picker-label">Sede</span> -->
+    <mat-form-field class="branch-picker-field" appearance="outline" subscriptSizing="dynamic">
+      <mat-select
+        [value]="activeBranchId"
+        (selectionChange)="switchBranch($event.value)"
+        [disabled]="isSwitchingBranch || !branches.length"
+        panelClass="branch-options-panel"
+        aria-labelledby="branch-picker-label">
+        <mat-select-trigger>
+          <span class="branch-trigger-value" *ngIf="activeBranch as branch">
+            <span class="branch-trigger-icon" aria-hidden="true"><mat-icon>storefront</mat-icon></span>
+            <span class="branch-trigger-copy">
+              <strong>{{ branch.name }}</strong>
+              <small>{{ branch.isHeadquarters ? 'Principal' : 'Sede activa' }}</small>
+            </span>
+          </span>
+          <span *ngIf="!activeBranch">Cargando sedes…</span>
+        </mat-select-trigger>
+        <mat-option *ngFor="let branch of branches" [value]="branch.id" [disabled]="!branch.isActive">
+          <span class="branch-option">
+            <span class="branch-option-icon" aria-hidden="true"><mat-icon>storefront</mat-icon></span>
+            <span class="branch-option-copy">
+              <strong>{{ branch.name }}</strong>
+              <small>{{ branch.isHeadquarters ? 'Sede principal' : 'Sede' }} · {{ branch.isActive ? 'Activa' : 'Inactiva' }}</small>
+            </span>
+          </span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
   <span class="header-welcome">
     <span class="header-status-dot" aria-hidden="true"></span>
     Bienvenido
@@ -26,6 +57,14 @@
     </button>
 
     <nav id="profile-menu" class="profile-menu" aria-label="Opciones de usuario" [hidden]="!isProfileMenuOpen">
+      <a
+        class="profile-menu-item"
+        *ngIf="isAdmin"
+        [routerLink]="['/', tenantId, 'dashboard', 'configuration']"
+        (click)="closeProfileMenu()">
+        <mat-icon>settings</mat-icon>
+        <span>Configuración</span>
+      </a>
       <a class="profile-menu-item" [routerLink]="['/', tenantId, 'dashboard', 'support']" (click)="closeProfileMenu()">
         <mat-icon>contact_support</mat-icon>
         <span>Soporte</span>
@@ -42,4 +81,5 @@
     </nav>
   </div>
 </nav>
+<span class="branch-switch-error" role="alert" *ngIf="branchErrorMessage">{{ branchErrorMessage }}</span>
 </header>

@@ -3,11 +3,14 @@
     <div>
       <p class="subscriptions-eyebrow">Lumo · Administración global</p>
       <h1>Suscripciones</h1>
-      <p class="subscriptions-intro">Controla los ciclos, registra pagos y da seguimiento a las obligaciones de cada empresa.</p>
+      <p class="subscriptions-intro">Registra empresas con su sede principal, administra sedes y controla una suscripción por empresa.</p>
     </div>
     <div class="subscriptions-header-actions">
       <span class="creator-account">{{ sessionStorageEmail }}</span>
-      <button type="button" class="button button-outline" (click)="loadTenants()" [disabled]="loading">Actualizar</button>
+      <button type="button" class="button button-primary" (click)="showCreateForm = !showCreateForm">
+        {{ showCreateForm ? 'Cerrar registro' : 'Registrar empresa' }}
+      </button>
+      <button type="button" class="button button-outline" (click)="loadCompanies()" [disabled]="loading">Actualizar</button>
       <button type="button" class="button button-quiet" (click)="logout()">Cerrar sesión</button>
     </div>
   </header>
@@ -15,11 +18,130 @@
   <div class="subscription-alert alert-error" role="alert" *ngIf="errorMessage">{{ errorMessage }}</div>
   <div class="subscription-alert alert-success" role="status" *ngIf="successMessage">{{ successMessage }}</div>
 
+  <section class="upgrade-requests-panel" *ngIf="loadingUpgradeRequests || planUpgradeRequests.length">
+    <div class="upgrade-requests-heading">
+      <div>
+        <h2>Solicitudes de mejora a Plus</h2>
+        <p>Revisa las solicitudes enviadas por los administradores de empresa.</p>
+      </div>
+      <button type="button" class="button button-outline button-small" (click)="loadPlanUpgradeRequests()" [disabled]="loadingUpgradeRequests">
+        Actualizar
+      </button>
+    </div>
+    <p class="upgrade-requests-loading" *ngIf="loadingUpgradeRequests">Cargando solicitudes…</p>
+    <article class="upgrade-request-row" *ngFor="let request of planUpgradeRequests">
+      <div>
+        <strong>{{ request.companyName }}</strong>
+        <small>NIT {{ request.companyNit || 'No registrado' }} · Solicitó {{ request.requestedByEmail }} · {{ request.requestedAt | date:'dd/MM/yyyy' }}</small>
+      </div>
+      <div class="upgrade-request-actions">
+        <button
+          type="button"
+          class="button button-primary button-small"
+          [disabled]="!!busyAction"
+          (click)="approvePlanUpgradeRequest(request)">
+          {{ busyAction === 'approve-upgrade-' + request.id ? 'Aprobando…' : 'Aprobar Plus' }}
+        </button>
+        <button
+          type="button"
+          class="button button-danger button-small"
+          [disabled]="!!busyAction"
+          (click)="rejectPlanUpgradeRequest(request)">
+          {{ busyAction === 'reject-upgrade-' + request.id ? 'Rechazando…' : 'Rechazar' }}
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <section class="company-form-panel" *ngIf="showCreateForm">
+    <div class="form-panel-heading">
+      <div>
+        <h2>Registrar empresa</h2>
+        <p>Se creará la empresa, su sede principal, el administrador y los 12 meses iniciales.</p>
+      </div>
+    </div>
+    <form #companyForm="ngForm" (ngSubmit)="createCompany()">
+      <h3>Datos de la empresa</h3>
+      <div class="form-grid">
+        <label>Nombre de la empresa<input name="name" [(ngModel)]="newCompany.name" required maxlength="200"></label>
+        <label>NIT<input name="nit" [(ngModel)]="newCompany.nit" (ngModelChange)="companyNitChanged($event)" required></label>
+        <label>Correo de contacto<input name="email" type="email" [(ngModel)]="newCompany.email" (ngModelChange)="companyEmailChanged($event)" required></label>
+        <label>Teléfono
+          <input #companyPhone="ngModel" name="phone" type="tel" inputmode="numeric" autocomplete="tel" [(ngModel)]="newCompany.phone" required minlength="7" maxlength="10" pattern="[0-9]{7,10}">
+          <small class="form-error" *ngIf="companyPhone.invalid && companyPhone.touched">Ingresa entre 7 y 10 dígitos numéricos.</small>
+        </label>
+        <label class="form-grid-wide">Dirección<input name="address" [(ngModel)]="newCompany.address" required></label>
+      </div>
+
+      <h3>Sede principal</h3>
+      <div class="form-grid">
+        <label>Nombre de sede<input name="branchName" [(ngModel)]="newCompany.branchName" required></label>
+        <label>NIT de sede<input name="branchNit" [(ngModel)]="newCompany.branchNit" (ngModelChange)="branchNitChanged($event)"></label>
+        <label>Identificador URL<input name="branchIdentifier" [(ngModel)]="newCompany.branchIdentifier" required pattern="[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*" autocomplete="off"></label>
+        <label>Correo de sede<input name="branchEmail" type="email" [(ngModel)]="newCompany.branchEmail" (ngModelChange)="branchEmailChanged($event)"></label>
+        <label>Teléfono de sede
+          <input #branchPhone="ngModel" name="branchPhone" type="tel" inputmode="numeric" autocomplete="tel" [(ngModel)]="newCompany.branchPhone" minlength="7" maxlength="10" pattern="[0-9]{7,10}">
+          <small class="form-error" *ngIf="branchPhone.invalid && branchPhone.touched">Si lo ingresas, debe tener entre 7 y 10 dígitos numéricos.</small>
+        </label>
+        <label class="form-grid-wide">Dirección de sede<input name="branchAddress" [(ngModel)]="newCompany.branchAddress"></label>
+      </div>
+
+      <h3>Administrador inicial</h3>
+      <div class="form-grid">
+        <label>Nombres<input name="adminFirstName" [(ngModel)]="newCompany.adminFirstName" required></label>
+        <label>Apellidos<input name="adminLastName" [(ngModel)]="newCompany.adminLastName" required></label>
+        <label>Correo de acceso<input name="adminEmail" type="email" [(ngModel)]="newCompany.adminEmail" required></label>
+        <label>Tipo de documento
+          <select name="adminDocumentType" [(ngModel)]="newCompany.adminDocumentType" required>
+            <option value="" disabled>Selecciona</option>
+            <option>Cédula de Ciudadanía</option>
+            <option>Pasaporte</option>
+            <option>Tarjeta de Identidad</option>
+            <option>Cédula de Extranjería</option>
+          </select>
+        </label>
+        <label>Número de documento<input name="adminDocumentNumber" [(ngModel)]="newCompany.adminDocumentNumber" required></label>
+        <label>Celular
+          <input #adminPhone="ngModel" name="adminPhone" type="tel" inputmode="numeric" autocomplete="tel" [(ngModel)]="newCompany.adminPhone" required minlength="7" maxlength="10" pattern="[0-9]{7,10}">
+          <small class="form-error" *ngIf="adminPhone.invalid && adminPhone.touched">Ingresa entre 7 y 10 dígitos numéricos.</small>
+        </label>
+        <label>Contraseña inicial<input name="adminPassword" type="password" [(ngModel)]="newCompany.adminPassword" required minlength="8" autocomplete="new-password"></label>
+        <label>Confirmar contraseña
+          <input name="adminPasswordConfirm" type="password" [(ngModel)]="adminPasswordConfirm" required minlength="8" autocomplete="new-password">
+          <small class="form-error" *ngIf="showPasswordMismatch">Las contraseñas no coinciden.</small>
+        </label>
+      </div>
+
+      <h3>Suscripción</h3>
+      <div class="form-grid">
+        <label>Plan contratado
+          <select name="subscriptionPlan" [(ngModel)]="newCompany.subscriptionPlan" required>
+            <option value="standard">Standard · Una sede</option>
+            <option value="plus">Plus · Múltiples sedes</option>
+          </select>
+          <small class="form-hint" *ngIf="newCompany.subscriptionPlan === 'standard'">
+            Incluye una sola sede; no tendrá acceso a la administración ni al cambio de sede.
+          </small>
+          <small class="form-hint" *ngIf="newCompany.subscriptionPlan === 'plus'">
+            Permite crear y administrar varias sedes, y cambiar entre ellas desde el header.
+          </small>
+        </label>
+        <label>Fecha de inicio<input name="startDate" type="date" [(ngModel)]="newCompany.startDate" required></label>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="button button-outline" (click)="showCreateForm = false">Cancelar</button>
+        <button type="submit" class="button button-primary" [disabled]="!companyForm.valid || !passwordsMatch || creatingCompany">
+          {{ creatingCompany ? 'Registrando…' : 'Crear empresa y suscripción' }}
+        </button>
+      </div>
+    </form>
+  </section>
+
   <section class="subscription-stats" aria-label="Resumen de suscripciones">
     <article class="summary-card">
       <span>Empresas</span>
-      <strong>{{ tenants.length }}</strong>
-      <small>Tenants registrados</small>
+      <strong>{{ companies.length }}</strong>
+      <small>Una suscripción por empresa</small>
     </article>
     <article class="summary-card summary-card-warning">
       <span>Obligaciones en mora</span>
@@ -28,7 +150,7 @@
     </article>
     <article class="summary-card">
       <span>Empresas inactivas</span>
-      <strong>{{ inactiveTenantCount }}</strong>
+      <strong>{{ inactiveCompanyCount }}</strong>
       <small>Incluye inactivas por mora</small>
     </article>
   </section>
@@ -37,7 +159,7 @@
     <div class="companies-heading">
       <div>
         <h2>Empresas registradas</h2>
-        <p>Expande una empresa para revisar sus 12 meses y gestionar cada pago.</p>
+        <p>Expande una empresa para administrar sus sedes y revisar sus obligaciones mensuales.</p>
       </div>
       <label class="company-search">
         <span class="sr-only">Buscar empresa</span>
@@ -46,23 +168,26 @@
     </div>
 
     <div class="loading-state" *ngIf="loading">Cargando suscripciones…</div>
-    <div class="empty-state" *ngIf="!loading && filteredTenants.length === 0">
+    <div class="empty-state" *ngIf="!loading && filteredCompanies.length === 0">
       No se encontraron empresas para mostrar.
     </div>
 
-    <article class="company-card" *ngFor="let tenant of filteredTenants">
+    <article class="company-card" *ngFor="let company of filteredCompanies">
       <details>
         <summary>
-          <span class="company-mark" aria-hidden="true">{{ tenant.name.slice(0, 1).toUpperCase() }}</span>
+          <span class="company-mark" aria-hidden="true">{{ company.name.slice(0, 1).toUpperCase() }}</span>
           <span class="company-main">
-            <strong>{{ tenant.name }}</strong>
-            <small>{{ tenant.identifier }} · NIT {{ tenant.nit || 'No registrado' }} · {{ tenant.email || 'Sin correo registrado' }}</small>
+            <strong>{{ company.name }}</strong>
+            <small>NIT {{ company.nit || 'No registrado' }} · {{ company.email || 'Sin correo registrado' }} · {{ company.branches.length }} sede(s)</small>
           </span>
-          <span class="company-state" [class.company-inactive]="!tenant.isActive">
-            <i></i>{{ tenant.isActive ? 'Activa' : 'Inactiva' }}
+          <span class="company-state" [class.company-inactive]="!company.isActive">
+            <i></i>{{ company.isActive ? 'Activa' : 'Inactiva' }}
           </span>
-          <span class="company-delinquent" *ngIf="hasOverduePeriod(tenant)">
-            {{ overduePeriodCount(tenant) }} en mora
+          <span class="company-plan" [class.company-plan-plus]="company.subscriptionPlan === 'plus'">
+            {{ company.subscriptionPlan === 'plus' ? 'Plus' : 'Standard' }}
+          </span>
+          <span class="company-delinquent" *ngIf="hasOverduePeriod(company)">
+            {{ overduePeriodCount(company) }} en mora
           </span>
           <span class="company-chevron" aria-hidden="true">⌄</span>
         </summary>
@@ -72,56 +197,71 @@
             <button
               type="button"
               class="button button-danger button-small"
-              *ngIf="tenant.isActive"
+              *ngIf="company.isActive"
               [disabled]="!!busyAction"
-              (click)="deactivate(tenant)">
-              {{ busyAction === 'deactivate-' + tenant.id ? 'Desactivando…' : 'Desactivar empresa' }}
+              (click)="deactivate(company)">
+              {{ busyAction === 'deactivate-' + company.id ? 'Desactivando…' : 'Desactivar empresa' }}
             </button>
             <button
               type="button"
               class="button button-primary button-small"
-              *ngIf="!tenant.isActive"
+              *ngIf="!company.isActive"
               [disabled]="!!busyAction"
-              (click)="activate(tenant)">
-              {{ busyAction === 'activate-' + tenant.id ? 'Activando…' : 'Activar empresa' }}
+              (click)="activate(company)">
+              {{ busyAction === 'activate-' + company.id ? 'Activando…' : 'Activar empresa' }}
             </button>
           </div>
 
-          <div class="cycle-toolbar" *ngIf="tenant.periods.length">
+          <div class="branch-list" aria-label="Sedes de la empresa">
+            <div class="branch-list-heading">
+              <strong>Sedes</strong>
+              <span>El inventario, las ventas y la configuración se gestionan por sede.</span>
+            </div>
+            <div class="branch-list-row" *ngFor="let branch of company.branches">
+              <span>
+                <strong>{{ branch.name }}</strong>
+                <small>{{ branch.identifier }}</small>
+              </span>
+              <span class="headquarters-label" *ngIf="branch.isHeadquarters">Principal</span>
+              <span class="branch-state" [class.branch-state-inactive]="!branch.isActive">{{ branch.isActive ? 'Activa' : 'Inactiva' }}</span>
+            </div>
+          </div>
+
+          <div class="cycle-toolbar" *ngIf="company.periods.length">
             <div>
               <span class="detail-label">Inicio del servicio</span>
-              <strong>{{ tenant.startDate | date:'dd/MM/yyyy' }}</strong>
+              <strong>{{ company.startDate | date:'dd/MM/yyyy' }}</strong>
             </div>
             <div>
               <span class="detail-label">Ciclos</span>
-              <strong>{{ tenant.periods[tenant.periods.length - 1].cycleNumber }}</strong>
+              <strong>{{ company.periods[company.periods.length - 1].cycleNumber }}</strong>
             </div>
             <div class="cycle-actions">
               <button
                 type="button"
                 class="button button-outline button-small"
-                [disabled]="!canRenew(tenant) || !!busyAction"
-                (click)="renew(tenant)">
-                {{ busyAction === 'renew-' + tenant.id ? 'Renovando…' : 'Renovar 12 meses' }}
+                [disabled]="!canRenew(company) || !!busyAction"
+                (click)="renew(company)">
+                {{ busyAction === 'renew-' + company.id ? 'Renovando…' : 'Renovar 12 meses' }}
               </button>
             </div>
           </div>
 
-          <div class="initialize-panel" *ngIf="!tenant.periods.length">
+          <div class="initialize-panel" *ngIf="!company.periods.length">
             <div>
               <strong>Suscripción sin inicializar</strong>
               <p>Define la fecha de inicio para generar las 12 obligaciones mensuales.</p>
             </div>
             <label>
               Fecha de inicio
-              <input type="date" [(ngModel)]="startDates[tenant.id]">
+              <input type="date" [(ngModel)]="startDates[company.id]">
             </label>
-            <button type="button" class="button button-primary button-small" [disabled]="!startDates[tenant.id] || !!busyAction" (click)="initializeSubscription(tenant)">
-              {{ busyAction === 'initialize-' + tenant.id ? 'Creando…' : 'Crear obligaciones' }}
+            <button type="button" class="button button-primary button-small" [disabled]="!startDates[company.id] || !!busyAction" (click)="initializeSubscription(company)">
+              {{ busyAction === 'initialize-' + company.id ? 'Creando…' : 'Crear obligaciones' }}
             </button>
           </div>
 
-          <div class="period-list" *ngIf="tenant.periods.length">
+          <div class="period-list" *ngIf="company.periods.length">
             <div class="period-row period-row-heading">
               <span>Mes / ciclo</span>
               <span>Vencimiento</span>
@@ -129,7 +269,7 @@
               <span>Recordatorios</span>
               <span>Acción</span>
             </div>
-            <div class="period-row" *ngFor="let period of tenant.periods">
+            <div class="period-row" *ngFor="let period of company.periods">
               <strong>Mes {{ period.monthNumber }} <small>· Ciclo {{ period.cycleNumber }}</small></strong>
               <span>{{ period.dueDate | date:'dd/MM/yyyy' }}</span>
               <span class="period-status" [ngClass]="{

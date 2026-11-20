@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
-import { authGuardCanActivate, authGuardCanMatch } from './guards/auth.guard';
+import {
+  authGuardCanActivate,
+  authGuardCanMatch,
+  companyAdminGuard,
+  plusPlanGuard
+} from './guards/auth.guard';
 import { creatorAuthGuard } from './guards/creator-auth.guard';
 
 export const routes: Routes = [
@@ -83,6 +88,16 @@ export const routes: Routes = [
             path: 'manageUsers',
             canActivate: [authGuardCanActivate],
             loadComponent: () => import('./components/manage-users/manage-users.component'),
+          },
+          {
+            path: 'branches',
+            canActivate: [authGuardCanActivate, plusPlanGuard],
+            loadComponent: () => import('./components/branches/branches.component'),
+          },
+          {
+            path: 'configuration',
+            canActivate: [authGuardCanActivate, companyAdminGuard],
+            loadComponent: () => import('./components/configuration/configuration.component'),
           },
           {
             path: 'invoices',

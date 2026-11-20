@@ -1,0 +1,63 @@
+<main class="branches-page">
+  <header class="branches-heading">
+    <div>
+      <p class="branches-eyebrow">Administración de empresa</p>
+      <h1>Sedes</h1>
+      <p>Configura los datos de cada ubicación. El inventario y las operaciones se mantienen aislados por sede.</p>
+    </div>
+  </header>
+
+  <div class="branch-alert branch-alert-error" role="alert" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="branch-alert branch-alert-success" role="status" *ngIf="successMessage">{{ successMessage }}</div>
+
+  <section class="branch-panel">
+    <h2>{{ editingBranchId === null ? 'Agregar sede' : 'Editar sede' }}</h2>
+    <form #branchForm="ngForm" (ngSubmit)="saveBranch()">
+      <div class="branch-form-grid">
+        <label>Nombre de sede
+          <input name="name" [(ngModel)]="form.name" required maxlength="200">
+        </label>
+        <label>Identificador URL
+          <input name="identifier" [(ngModel)]="form.identifier" required pattern="[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*" autocomplete="off">
+        </label>
+        <label>NIT de sede<input name="nit" [(ngModel)]="form.nit"></label>
+        <label>Correo de sede<input name="email" type="email" [(ngModel)]="form.email"></label>
+        <label>Teléfono<input name="phone" [(ngModel)]="form.phone"></label>
+        <label>Dirección<input name="address" [(ngModel)]="form.address"></label>
+      </div>
+      <p class="branch-form-hint">Al crear una sede, el NIT y el correo se precargan con los datos de la empresa y puedes personalizarlos. El identificador determina la dirección usada para iniciar sesión, por ejemplo: /mi-sede.</p>
+      <div class="branch-form-actions">
+        <button type="button" class="branch-button branch-button-outline" *ngIf="editingBranchId !== null" (click)="cancelEdit()">Cancelar</button>
+        <button type="submit" class="branch-button branch-button-primary" [disabled]="!branchForm.valid || saving">
+          {{ saving ? 'Guardando…' : editingBranchId === null ? 'Crear sede' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="branch-panel">
+    <div class="branch-list-heading">
+      <div>
+        <h2>Sedes registradas</h2>
+        <p>{{ branches.length }} sede(s) pertenecen a esta empresa.</p>
+      </div>
+      <button type="button" class="branch-button branch-button-outline" (click)="loadBranches()" [disabled]="loading">Actualizar</button>
+    </div>
+    <div class="branch-loading" *ngIf="loading">Cargando sedes…</div>
+    <div class="branch-empty" *ngIf="!loading && !branches.length">Aún no hay sedes registradas.</div>
+    <article class="branch-card" *ngFor="let branch of branches">
+      <div class="branch-card-main">
+        <div class="branch-card-title">
+          <h3>{{ branch.name }}</h3>
+          <span class="branch-badge" *ngIf="branch.isHeadquarters">Principal</span>
+          <span class="branch-status" [class.branch-status-inactive]="!branch.isActive">{{ branch.isActive ? 'Activa' : 'Inactiva' }}</span>
+        </div>
+        <p>{{ branch.identifier }} · {{ branch.address || 'Sin dirección' }}</p>
+        <small>{{ branch.email || 'Sin correo' }} · {{ branch.phone || 'Sin teléfono' }} · NIT {{ branch.nit || 'No registrado' }}</small>
+      </div>
+      <button type="button" class="branch-button branch-button-outline" (click)="editBranch(branch)" [disabled]="saving || isEditing(branch)">
+        Editar
+      </button>
+    </article>
+  </section>
+</main>

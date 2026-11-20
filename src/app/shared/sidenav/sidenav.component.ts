@@ -23,6 +23,7 @@ export class SidenavComponent implements OnInit {
   opcionesMenu: any[] = [];
   tenantId: string = '';
   isAdmin: boolean = false;
+  hasPlusPlan = false;
 
   constructor(public sidebarService: SidebarService, 
     private _getInfoService: GetInfoService, 
@@ -30,10 +31,11 @@ export class SidenavComponent implements OnInit {
     private titleService: TitleService) {}
 
   ngOnInit() {
-  this.tenantId = this.tenantService.getTenant() ?? '';
+  this.tenantService.tenantId$.subscribe(tenantId => this.tenantId = tenantId ?? '');
 
   this._getInfoService.getUserInfo().subscribe(response => {
-      this.isAdmin = response.role !== '0';
+      this.isAdmin = ['1', 'Administrador'].includes(String(response.role));
+      this.hasPlusPlan = response.subscriptionPlan === 'plus';
     });
   
   forkJoin({

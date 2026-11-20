@@ -24,6 +24,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/auth/login`, body, { headers });
   }
 
+  switchBranch(branchId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/switch-branch`, { branchId });
+  }
+
   requestPasswordReset(email: string, tenantIdentifier: string): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.apiUrl}/auth/password-reset/request`, {
       email,

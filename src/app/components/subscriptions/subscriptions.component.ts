@@ -2,8 +2,14 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PlanUpgradeRequest } from '../../services/Company/company-settings.service';
 import { CreatorAuthService } from '../../services/creator/creator-auth.service';
-import { SubscriptionPeriod, SubscriptionTenant, SubscriptionsService } from '../../services/creator/subscriptions.service';
+import {
+  CreateCompanyRequest,
+  SubscriptionCompany,
+  SubscriptionPeriod,
+  SubscriptionsService
+} from '../../services/creator/subscriptions.service';
 
 @Component({
   selector: 'app-subscriptions',
@@ -13,13 +19,21 @@ import { SubscriptionPeriod, SubscriptionTenant, SubscriptionsService } from '..
   styleUrl: './subscriptions.component.css'
 })
 export default class SubscriptionsComponent implements OnInit {
-  tenants: SubscriptionTenant[] = [];
+  companies: SubscriptionCompany[] = [];
+  planUpgradeRequests: PlanUpgradeRequest[] = [];
   loading = true;
+  loadingUpgradeRequests = true;
   busyAction = '';
   errorMessage = '';
   successMessage = '';
   search = '';
   startDates: Record<number, string> = {};
+  showCreateForm = false;
+  creatingCompany = false;
+  adminPasswordConfirm = '';
+  private branchNitCustomized = false;
+  private branchEmailCustomized = false;
+  newCompany: CreateCompanyRequest = this.emptyCompanyForm();
 
   constructor(
     private readonly subscriptionsService: SubscriptionsService,
@@ -28,38 +42,48 @@ export default class SubscriptionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadTenants();
+    this.loadCompanies();
+    this.loadPlanUpgradeRequests();
   }
 
-  get filteredTenants(): SubscriptionTenant[] {
+  get filteredCompanies(): SubscriptionCompany[] {
     const query = this.search.trim().toLocaleLowerCase();
-    if (!query) return this.tenants;
-    return this.tenants.filter(tenant =>
-      `${tenant.name} ${tenant.identifier} ${tenant.nit} ${tenant.email}`.toLocaleLowerCase().includes(query)
+    if (!query) return this.companies;
+    return this.companies.filter(company =>
+      `${company.name} ${company.nit} ${company.email} ${company.branches.map(branch => `${branch.name} ${branch.identifier}`).join(' ')}`
+        .toLocaleLowerCase().includes(query)
     );
   }
 
   get delinquentPeriodCount(): number {
-    return this.tenants.reduce(
-      (count, tenant) => count + tenant.periods.filter(period => period.status === 'En mora').length,
+    return this.companies.reduce(
+      (count, company) => count + company.periods.filter(period => period.status === 'En mora').length,
       0
     );
   }
 
-  get inactiveTenantCount(): number {
-    return this.tenants.filter(tenant => !tenant.isActive).length;
+  get inactiveCompanyCount(): number {
+    return this.companies.filter(company => !company.isActive).length;
   }
 
   get sessionStorageEmail(): string {
     return sessionStorage.getItem('creatorEmail') ?? 'Creador';
   }
 
-  loadTenants(): void {
+  get passwordsMatch(): boolean {
+    return this.newCompany.adminPassword === this.adminPasswordConfirm;
+  }
+
+  get showPasswordMismatch(): boolean {
+    return !!this.adminPasswordConfirm && !this.passwordsMatch;
+  }
+
+  loadCompanies(): void {
     this.loading = true;
     this.errorMessage = '';
-    this.subscriptionsService.getTenants().subscribe({
-      next: tenants => {
-        this.tenants = tenants;
+    this.subscriptionsService.getCompanies().subscribe({
+      next: companies => {
+        this.companies = companies;
         this.loading = false;
       },
       error: error => {
@@ -69,12 +93,68 @@ export default class SubscriptionsComponent implements OnInit {
     });
   }
 
-  initializeSubscription(tenant: SubscriptionTenant): void {
-    const startDate = this.startDates[tenant.id];
+  loadPlanUpgradeRequests(): void {
+    this.loadingUpgradeRequests = true;
+    this.subscriptionsService.getPlanUpgradeRequests().subscribe({
+      next: requests => {
+        this.planUpgradeRequests = requests;
+        this.loadingUpgradeRequests = false;
+      },
+      error: error => {
+        this.errorMessage = error.error?.message ?? 'No fue posible cargar las solicitudes de mejora de plan.';
+        this.loadingUpgradeRequests = false;
+      }
+    });
+  }
+
+  approvePlanUpgradeRequest(request: PlanUpgradeRequest): void {
+    if (this.busyAction
+      || !window.confirm(`¿Aprobar el cambio al plan Plus para ${request.companyName}?`)) return;
+
+    this.busyAction = `approve-upgrade-${request.id}`;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.subscriptionsService.approvePlanUpgradeRequest(request.id).subscribe({
+      next: response => {
+        this.successMessage = response.message;
+        this.busyAction = '';
+        this.loadCompanies();
+        this.loadPlanUpgradeRequests();
+      },
+      error: error => {
+        this.errorMessage = error.error?.message ?? 'No fue posible aprobar la solicitud de mejora.';
+        this.busyAction = '';
+      }
+    });
+  }
+
+  rejectPlanUpgradeRequest(request: PlanUpgradeRequest): void {
+    if (this.busyAction
+      || !window.confirm(`¿Rechazar la solicitud de mejora a Plus para ${request.companyName}?`)) return;
+
+    this.busyAction = `reject-upgrade-${request.id}`;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.subscriptionsService.rejectPlanUpgradeRequest(request.id).subscribe({
+      next: response => {
+        this.successMessage = response.message;
+        this.busyAction = '';
+        this.loadCompanies();
+        this.loadPlanUpgradeRequests();
+      },
+      error: error => {
+        this.errorMessage = error.error?.message ?? 'No fue posible rechazar la solicitud de mejora.';
+        this.busyAction = '';
+      }
+    });
+  }
+
+  initializeSubscription(company: SubscriptionCompany): void {
+    const startDate = this.startDates[company.id];
     if (!startDate || this.busyAction) return;
 
-    this.runAction(`initialize-${tenant.id}`, () =>
-      this.subscriptionsService.initialize(tenant.id, startDate)
+    this.runAction(`initialize-${company.id}`, () =>
+      this.subscriptionsService.initialize(company.id, startDate)
     );
   }
 
@@ -85,40 +165,90 @@ export default class SubscriptionsComponent implements OnInit {
     );
   }
 
-  deactivate(tenant: SubscriptionTenant): void {
-    if (this.busyAction || !window.confirm(`¿Desactivar la empresa ${tenant.name}?`)) return;
-    this.runAction(`deactivate-${tenant.id}`, () =>
-      this.subscriptionsService.deactivate(tenant.id)
+  deactivate(company: SubscriptionCompany): void {
+    if (this.busyAction || !window.confirm(`¿Desactivar la empresa ${company.name} y todas sus sedes?`)) return;
+    this.runAction(`deactivate-${company.id}`, () =>
+      this.subscriptionsService.deactivate(company.id)
     );
   }
 
-  activate(tenant: SubscriptionTenant): void {
-    if (this.busyAction || !window.confirm(`¿Volver a activar la empresa ${tenant.name}?`)) return;
-    this.runAction(`activate-${tenant.id}`, () =>
-      this.subscriptionsService.activate(tenant.id)
+  activate(company: SubscriptionCompany): void {
+    if (this.busyAction || !window.confirm(`¿Volver a activar la empresa ${company.name} y todas sus sedes?`)) return;
+    this.runAction(`activate-${company.id}`, () =>
+      this.subscriptionsService.activate(company.id)
     );
   }
 
-  renew(tenant: SubscriptionTenant): void {
+  renew(company: SubscriptionCompany): void {
     if (this.busyAction) return;
-    this.runAction(`renew-${tenant.id}`, () =>
-      this.subscriptionsService.renew(tenant.id)
+    this.runAction(`renew-${company.id}`, () =>
+      this.subscriptionsService.renew(company.id)
     );
   }
 
-  canRenew(tenant: SubscriptionTenant): boolean {
-    if (!tenant.periods.length) return false;
-    const lastCycle = Math.max(...tenant.periods.map(period => period.cycleNumber));
-    const periods = tenant.periods.filter(period => period.cycleNumber === lastCycle);
+  canRenew(company: SubscriptionCompany): boolean {
+    if (!company.periods.length) return false;
+    const lastCycle = Math.max(...company.periods.map(period => period.cycleNumber));
+    const periods = company.periods.filter(period => period.cycleNumber === lastCycle);
     return periods.length === 12 && periods.every(period => period.status === 'Pagado');
   }
 
-  hasOverduePeriod(tenant: SubscriptionTenant): boolean {
-    return tenant.periods.some(period => period.status === 'En mora');
+  hasOverduePeriod(company: SubscriptionCompany): boolean {
+    return company.periods.some(period => period.status === 'En mora');
   }
 
-  overduePeriodCount(tenant: SubscriptionTenant): number {
-    return tenant.periods.filter(period => period.status === 'En mora').length;
+  overduePeriodCount(company: SubscriptionCompany): number {
+    return company.periods.filter(period => period.status === 'En mora').length;
+  }
+
+  companyNitChanged(value: string): void {
+    if (!this.branchNitCustomized) this.newCompany.branchNit = value;
+  }
+
+  branchNitChanged(value: string): void {
+    this.branchNitCustomized = !!value && value.trim() !== this.newCompany.nit.trim();
+  }
+
+  companyEmailChanged(value: string): void {
+    if (!this.branchEmailCustomized) this.newCompany.branchEmail = value;
+  }
+
+  branchEmailChanged(value: string): void {
+    this.branchEmailCustomized = !!value
+      && value.trim().toLocaleLowerCase() !== this.newCompany.email.trim().toLocaleLowerCase();
+  }
+
+  createCompany(): void {
+    if (this.creatingCompany || this.busyAction) return;
+    if (!this.passwordsMatch) {
+      this.errorMessage = 'Las contraseñas del administrador no coinciden.';
+      return;
+    }
+
+    this.creatingCompany = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    const request: CreateCompanyRequest = {
+      ...this.newCompany,
+      branchNit: this.newCompany.branchNit || this.newCompany.nit,
+      branchEmail: this.newCompany.branchEmail || this.newCompany.email
+    };
+    this.subscriptionsService.createCompany(request).subscribe({
+      next: () => {
+        this.successMessage = 'La empresa, su sede principal, el administrador y la suscripción se crearon correctamente.';
+        this.newCompany = this.emptyCompanyForm();
+        this.adminPasswordConfirm = '';
+        this.branchNitCustomized = false;
+        this.branchEmailCustomized = false;
+        this.showCreateForm = false;
+        this.creatingCompany = false;
+        this.loadCompanies();
+      },
+      error: error => {
+        this.errorMessage = error.error?.message ?? 'No fue posible registrar la empresa.';
+        this.creatingCompany = false;
+      }
+    });
   }
 
   logout(): void {
@@ -137,12 +267,37 @@ export default class SubscriptionsComponent implements OnInit {
       next: response => {
         this.successMessage = response.message;
         this.busyAction = '';
-        this.loadTenants();
+        this.loadCompanies();
       },
       error: error => {
         this.errorMessage = error.error?.message ?? 'No fue posible completar la operación.';
         this.busyAction = '';
       }
     });
+  }
+
+  private emptyCompanyForm(): CreateCompanyRequest {
+    return {
+      name: '',
+      nit: '',
+      email: '',
+      subscriptionPlan: 'standard',
+      phone: '',
+      address: '',
+      branchName: '',
+      branchNit: '',
+      branchIdentifier: '',
+      branchAddress: '',
+      branchPhone: '',
+      branchEmail: '',
+      startDate: new Date().toISOString().slice(0, 10),
+      adminFirstName: '',
+      adminLastName: '',
+      adminEmail: '',
+      adminDocumentType: '',
+      adminDocumentNumber: '',
+      adminPhone: '',
+      adminPassword: ''
+    };
   }
 }
