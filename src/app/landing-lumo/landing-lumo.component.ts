@@ -9,6 +9,11 @@ import { AfterViewInit, Component, ViewEncapsulation  } from '@angular/core';
 })
 export default class LandingLumoComponent implements AfterViewInit {
 
+  planWhatsAppUrl(plan: 'Standard' | 'Plus'): string {
+    const message = `Hola, quiero información y registrar mi empresa con el plan ${plan} de Lumo. ¿Me pueden indicar los requisitos y el proceso?`;
+    return `https://wa.me/573226444646?text=${encodeURIComponent(message)}`;
+  }
+
   ngAfterViewInit(): void {
     this.initScrollAnimations();
     this.initCounters();
