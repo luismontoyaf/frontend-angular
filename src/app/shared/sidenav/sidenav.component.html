@@ -106,6 +106,12 @@
           <span>Reportes</span>
         </a>
       </li>
+      <li *ngIf="isAdmin && hasPlusPlan">
+        <a [routerLink]="['/', tenantId, 'dashboard', 'branches']" routerLinkActive="is-active" (click)="closeMenuOnMobile()" class="sidebar-link">
+          <mat-icon class="icon">store</mat-icon>
+          <span>Administrar sedes</span>
+        </a>
+      </li>
     </ul>
   </nav>
 </aside>

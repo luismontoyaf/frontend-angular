@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
+import type { PlanUpgradeRequest } from '../Company/company-settings.service';
 
 export interface SubscriptionPeriod {
   id: number;
@@ -14,16 +15,56 @@ export interface SubscriptionPeriod {
   lastReminderSentAt: string | null;
 }
 
-export interface SubscriptionTenant {
+export type SubscriptionPlan = 'standard' | 'plus';
+
+export interface CompanyBranch {
   id: number;
   name: string;
   identifier: string;
   nit: string;
   email: string;
+  companyNit?: string;
+  companyEmail?: string;
+  phone: string;
+  address: string;
+  isActive: boolean;
+  isHeadquarters: boolean;
+}
+
+export interface SubscriptionCompany {
+  id: number;
+  name: string;
+  nit: string;
+  email: string;
+  subscriptionPlan: SubscriptionPlan;
   isActive: boolean;
   suspendedForOverdue: boolean;
   startDate: string | null;
   periods: SubscriptionPeriod[];
+  branches: CompanyBranch[];
+}
+
+export interface CreateCompanyRequest {
+  name: string;
+  nit: string;
+  email: string;
+  subscriptionPlan: SubscriptionPlan;
+  phone: string;
+  address: string;
+  branchName: string;
+  branchNit: string;
+  branchIdentifier: string;
+  branchAddress: string;
+  branchPhone: string;
+  branchEmail: string;
+  startDate: string;
+  adminFirstName: string;
+  adminLastName: string;
+  adminEmail: string;
+  adminDocumentType: string;
+  adminDocumentNumber: string;
+  adminPhone: string;
+  adminPassword: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -32,27 +73,49 @@ export class SubscriptionsService {
 
   constructor(private readonly http: HttpClient) {}
 
-  getTenants(): Observable<SubscriptionTenant[]> {
-    return this.http.get<SubscriptionTenant[]>(`${this.apiUrl}/tenants`);
+  getCompanies(): Observable<SubscriptionCompany[]> {
+    return this.http.get<SubscriptionCompany[]>(`${this.apiUrl}/companies`);
   }
 
-  initialize(tenantId: number, startDate: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/tenants/${tenantId}/initialize`, { startDate });
+  getPlanUpgradeRequests(): Observable<PlanUpgradeRequest[]> {
+    return this.http.get<PlanUpgradeRequest[]>(`${this.apiUrl}/plan-upgrade-requests`);
+  }
+
+  approvePlanUpgradeRequest(requestId: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/plan-upgrade-requests/${requestId}/approve`,
+      {}
+    );
+  }
+
+  rejectPlanUpgradeRequest(requestId: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/plan-upgrade-requests/${requestId}/reject`,
+      {}
+    );
+  }
+
+  createCompany(request: CreateCompanyRequest): Observable<CompanyBranch> {
+    return this.http.post<CompanyBranch>(`${this.apiUrl}/companies`, request);
+  }
+
+  initialize(companyId: number, startDate: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/companies/${companyId}/initialize`, { startDate });
   }
 
   registerPayment(periodId: number): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.apiUrl}/periods/${periodId}/payments`, {});
   }
 
-  deactivate(tenantId: number): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/tenants/${tenantId}/deactivate`, {});
+  deactivate(companyId: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/companies/${companyId}/deactivate`, {});
   }
 
-  activate(tenantId: number): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/tenants/${tenantId}/activate`, {});
+  activate(companyId: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/companies/${companyId}/activate`, {});
   }
 
-  renew(tenantId: number): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.apiUrl}/tenants/${tenantId}/renew`, {});
+  renew(companyId: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/companies/${companyId}/renew`, {});
   }
 }

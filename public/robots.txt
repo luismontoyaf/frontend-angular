@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /*/dashboard
+Disallow: /creator/
 
 Sitemap: https://lumocolombia.com/sitemap.xml

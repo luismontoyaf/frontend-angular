@@ -1,4 +1,6 @@
-import { AfterViewInit, Component, ViewEncapsulation  } from '@angular/core';
+import { AfterViewInit, Component, ViewEncapsulation, inject   } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-landing-lumo',
@@ -8,6 +10,39 @@ import { AfterViewInit, Component, ViewEncapsulation  } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export default class LandingLumoComponent implements AfterViewInit {
+
+  private title = inject(Title);
+  private meta = inject(Meta);
+  private doc = inject(DOCUMENT);
+
+  constructor(){
+    this.title.setTitle('Software de ventas e inventario en Colombia | Lumo');
+
+    this.meta.updateTag({ name: 'description', content: 'Lumo es un software en la nube para gestionar ventas, inventario con variantes, clientes y reportes de tu negocio en Colombia. Sin instalaciones.' });
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+
+    this.meta.updateTag({ property: 'og:title', content: 'Lumo | Software de ventas e inventario en Colombia' });
+    this.meta.updateTag({ property: 'og:description', content: 'Gestiona ventas, inventario, clientes y reportes desde una sola plataforma.' });
+    this.meta.updateTag({ property: 'og:url', content: 'https://lumocolombia.com/' });
+    this.meta.updateTag({ property: 'og:image', content: 'https://lumocolombia.com/og-image.png' });
+    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+
+    // Canonical
+    let link: HTMLLinkElement | null = this.doc.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = this.doc.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      this.doc.head.appendChild(link);
+    }
+    link.setAttribute('href', 'https://lumocolombia.com/');
+
+    this.addStructuredData();
+  }
+
+  planWhatsAppUrl(plan: 'Standard' | 'Plus'): string {
+    const message = `Hola, quiero información y registrar mi empresa con el plan ${plan} de Lumo. ¿Me pueden indicar los requisitos y el proceso?`;
+    return `https://wa.me/573226444646?text=${encodeURIComponent(message)}`;
+  }
 
   ngAfterViewInit(): void {
     this.initScrollAnimations();
@@ -97,5 +132,44 @@ export default class LandingLumoComponent implements AfterViewInit {
 
     const dash = document.querySelector('.dashboard-mock');
     if (dash) chartObserver.observe(dash);
+  }
+
+  private addStructuredData() {
+    const data = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Organization',
+          name: 'Lumo',
+          url: 'https://lumocolombia.com',
+          logo: 'https://lumocolombia.com/assets/android-icon-192x192.png'
+        },
+        {
+          '@type': 'SoftwareApplication',
+          name: 'Lumo',
+          applicationCategory: 'BusinessApplication',
+          operatingSystem: 'Web',
+          inLanguage: 'es-CO',
+          description: 'Software en la nube para gestionar ventas, inventario con variantes, clientes y reportes.',
+          url: 'https://lumocolombia.com',
+          featureList: [
+            'Gestión de ventas',
+            'Inventario con variantes',
+            'Registro de clientes',
+            'Reportes descargables',
+            'Multi-sede'
+          ]
+        }
+      ]
+    };
+
+    const id = 'ld-json-lumo';
+    this.doc.getElementById(id)?.remove();
+
+    const script = this.doc.createElement('script');
+    script.id = id;
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(data);
+    this.doc.head.appendChild(script);
   }
 }

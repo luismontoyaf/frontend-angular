@@ -1144,6 +1144,8 @@
   }
  
   .pricing-card {
+    display: flex;
+    flex-direction: column;
     background: var(--lumo-card);
     border: 1px solid var(--lumo-border);
     border-radius: 14px;
@@ -1161,6 +1163,52 @@
   .pricing-card.featured {
     border-color: rgba(240,123,32,0.45);
     background: linear-gradient(135deg, rgba(240,123,32,0.07), var(--lumo-card));
+  }
+
+  .pricing-card-plus {
+    border-color: rgba(30, 106, 176, 0.4);
+    background: linear-gradient(145deg, rgba(30, 106, 176, 0.07), var(--lumo-card));
+  }
+
+  .pricing-card-plus .pricing-plan {
+    color: var(--lumo-blue);
+  }
+
+  .pricing-title {
+    margin-bottom: 0.65rem;
+    color: var(--lumo-text);
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .pricing-description {
+    min-height: 3.2rem;
+    margin-bottom: 1.4rem;
+    color: var(--lumo-muted);
+    font-size: 0.9rem;
+  }
+
+  .pricing-card .pricing-features {
+    flex-grow: 1;
+  }
+
+  .pricing-card-plus .btn-pricing {
+    border-color: var(--lumo-blue);
+    background: var(--lumo-blue);
+    color: #fff;
+  }
+
+  .pricing-card-plus .btn-pricing:hover {
+    background: #12578e;
+    transform: translateY(-2px);
+  }
+
+  .pricing-contact-note {
+    margin-top: 0.75rem;
+    color: var(--lumo-subtle);
+    font-size: 0.75rem;
   }
  
   .pricing-card.featured::before {

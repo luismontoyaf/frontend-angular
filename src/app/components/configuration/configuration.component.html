@@ -1,0 +1,142 @@
+<main class="configuration-page">
+  <header class="configuration-header">
+    <div>
+      <p class="configuration-eyebrow">Administración de empresa</p>
+      <h1>Configuración</h1>
+      <p>Actualiza los datos de tu empresa y consulta las características de tu plan.</p>
+    </div>
+    <button type="button" class="configuration-button button-outline" (click)="loadSettings()" [disabled]="loading">
+      Actualizar
+    </button>
+  </header>
+
+  <div class="configuration-alert alert-error" role="alert" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="configuration-alert alert-success" role="status" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="configuration-loading" *ngIf="loading">Cargando configuración…</div>
+
+  <ng-container *ngIf="!loading && settings as company">
+    <div class="configuration-tabs" role="tablist" aria-label="Secciones de configuración">
+      <button
+        type="button"
+        role="tab"
+        id="company-settings-tab"
+        aria-controls="company-settings-panel"
+        [attr.aria-selected]="activeScreen === 'company'"
+        [class.tab-active]="activeScreen === 'company'"
+        (click)="activeScreen = 'company'">
+        Información de la empresa
+      </button>
+      <button
+        type="button"
+        role="tab"
+        id="company-plan-tab"
+        aria-controls="company-plan-panel"
+        [attr.aria-selected]="activeScreen === 'plan'"
+        [class.tab-active]="activeScreen === 'plan'"
+        (click)="activeScreen = 'plan'">
+        Plan contratado
+      </button>
+    </div>
+
+    <section
+      id="company-settings-panel"
+      class="configuration-card"
+      role="tabpanel"
+      aria-labelledby="company-settings-tab"
+      *ngIf="activeScreen === 'company'">
+      <div class="configuration-card-heading">
+        <div>
+          <h2>Información de la empresa</h2>
+          <p>Estos datos se usan como referencia al registrar sedes.</p>
+        </div>
+      </div>
+      <form #companyForm="ngForm" (ngSubmit)="saveCompany()">
+        <div class="configuration-form-grid">
+          <label>Nombre de la empresa
+            <input name="name" [(ngModel)]="company.name" required maxlength="200">
+          </label>
+          <label>NIT de la empresa
+            <input name="nit" [(ngModel)]="company.nit" required maxlength="50">
+          </label>
+          <label>Correo de la empresa
+            <input name="email" type="email" [(ngModel)]="company.email" required maxlength="255">
+          </label>
+          <label>Teléfono de la empresa
+            <input
+              name="phone"
+              type="tel"
+              inputmode="numeric"
+              autocomplete="tel"
+              [(ngModel)]="company.phone"
+              required
+              minlength="7"
+              maxlength="10"
+              pattern="[0-9]{7,10}">
+            <small>Ingresa entre 7 y 10 dígitos numéricos.</small>
+          </label>
+          <label class="form-wide">Dirección de la empresa
+            <input name="address" [(ngModel)]="company.address" required maxlength="500">
+          </label>
+        </div>
+        <div class="configuration-actions">
+          <button type="submit" class="configuration-button button-primary" [disabled]="!companyForm.valid || saving">
+            {{ saving ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section
+      id="company-plan-panel"
+      class="configuration-card plan-panel"
+      role="tabpanel"
+      aria-labelledby="company-plan-tab"
+      *ngIf="activeScreen === 'plan'">
+      <div class="configuration-card-heading">
+        <div>
+          <h2>Plan contratado</h2>
+          <p>El plan determina las herramientas de administración de sedes disponibles.</p>
+        </div>
+        <span class="plan-badge" [class.plan-badge-plus]="company.subscriptionPlan === 'plus'">
+          {{ company.subscriptionPlan === 'plus' ? 'Plus' : 'Standard' }}
+        </span>
+      </div>
+
+      <div class="plan-description" *ngIf="company.subscriptionPlan === 'standard'">
+        <h3>Tu empresa usa el plan Standard</h3>
+        <p>Standard incluye la operación de una sola sede. Para crecer a varias ubicaciones, puedes solicitar el cambio a Plus.</p>
+
+        <div class="upgrade-benefits">
+          <h3>¿Qué obtienes con Plus?</h3>
+          <ul>
+            <li>Crear y administrar varias sedes desde una misma empresa.</li>
+            <li>Mantener inventario, ventas y configuración independientes por sede.</li>
+            <li>Cambiar de sede desde el selector del encabezado.</li>
+          </ul>
+        </div>
+
+        <div class="upgrade-request-pending" role="status" *ngIf="company.upgradeRequestStatus === 'pending'">
+          <strong>Solicitud pendiente de aprobación</strong>
+          <span *ngIf="company.upgradeRequestedAt">Enviada el {{ company.upgradeRequestedAt | date:'dd/MM/yyyy' }}.</span>
+          <span>El creador de la plataforma debe aprobar el cambio.</span>
+        </div>
+        <div class="upgrade-request-rejected" role="status" *ngIf="company.upgradeRequestStatus === 'rejected'">
+          La solicitud anterior fue rechazada. Puedes volver a solicitar la mejora a Plus.
+        </div>
+        <button
+          type="button"
+          class="configuration-button button-primary"
+          *ngIf="company.upgradeRequestStatus !== 'pending'"
+          (click)="requestPlusUpgrade()"
+          [disabled]="requestingUpgrade">
+          {{ requestingUpgrade ? 'Enviando solicitud…' : 'Solicitar mejora a Plus' }}
+        </button>
+      </div>
+
+      <div class="plan-description plan-active-description" *ngIf="company.subscriptionPlan === 'plus'">
+        <h3>Tu empresa usa el plan Plus</h3>
+        <p>Puedes administrar varias sedes y cambiar entre ellas desde el selector del encabezado.</p>
+      </div>
+    </section>
+  </ng-container>
+</main>

@@ -1,4 +1,5 @@
-<!-- NAV -->
+<header>
+  <!-- NAV -->
 <nav>
   <div class="nav-logo">LUMO <span>Gestión de ventas e inventario</span></div>
   <ul class="nav-links">
@@ -8,7 +9,9 @@
   </ul>
   <a href="#pricing" class="btn-nav">Comenzar ahora →</a>
 </nav>
+</header>
 
+<main>
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg">
@@ -304,37 +307,54 @@
 <!-- PRICING -->
 <section id="pricing">
   <div class="container">
-    <span class="section-label anim">✦ Precio</span>
-    <h2 class="section-title anim">Un plan. Todo incluido.<br>Sin sorpresas.</h2>
-    <p class="section-sub anim">Lumo está en acceso anticipado. Habla directamente con nosotros y te damos todos los detalles.</p>
+    <span class="section-label anim">✦ Planes</span>
+    <h2 class="section-title anim">Elige el plan para<br>tu forma de operar.</h2>
+    <p class="section-sub anim">Ambos planes incluyen las herramientas de Lumo. Elige Standard para una sede o Plus para gestionar varias.</p>
 
-    <div class="pricing-solo-wrap anim">
-      <div class="pricing-solo-card">
-        <div class="pricing-solo-badge">Acceso anticipado</div>
-        <h3 class="pricing-solo-name">Plan Completo</h3>
-        <p class="pricing-solo-desc">Todo lo que necesitas para gestionar tu negocio desde el primer día, sin restricciones.</p>
-
-        <ul class="pricing-features pricing-features-solo">
-          <li><span class="check">✓</span> Gestión de ventas ilimitada</li>
+    <div class="pricing-grid">
+      <article class="pricing-card">
+        <div class="pricing-plan">Una sede</div>
+        <h3 class="pricing-title">Standard</h3>
+        <p class="pricing-description">Para negocios que operan desde una sola ubicación.</p>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Gestión de ventas</li>
           <li><span class="check">✓</span> Inventario con variantes</li>
-          <li><span class="check">✓</span> Registro de clientes</li>
-          <li><span class="check">✓</span> Historial completo de ventas</li>
+          <li><span class="check">✓</span> Registro de clientes e historial</li>
           <li><span class="check">✓</span> Reportes descargables</li>
           <li><span class="check">✓</span> Acceso desde cualquier dispositivo</li>
           <li><span class="check">✓</span> Soporte directo con el equipo</li>
+          <li><span class="check">✓</span> Administración de una sede</li>
         </ul>
-
-        <div class="pricing-divider"></div>
-
-        <p class="pricing-wa-hint">¿Cuánto cuesta? Escríbenos y te contamos — también puedes preguntarnos lo que quieras sobre la plataforma.</p>
-
-        <a href="https://wa.me/573226444646?text=Hola,%20me%20interesa%20Lumo%20para%20mi%20negocio.%20%C2%BFMe%20puedes%20dar%20m%C3%A1s%20informaci%C3%B3n?"
-           target="_blank" class="btn-wa btn-wa-large" rel="noopener noreferrer">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.559 4.14 1.535 5.876L0 24l6.324-1.502A11.955 11.955 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.932 0-3.742-.516-5.295-1.415l-.379-.225-3.932.934.998-3.838-.248-.396A9.956 9.956 0 012 12C2 6.478 6.478 2 12 2s10 4.478 10 10-4.478 10-10 10z"/></svg>
-          Consultar por WhatsApp
+        <a
+          [href]="planWhatsAppUrl('Standard')"
+          target="_blank"
+          class="btn-pricing"
+          rel="noopener noreferrer">
+          Solicitar información y registro
         </a>
-        <p class="pricing-wa-sub">Respuesta en menos de 24 horas · Sin compromiso</p>
-      </div>
+        <p class="pricing-contact-note">El mensaje indicará que te interesa Standard.</p>
+      </article>
+
+      <article class="pricing-card pricing-card-plus">
+        <div class="pricing-plan">Varias sedes</div>
+        <h3 class="pricing-title">Plus</h3>
+        <p class="pricing-description">Para empresas que necesitan administrar varias ubicaciones.</p>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Todas las funciones de Standard</li>
+          <li><span class="check">✓</span> Crear y administrar varias sedes</li>
+          <li><span class="check">✓</span> Inventario, ventas y configuración independientes por sede</li>
+          <li><span class="check">✓</span> Cambiar de sede desde el encabezado</li>
+          <li><span class="check">✓</span> Reportes descargables y soporte directo</li>
+        </ul>
+        <a
+          [href]="planWhatsAppUrl('Plus')"
+          target="_blank"
+          class="btn-pricing"
+          rel="noopener noreferrer">
+          Solicitar información y registro
+        </a>
+        <p class="pricing-contact-note">El mensaje indicará que te interesa Plus.</p>
+      </article>
     </div>
   </div>
 </section>
@@ -354,6 +374,7 @@
     </div>
   </div>
 </section>
+</main>
 
 <!-- FOOTER -->
 <footer>
@@ -370,5 +391,5 @@
      target="_blank"
      rel="noopener noreferrer">Política de tratamiento de datos</a>
 </div>
-  <div class="footer-copy">© 2025 Lumo. Todos los derechos reservados.</div>
+  <div class="footer-copy">© 2026 Lumo. Todos los derechos reservados.</div>
 </footer>
